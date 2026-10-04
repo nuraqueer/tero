@@ -1,0 +1,29 @@
+# Threat model
+
+Who might attack Tero or its members, and how we defend.
+
+| Who | Danger | Defences |
+|---|---|---|
+| **The state** (police, courts, surveillance) | Requests for data, network monitoring, blocking the site | No servers or operators in hostile countries; Cloudflare holds only ciphertext; ECH hides the site name; Tor route; PWA and direct Android download |
+| **Infiltrators** posing as members to trap people | Entrapment, outing people | Invite and vouch; Sequence gates; in-person confirmation codes on Tero cards; coarse location only; inviters accountable |
+| **Blackmailers** | Screenshots, threats to out someone | Pseudonyms; hidden media; screenshot blocking on sensitive screens; fast reporting and banning |
+| **Family, partners, checkpoints** with the phone in hand | Forced unlock | Decoy PIN; disguised icon; panic wipe; no notification previews |
+| **Scammers** | Fake HRT couriers, fake fundraisers | Trust votes only after a confirmed handover; donations checkable on the blockchain; verified badges |
+| **Rogue admin or insider** | Abusing the dashboard | Council quorum votes; append-only logs; no admin can read private messages |
+| **Hackers** | Server breach | Only ciphertext stored; ID documents deleted after verification; passkeys, so no passwords to steal |
+| **PassID compromise** | Someone signs in as a member | Encryption keys live only on devices; pairwise IDs; back-channel logout |
+| **Platform takedown** (app stores, domain, payments) | Losing the app | PWA plus direct Android download; signed offline bundles; no payment companies involved |
+
+## Data rules
+
+1. Collect the minimum. If we don't have it, nobody can take it.
+2. Sensitive data is encrypted on the device before it leaves.
+3. Verification documents are deleted after the decision.
+4. The invite tree and who-talks-to-whom are treated as sensitive.
+5. Location is city level at most.
+
+## Honest limits
+
+No system makes a person untraceable. Spyware on a phone, or someone
+forced to unlock it, defeats most protections. Tero tells members this
+plainly, especially in high-risk countries.
