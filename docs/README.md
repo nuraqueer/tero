@@ -16,6 +16,7 @@ These documents record what has been decided **before any code is written**.
 | [countries.md](countries.md) | Per-country data: risk, warnings, resources |
 | [app-stores.md](app-stores.md) | App Store and Google Play rules, app size |
 | [design.md](design.md) | Tero's own design, Apple 2026 style (Liquid Glass) |
+| [build-plan.md](build-plan.md) | How phase 1 gets built: layout, technology, milestones |
 
 ## Decisions log
 
