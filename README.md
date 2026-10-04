@@ -44,6 +44,7 @@ Tero is built for people whose safety depends on staying unseen.
 - **Invite only.** You join when someone who trusts you hands you a single-use Tero card.
 - **A passcode every time.** A second "decoy" passcode opens a harmless view and quietly alerts the people who brought you in.
 - **Chats that fade.** Private chats clear by default unless both people choose to keep them.
+- **Tero partners.** Clinics, pharmacies and lawyers who know Tero show the same three words as your Tero card, so you know you're safe before you say a thing.
 - **Run by the community.** A council of trusted members, each holding a tarot card, verifies professionals and votes on decisions together.
 
 ## Open to everyone, in part
