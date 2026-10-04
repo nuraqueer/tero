@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "Tero",
+    "slug": "tero",
+    "scheme": "tero",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#FAF9F5",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "org.pherus.tero"
+    },
+    "android": {
+      "package": "org.pherus.tero",
+      "adaptiveIcon": {
+        "backgroundColor": "#141413",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-localization",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FAF9F5",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 76
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

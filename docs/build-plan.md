@@ -28,6 +28,7 @@ docs/         These documents
 |---|---|---|
 | App | **Expo** with expo-router | One codebase for iOS, Android and web |
 | Language | TypeScript everywhere | Shared types between app and server |
+| Package manager | **Bun** (workspaces) | Fast installs and scripts across all packages |
 | Server | **Cloudflare Workers** | Runs at the edge, on the one domain |
 | Mailboxes and live delivery | **Durable Objects** | One object per inbox or Circle, holding only ciphertext |
 | Public data | **D1** | Guides, country packs, trust scores, roles |
