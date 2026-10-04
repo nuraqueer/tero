@@ -43,8 +43,8 @@ rarely online as peers because iOS and Android stop background apps.
 ## On the device
 
 - **Passcode every time.** Each time the app is closed or put in the
-  background, it locks. The passcode unlocks the encrypted vault. This is
-  separate from the passkey.
+  background, it locks. The passcode unlocks the encrypted vault and the
+  keys.
 - **Decoy passcode, entered on the same lock screen.** It opens only the
   most basic, harmless information. Nothing on the screen shows that a
   decoy was used, and nobody can tell a hidden vault exists.
@@ -56,19 +56,36 @@ rarely online as peers because iOS and Android stop background apps.
 
 When the decoy passcode is entered:
 
-1. A silent alert goes to the person's chosen emergency contacts and to
-   the council for their country: "this person has been forced to open
-   Tero".
+1. A silent alert goes to the person who brought them in (see the table
+   below) and to the council for their country: "this person has been
+   forced to open Tero".
 2. Nothing on the device shows the alert was sent. It leaves no trace in
    sent messages.
 3. The account's sensitive access is frozen on the server, and other
-   signed-in devices are signed out, until the person checks in with
-   their real passcode and a recovery step.
+   linked devices are signed out.
 4. People who chat with the person are warned that their conversations
    may be exposed, so they can protect themselves.
 
-Open details: who the emergency contacts are by default (the inviter?),
-and how someone recovers after a false alarm.
+### Recovering after a duress alert or false alarm
+
+The person reaches out to whoever brought them into Tero, who sends a
+**one-time recovery passcode**:
+
+| Brought in by | Who sends the recovery passcode |
+|---|---|
+| A member (Tero card) | The member who invited them |
+| A moderator | The moderators |
+| The council | The council |
+| The Fool | The Fool |
+
+Safety rules, because an attacker may still have the person or the phone:
+
+- The sender confirms it's really them and that they're safe, outside the
+  app (in person, or with a check agreed beforehand).
+- The recovery passcode only works after a **waiting period** (for example
+  24 hours), and the alert recipients can cancel it during that time.
+- If the person who brought them in is gone or unreachable, the country's
+  council handles it.
 
 ## Ephemeral chats
 
@@ -79,57 +96,86 @@ and how someone recovers after a false alarm.
   always works.
 - Platform limits: iOS can detect screenshots but not block them. Android
   14 and later can detect them, and Android can block them on chosen screens.
-- **Social recovery**: the recovery key is split among people you trust
-  (for example any 3 of 5), because passkey-only means a lost phone would
-  otherwise lose the account.
 
 Honest limit: if a phone has spyware or someone is forced to unlock it,
 most protections stop working. We reduce risk; we don't promise zero.
 
-## PassID
+## Voice: Spaces and calls
 
-Tero signs people in with **PassID** (OAuth 2 / OpenID Connect, built on
-Better Auth). Tero runs its own Better Auth on the Worker and uses PassID
-as its sign-in provider (Better Auth's generic OAuth plugin). The phone
-apps sign in to Tero's Better Auth through the Expo integration, not to
-PassID directly.
-
-**PassID handles sign-in only. Tero's encryption keys never touch it.**
-Even if PassID were breached, old messages stay unreadable.
-
-### PassID app registration
-
-**Not registered yet.** This waits until PassID supports pairwise
-identifiers. `tero.pherus.org` is still in development. The table is the plan.
-
-| Field | Value | Why |
+| Use | Who can talk | Who listens |
 |---|---|---|
-| Name | Tero | |
-| Website | `https://tero.pherus.org` | |
-| Logo | A square Tero logo on `tero.pherus.org` | |
-| Icon | React | Expo is React (cosmetic only) |
-| App type | **Web** | Better Auth on the Worker does the token exchange and can keep a secret. **Can't be changed later.** |
-| Client auth | **Basic** | Secret in the Authorization header, stored as a Worker secret |
-| Redirect URI | `https://tero.pherus.org/api/auth/oauth2/callback/passid` | Better Auth's generic OAuth callback, provider id `passid` |
-| Sign-out redirect | `https://tero.pherus.org/signed-out` | Same single domain |
-| Grant types | **Authorization code** only | Tero keeps its own sessions, so no refresh token is needed. Not client credentials. |
-| Scopes | **`openid`**, **`age_over_18`**, **`age_over_21`** | Minimum data. Both age answers so each country's legal age can be applied. Not `profile`, not `email`, not `offline_access`. |
-| Terms | `https://tero.pherus.org/terms` | |
-| Privacy | `https://tero.pherus.org/privacy` | |
-| Support | A Pherus support address for Tero | |
-| License | AGPL-3.0 (add it to pherus.org/licenses) | |
-| Trusted client | Yes | Pherus runs Tero |
-| RP-initiated logout | **On (back-channel)** | Revoking a PassID account ends Tero sessions. It doesn't wipe device data. |
+| **Spaces** for communities, groups, skills, learning, Discord-style hangouts | Up to **6 speakers** (host included) | Everyone else in the room |
+| **Voice with a professional** (consultations, enquiries) | The two people | Nobody else |
 
-### Asked of PassID
+- **End-to-end encrypted.** Audio is encrypted on the speaker's phone
+  (SFrame, with group keys from MLS) before it reaches Cloudflare
+  Realtime, which forwards it without being able to listen. Keys change
+  whenever someone joins or leaves.
+- **Voice disguise.** Speakers can change their voice. This happens on the
+  phone, before encryption, so the real voice never leaves the device.
+- **Not recorded** by default.
+- Honest limits: everyone in the room can hear, so encryption protects
+  against the server, not against a listener in the room. Voice changers
+  hide a voice from people, but they aren't perfect against forensic
+  analysis.
 
-- **Pairwise subject identifiers**: PassID should give Tero a different
-  user ID than it gives other Pherus apps, so databases can't be joined to
-  find the same person. The registration form doesn't show this option yet.
-- PKCE on the authorization code flow, even for this confidential client.
-- **More age checks**: some countries' legal age is 19 or 20. PassID
-  only answers 13, 16, 18 and 21. Either PassID adds a general
-  "age over N" answer, or Tero requires 21 in those countries.
+## Identity: your keys are your account
+
+**No PassID. No usernames, emails, phone numbers or passwords.** Like a
+crypto wallet, each person's account *is* a set of keys they hold.
+
+### How it works
+
+1. **On first launch**, the phone creates a secret **seed** (shown once as
+   a recovery phrase of 12 words).
+2. From that one seed, the app derives **separate keys** that can't be
+   linked to each other in public:
+
+   | Key | Used for |
+   |---|---|
+   | Identity key | Your Tero address (what others see and verify) |
+   | Messaging keys | End-to-end encryption |
+   | Wallet keys | Celo (USDT and USDC), with a new address per fundraiser |
+   | Per-app keys | Signing in to other apps, a different key for each |
+
+3. **Signing in** means proving you hold the identity key: Tero sends a
+   challenge, and the phone signs it. Nothing secret is ever sent.
+4. **Keys are stored in the phone's secure hardware** (Secure Enclave on
+   iOS, Keystore on Android), locked behind the app passcode.
+5. **More devices** are added by scanning a QR code from a device you
+   already have, like Signal or WhatsApp.
+
+### Why the keys are kept separate
+
+If your Tero address were also your wallet address, anyone could look up
+every donation you ever made on the public blockchain and link it to your
+Tero identity. The same applies to using one key in many apps: it would
+let those apps match you up. Separate keys from one seed give you one
+backup, without one public trail.
+
+### "Use it anywhere else"
+
+The identity follows a published standard (a decentralised identifier such
+as `did:key`), so other apps, including future Pherus apps, can let people
+sign in with it. Each app gets its own key by default. A person can choose
+to prove two keys are theirs when they want to.
+
+### Recovery
+
+- **Recovery phrase**: the 12 words restore everything.
+- **Social recovery**: the seed is also split among people you trust (for
+  example any 3 of 5), so losing both the phone and the phrase isn't the
+  end.
+- **Duress recovery**: see above.
+
+### What we give up without PassID
+
+| Lost | Replacement |
+|---|---|
+| Age check (over 18 / 21) | The inviter confirms the person is of legal age for their country when approving the Tero card, and the person declares it. Inviters are accountable through trust. |
+| A central account to disable | The council can ban an identity key on Tero's servers. The key still exists, but Tero won't serve it. |
+
+PassID can still be added later as an optional extra, but nothing depends on it.
 
 ## Languages
 

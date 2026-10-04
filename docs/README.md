@@ -10,7 +10,7 @@ These documents record what has been decided **before any code is written**.
 |---|---|
 | [vision.md](vision.md) | What Tero is, the four suits, access levels, phases |
 | [roles-and-sequences.md](roles-and-sequences.md) | Tarot cards (council), Sequences (trust), invites with Tero cards |
-| [architecture.md](architecture.md) | One domain, Expo, Cloudflare, encrypted relay, PassID |
+| [architecture.md](architecture.md) | One domain, Expo, Cloudflare, encrypted relay, identity keys, voice |
 | [threat-model.md](threat-model.md) | Who might attack Tero and how we defend |
 | [wallet.md](wallet.md) | Non-custodial stablecoin donations |
 | [countries.md](countries.md) | Per-country data: risk, warnings, resources |
@@ -25,7 +25,7 @@ These documents record what has been decided **before any code is written**.
 | D3 | Run by a Pherus subsidiary in a safe country. Pherus is the parent. |
 | D4 | One domain only: `tero.pherus.org`. No subdomains. |
 | D5 | One Expo codebase for web, iOS and Android. Admin is behind sign-in on the same domain. |
-| D6 | Sign-in is passkeys only, through **PassID** (one account). |
+| D6 | ~~Sign-in through PassID.~~ Replaced by D24. |
 | D7 | Sensitive data is encrypted on the device. Cloudflare stores only ciphertext (encrypted relay). |
 | D8 | Joining is invite-and-vouch only, with single-use Tero cards. |
 | D9 | Money is stablecoins only, non-custodial. Tero never holds funds. |
@@ -37,15 +37,18 @@ These documents record what has been decided **before any code is written**.
 | D15 | Code license: **AGPL-3.0** (in `LICENSE`), with a contributor agreement (`CLA.md`) so Pherus can ship to the app stores. |
 | D16 | Minimum age: **18, or the country's legal age if higher**. |
 | D17 | App store rules and app size are design constraints from day one. |
-| D18 | PassID registration waits until PassID supports pairwise identifiers. `tero.pherus.org` is still in development. |
+| D18 | ~~PassID registration.~~ Not needed after D24. `tero.pherus.org` is still in development. |
 | D19 | The app locks every time it's closed. A decoy passcode on the same screen opens only basic info and silently sends a duress alert. No disguised icon. |
 | D20 | Private chats clear by default and are kept only if both agree. Screenshot alerts warn but don't block. |
 | D21 | Spaces (live audio rooms) and anonymous "someone to talk to" are part of Cups. |
 | D22 | The council oversees moderators and countries. Moderators moderate the platform. The Fool can remove a council member alone; otherwise it takes a vote. |
 | D23 | Tor is built into the iOS app when added. |
+| D24 | **No PassID.** Each person's account is a set of keys they hold, like a crypto wallet. One seed, separate unlinkable keys for identity, messaging, wallet and other apps. |
+| D25 | Duress alerts go to whoever brought the person in and the country's council. Recovery uses a one-time passcode from that same person or group, after a waiting period. |
+| D26 | Voice: end-to-end encrypted Spaces with up to 6 speakers and unlimited listeners, private voice calls with professionals, and voice disguise. |
+| D27 | Recovery phrase is **12 words** (plus social recovery). |
+| D28 | Communities are Discord-style: text channels plus voice Spaces. |
 
 ## Open questions
 
-1. PassID: pairwise identifiers, and age checks beyond 18 and 21 (see [architecture.md](architecture.md#asked-of-passid)).
-2. Duress alert: default emergency contacts, and recovery after a false alarm.
-3. Spaces: is audio end-to-end encrypted, and can speakers use voice changing?
+None right now.

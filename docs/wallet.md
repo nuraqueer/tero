@@ -13,7 +13,7 @@ Why this route:
 
 ## How it works
 
-- Keys are created and kept on the device, inside the encrypted vault.
+- Wallet keys come from the person's seed (see [architecture.md](architecture.md#identity-your-keys-are-your-account)), separate from their Tero identity key, and stay on the device.
 - A fundraiser (a goal) gets its **own new address**.
 - Anyone can check the goal's progress on the blockchain. Nobody has to take Tero's word for it.
 - Only members can see which address belongs to which Tero fundraiser.

@@ -15,8 +15,8 @@ before submitting.
 | Crypto wallets (Apple 3.1.5) | Wallets must come from a developer enrolled as an organisation | Publish under Pherus (or the subsidiary) as an organisation |
 | Gifts between people (Apple 3.1.1) | Person-to-person gifts can skip in-app purchase if optional and 100% goes to the receiver | Tero takes no cut of donations |
 | Crypto (Google Play) | Some countries have extra rules for crypto wallets | Check Google's current wallet policy for each country before launch |
-| Account deletion (Apple 5.1.1) | Users must be able to delete their account in the app | Delete account in settings, which also wipes local data |
-| Sign in with Apple (Apple 4.8) | Required if third-party logins are offered | PassID is Pherus's own account system. Confirm this exemption applies. |
+| Account deletion (Apple 5.1.1) | Users must be able to delete their account in the app | Delete account in settings: removes Tero's server data and wipes the keys and data on the phone |
+| Sign in with Apple (Apple 4.8) | Required if third-party logins are offered | Tero has no third-party login (accounts are keys), so it doesn't apply |
 | Age rating | Mature content and unrestricted chat | 18+ rating on both stores |
 | Government removals | Stores remove apps per country on government request | PWA and direct Android download as fallbacks |
 

@@ -26,7 +26,9 @@ known by their card and pseudonym, not by their real identity.
 
 ## Key features
 
-- **Spaces**: live audio rooms like X Spaces, with hosts, speakers and listeners. Not recorded by default.
+- **Communities**: Discord-style, with text channels and voice Spaces.
+- **Spaces**: end-to-end encrypted live audio rooms like X Spaces, for communities, groups, skills and learning. Up to 6 speakers, everyone else listens. Voice disguise. Not recorded by default.
+- **Voice with professionals**: private, end-to-end encrypted calls for consultations and enquiries.
 - **Someone to talk to**: anonymous, random matching for emotional relief. Neither person knows who the other is. Only vouched members, with reporting.
 - **Verified professionals**: doctors, therapists, lawyers and others, checked per country.
 - **Resource directories**: hospitals, pharmacies, HRT providers and surgeons, with cost estimates and what to expect, per country.
@@ -37,7 +39,7 @@ known by their card and pseudonym, not by their real identity.
 
 ## Phases
 
-1. **Foundation:** passkey sign-in (PassID), Tero cards, Sequences, encrypted vault, decoy passcode and duress alert, ephemeral chats, community spaces and chat, moderation, public resources, the four languages.
+1. **Foundation:** self-held identity keys and recovery, Tero cards, Sequences, encrypted vault, decoy passcode and duress alert, ephemeral chats, community spaces and chat, moderation, public resources, the four languages.
 2. **Professionals:** verification flows and council voting, consultations.
 3. **Pentacles:** jobs, skills, businesses, housing, wallet.
 4. **Journeys:** HRT and travel requests, surgery planning.

@@ -10,8 +10,8 @@ Who might attack Tero or its members, and how we defend.
 | **Family, partners, checkpoints** with the phone in hand | Forced unlock | Passcode on every open; decoy passcode with silent duress alert; panic wipe; no notification previews |
 | **Scammers** | Fake HRT couriers, fake fundraisers | Trust votes only after a confirmed handover; donations checkable on the blockchain; verified badges |
 | **Rogue admin or insider** | Abusing the dashboard | Council quorum votes; append-only logs; no admin can read private messages |
-| **Hackers** | Server breach | Only ciphertext stored; ID documents deleted after verification; passkeys, so no passwords to steal |
-| **PassID compromise** | Someone signs in as a member | Encryption keys live only on devices; pairwise IDs; back-channel logout |
+| **Hackers** | Server breach | Only ciphertext stored; ID documents deleted after verification; keys live on phones, so there are no passwords to steal |
+| **Key theft** | Someone steals a member's keys | Keys in secure hardware behind the passcode; duress alert; the council can ban a stolen key; recovery moves the person to new keys |
 | **Platform takedown** (app stores, domain, payments) | Losing the app | PWA plus direct Android download; signed offline bundles; no payment companies involved |
 
 ## Data rules
