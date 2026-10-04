@@ -55,6 +55,7 @@ These documents record what has been decided **before any code is written**.
 | D32 | Live subtitles with translation in Spaces, done on phones so they stay end-to-end encrypted. |
 | D33 | ~~Discord structure with Apple look.~~ Replaced by D34. |
 | D34 | **Tero's own design**, made the way Apple designs in 2026 (Liquid Glass, content first). Five tabs: Gathering, Circles, Messages, Suits, You. Circles are one conversation with topics and live Spaces. |
+| D35 | Colours: warm ivory, slate text, clay accent. Fonts: Newsreader (serif headings) and Instrument Sans. Calm and grown-up, not playful. |
 
 ## Open questions
 

@@ -68,10 +68,38 @@ from the novel.
 The tarot theme shows where it means something (cards, invites, recovery,
 Sequences, the council). Everyday screens stay clean.
 
+## Colour
+
+Warm, calm and grown-up: a warm ivory ground with one clay accent.
+
+| Role | Colour |
+|---|---|
+| Background | Ivory `#FAF9F5` |
+| Surfaces | White `#FFFFFF`, with hairline borders |
+| Text | Slate `#141413` |
+| Secondary text | Warm grey `#5E5D59` |
+| Accent (live dots, rings, icons) | Clay `#D97757` |
+| Accent text and links | Deep clay `#B4532F` (readable on ivory) |
+| Main buttons | Slate with ivory text |
+| Subtle fills, your chat bubbles | Oat `#E3DACC` |
+
+Restraint over decoration: hairline dividers instead of heavy cards,
+small radii, no glows, plain monochrome avatars.
+
 ## Fonts
 
-Apple's San Francisco font may only be used on Apple devices.
+Serif headings over a clean sans for everything else. Both are free and
+open, so they can ship on every platform.
 
-- **iOS:** the system font (San Francisco).
-- **Android and web:** Inter, which looks very similar and is free to use.
-- **Chinese:** the system's Chinese font on each platform.
+| Use | Font |
+|---|---|
+| Headings, the Tero wordmark, card names, numbers on the lock keypad | **Newsreader** (serif) |
+| Everything else | **Instrument Sans** |
+| Chinese | The system's Chinese font on each platform |
+
+The warm feel is inspired by Claude's interface. Anthropic's own fonts are
+private and are not used.
+
+## Mockups
+
+Clickable mockups of the main screens: https://claude.ai/artifact/TpPoDJbAyYFAFGKgxdzqYd
