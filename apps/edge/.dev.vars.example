@@ -1,0 +1,2 @@
+# Copy to .dev.vars for `wrangler dev`. Any random string of 32 characters or more.
+AUTH_SECRET=dev-only-secret-change-me-0123456789abcdef

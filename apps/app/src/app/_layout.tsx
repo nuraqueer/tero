@@ -1,3 +1,4 @@
+import '@/lib/polyfills';
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -13,6 +14,7 @@ import { JetBrainsMono_600SemiBold } from '@expo-google-fonts/jetbrains-mono';
 import { Cinzel_500Medium } from '@expo-google-fonts/cinzel';
 import { colors } from '@tero/ui';
 import { LocaleProvider } from '@/lib/locale';
+import { SessionProvider, useSession } from '@/lib/session';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,10 +38,37 @@ export default function RootLayout() {
 
   return (
     <LocaleProvider>
-      <StatusBar style="dark" />
-      <Stack
-        screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.ivory } }}
-      />
+      <SessionProvider>
+        <StatusBar style="dark" />
+        <Screens />
+      </SessionProvider>
     </LocaleProvider>
+  );
+}
+
+/** Each screen exists only in its state, so nothing behind the lock can be reached by URL or back gesture. */
+function Screens() {
+  const { state } = useSession();
+  // Until the phone's storage has been read, show nothing rather than a wrong screen.
+  if (state.status === 'loading') return null;
+  const full = state.status === 'open' && state.mode === 'full';
+  const basic = state.status === 'open' && state.mode === 'basic';
+
+  return (
+    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.ivory } }}>
+      <Stack.Protected guard={state.status === 'new'}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="setup" />
+      </Stack.Protected>
+      <Stack.Protected guard={state.status === 'locked'}>
+        <Stack.Screen name="lock" />
+      </Stack.Protected>
+      <Stack.Protected guard={full}>
+        <Stack.Screen name="home" />
+      </Stack.Protected>
+      <Stack.Protected guard={basic}>
+        <Stack.Screen name="basic" />
+      </Stack.Protected>
+    </Stack>
   );
 }

@@ -1,4 +1,5 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { locales, localeNames } from '@tero/i18n';
 import { colors, fonts, radii, space, touchTarget } from '@tero/ui';
@@ -22,11 +23,9 @@ export default function Welcome() {
         <Text style={styles.body}>{t('welcome.body')}</Text>
 
         <View style={styles.actions}>
-          {/* Joining arrives in milestone M2 (Tero cards). */}
           <Pressable
             accessibilityRole="button"
-            accessibilityState={{ disabled: true }}
-            disabled
+            onPress={() => router.push('/setup')}
             style={[styles.button, styles.primary]}
           >
             <Text style={styles.primaryLabel}>{t('welcome.haveCard')}</Text>

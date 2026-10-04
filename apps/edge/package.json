@@ -10,6 +10,10 @@
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run"
   },
+  "dependencies": {
+    "@tero/crypto": "workspace:*",
+    "@tero/protocol": "workspace:*"
+  },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20251001.0",
     "wrangler": "^4.40.0"
