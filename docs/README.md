@@ -14,6 +14,7 @@ These documents record what has been decided **before any code is written**.
 | [threat-model.md](threat-model.md) | Who might attack Tero and how we defend |
 | [wallet.md](wallet.md) | Non-custodial stablecoin donations |
 | [countries.md](countries.md) | Per-country data: risk, warnings, resources |
+| [app-stores.md](app-stores.md) | App Store and Google Play rules, app size |
 
 ## Decisions log
 
@@ -31,11 +32,14 @@ These documents record what has been decided **before any code is written**.
 | D10 | Languages: English, Swahili, Chinese (zh) and French from day one. |
 | D11 | Admins (council), moderators, professionals and members are separate roles. |
 | D12 | Professional verification is per country and per profession. AI assists, and the council votes. |
+| D13 | Wallet chain: **Celo**, with USDT and USDC. Fees paid in the stablecoin itself. Other EVM chains can be added later with the same code. |
+| D14 | Council: the Fool can add a council member alone. Other council members can only add someone by vote. The Fool can veto any vote. |
+| D15 | Code license: **AGPL-3.0**, with a contributor agreement so Pherus can ship to the app stores. |
+| D16 | Minimum age: **18, or the country's legal age if higher**. |
+| D17 | App store rules and app size are design constraints from day one. |
+| D18 | PassID registration waits until PassID supports pairwise identifiers. `tero.pherus.org` is still in development. |
 
 ## Open questions
 
-1. Which blockchain(s) for stablecoins (e.g. USDT on Tron, USDC on Base or Solana)?
-2. New council members: does the Fool confirm each one, or does the council vote and the Fool hold a veto?
-3. Code license once public (MIT is in the repo now; GPL-3.0 or the Pherus license are options).
-4. Minimum age: 18+ is proposed.
-5. Can PassID issue pairwise (per-app) subject IDs? See [architecture.md](architecture.md#passid).
+1. PassID: pairwise identifiers, and age checks beyond 18 and 21 (see [architecture.md](architecture.md#asked-of-passid)).
+2. Can the Fool remove a council member alone, or does removal need a vote?

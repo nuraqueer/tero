@@ -67,6 +67,9 @@ Even if PassID were breached, old messages stay unreadable.
 
 ### PassID app registration
 
+**Not registered yet.** This waits until PassID supports pairwise
+identifiers. `tero.pherus.org` is still in development. The table is the plan.
+
 | Field | Value | Why |
 |---|---|---|
 | Name | Tero | |
@@ -78,11 +81,11 @@ Even if PassID were breached, old messages stay unreadable.
 | Redirect URI | `https://tero.pherus.org/api/auth/oauth2/callback/passid` | Better Auth's generic OAuth callback, provider id `passid` |
 | Sign-out redirect | `https://tero.pherus.org/signed-out` | Same single domain |
 | Grant types | **Authorization code** only | Tero keeps its own sessions, so no refresh token is needed. Not client credentials. |
-| Scopes | **`openid`**, **`age_over_18`** | Minimum data. Not `profile`, not `email`, not `offline_access`. |
+| Scopes | **`openid`**, **`age_over_18`**, **`age_over_21`** | Minimum data. Both age answers so each country's legal age can be applied. Not `profile`, not `email`, not `offline_access`. |
 | Terms | `https://tero.pherus.org/terms` | |
 | Privacy | `https://tero.pherus.org/privacy` | |
 | Support | A Pherus support address for Tero | |
-| License | Open question (see [README](README.md#open-questions)) | |
+| License | AGPL-3.0 (add it to pherus.org/licenses) | |
 | Trusted client | Yes | Pherus runs Tero |
 | RP-initiated logout | **On (back-channel)** | Revoking a PassID account ends Tero sessions. It doesn't wipe device data. |
 
@@ -92,6 +95,9 @@ Even if PassID were breached, old messages stay unreadable.
   user ID than it gives other Pherus apps, so databases can't be joined to
   find the same person. The registration form doesn't show this option yet.
 - PKCE on the authorization code flow, even for this confidential client.
+- **More age checks**: some countries' legal age is 19 or 20. PassID
+  only answers 13, 16, 18 and 21. Either PassID adds a general
+  "age over N" answer, or Tero requires 21 in those countries.
 
 ## Languages
 

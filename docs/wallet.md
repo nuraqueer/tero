@@ -25,9 +25,22 @@ Why this route:
 | Donor addresses are public on the blockchain | New address per fundraiser; warn users not to reuse addresses tied to their real name |
 | Issuers (Circle, Tether) can freeze addresses | Tell users plainly |
 | Cashing out locally | The user's choice of exchange; Tero gives per-country guidance only |
-| App store rules | Apple and Google allow person-to-person gifts and non-custodial wallets; confirm the exact rules before launch |
+| App store rules | See [app-stores.md](app-stores.md) |
 
-## Open question
+## Chain: Celo
 
-Which blockchain(s): USDT on Tron is common in Africa; USDC on Base or
-Solana are other options.
+**Decision: Celo, with USDT and USDC.**
+
+| Why | Detail |
+|---|---|
+| Fees in the stablecoin | Users pay network fees in USDT or USDC. Nobody has to buy a separate coin first, which is the biggest usability problem with crypto wallets. |
+| Cheap and fast | Fees are a fraction of a cent, which matters for small donations. |
+| Used in Africa | Opera's MiniPay wallet runs on Celo with USDT, so cashing out locally is already familiar to many people. |
+| Same code, more chains | Celo works like Ethereum. The same code and keys can add Base, Polygon or Arbitrum later. |
+| Small app | Ethereum libraries such as viem are small and only include what's used. |
+
+Rejected for now:
+- **Tron**: USDT on Tron is popular, but fees need TRX and it uses different code. It can be added later if members ask for it.
+- **Solana**: good, but different code, keys and libraries, which make the app bigger.
+
+The chain is public, like every blockchain. The privacy rules above still apply.

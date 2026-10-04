@@ -39,8 +39,10 @@ More cards can be added as Tero grows.
 - Votes need a **quorum** (proposed: more than half of the seats).
 - Anyone with a conflict of interest **steps out** of that vote.
 - Every council action goes into an **append-only log**.
-- New council members: *open question*. Either the Fool confirms each one,
-  or the council votes and the Fool holds a veto.
+- **New council members:** the Fool can add one alone. Other council
+  members can only add someone by council vote.
+- **The Fool can veto** any council vote.
+- Removing a council member: *open question*.
 
 ## Sequences: trust levels
 
