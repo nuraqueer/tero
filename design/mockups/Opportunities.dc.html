@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Opportunities</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F0EEE6}
+a{color:#B4532F}a:hover{color:#8F3F22}
+.glass{background:rgba(255,255,255,0.72);-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);border:0.5px solid rgba(31,30,29,0.15);box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 8px 24px rgba(20,20,19,0.08)}
+.biz{width:200px;flex-shrink:0;background:#FFFFFF;border:0.5px solid rgba(31,30,29,0.15);border-radius:16px;overflow:hidden}
+.job{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:0.5px solid rgba(31,30,29,0.12)}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #FAF9F5; color: #141413; font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif">
+<div style="padding: 58px 16px 0">
+<a href="Suits.dc.html" class="glass" aria-label="Back to Suits" style="width: 44px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #141413">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+</a>
+</div>
+<div style="padding: 14px 22px 0">
+<div style="font-size: 12px; font-weight: 600; color: #B4532F; letter-spacing: 0.06em">PENTACLES</div>
+<h1 style="margin: 4px 0 0; font-family: 'Newsreader', Georgia, serif; font-size: 36px; font-weight: 400">Opportunities</h1>
+</div>
+<div style="margin: 16px 16px 0; background: #F0EEE6; border-radius: 12px; padding: 3px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+<sc-for list="{{segs}}" as="s" hint-placeholder-count="4">
+<button type="button" onClick="{{s.pick}}" style="{{s.style}}">{{s.name}}</button>
+</sc-for>
+</div>
+
+<sc-if value="{{showJobs}}" hint-placeholder-val="{{ true }}">
+<div style="padding: 20px 22px 0; font-size: 12px; font-weight: 600; color: #5E5D59; letter-spacing: 0.05em">QUEER-OWNED · TRENDING IN YOUR CIRCLES</div>
+<div style="display: flex; gap: 12px; padding: 12px 16px 0; overflow: hidden">
+<div class="biz">
+<div style="height: 92px; background: #E3DACC; display: flex; align-items: flex-end; padding: 12px; box-sizing: border-box; font-family: 'Newsreader', Georgia, serif; font-size: 22px">Kanga &amp; Thread</div>
+<div style="padding: 12px"><div style="font-size: 13px; color: #5E5D59">Tailoring · ships across East Africa</div><div style="font-size: 13px; font-weight: 600; margin-top: 8px; color: #B4532F">Support them</div></div>
+</div>
+<div class="biz">
+<div style="height: 92px; background: #CBCADB; display: flex; align-items: flex-end; padding: 12px; box-sizing: border-box; font-family: 'Newsreader', Georgia, serif; font-size: 22px">Lumen Studio</div>
+<div style="padding: 12px"><div style="font-size: 13px; color: #5E5D59">Photography · remote edits</div><div style="font-size: 13px; font-weight: 600; margin-top: 8px; color: #B4532F">Support them</div></div>
+</div>
+</div>
+<div style="padding: 20px 22px 0; font-size: 12px; font-weight: 600; color: #5E5D59; letter-spacing: 0.05em">JOBS SHARED BY MEMBERS</div>
+<div style="padding: 0 22px">
+<sc-for list="{{jobs}}" as="j" hint-placeholder-count="3">
+<div class="job">
+<div style="flex: 1; min-width: 0">
+<div style="font-size: 16px; font-weight: 600">{{j.title}}</div>
+<div style="font-size: 13px; color: #5E5D59; margin-top: 2px">{{j.meta}}</div>
+</div>
+<span style="font-size: 12px; font-weight: 600; color: #3D3D3A; border: 0.5px solid rgba(31,30,29,0.3); border-radius: 10px; padding: 4px 9px">{{j.kind}}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{showFunds}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 20px 16px 0; display: flex; flex-direction: column; gap: 12px">
+<sc-for list="{{funds}}" as="f" hint-placeholder-count="2">
+<div style="background: #FFFFFF; border: 0.5px solid rgba(31,30,29,0.15); border-radius: 16px; padding: 16px">
+<div style="font-family: 'Newsreader', Georgia, serif; font-size: 21px">{{f.title}}</div>
+<div style="font-size: 13px; color: #5E5D59; margin-top: 3px">{{f.who}}</div>
+<div style="height: 6px; border-radius: 3px; background: #F0EEE6; margin-top: 14px; overflow: hidden"><div style="{{f.bar}}"></div></div>
+<div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px"><span style="font-weight: 600">{{f.raised}}</span><span style="color: #5E5D59">Checkable on Celo</span></div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{showOther}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 40px 30px 0; text-align: center; color: #5E5D59; font-size: 15px; line-height: 1.5">{{otherText}}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { seg: 'Work' };
+  }
+  renderVals() {
+    const seg = this.state.seg;
+    const names = ['Work', 'Housing', 'Skills', 'Fundraisers'];
+    return {
+      segs: names.map((n) => ({
+        name: n,
+        pick: () => this.setState({ seg: n }),
+        style: 'min-height: 34px; border: 0; border-radius: 10px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (seg === n ? 'background: #FFFFFF; color: #141413; box-shadow: 0 1px 3px rgba(20,20,19,0.12)' : 'background: transparent; color: #5E5D59')
+      })),
+      showJobs: seg === 'Work',
+      showFunds: seg === 'Fundraisers',
+      showOther: seg === 'Housing' || seg === 'Skills',
+      otherText: seg === 'Housing' ? 'Rooms and safe stays offered by trusted members. Sequence 6 and above.' : 'Swap skills with members: teach what you know, learn what you need.',
+      jobs: [
+        { title: 'Front-end developer', meta: 'Shared by Quill · remote', kind: 'Remote' },
+        { title: 'Community health worker', meta: 'NGO · Nairobi', kind: 'On-site' },
+        { title: 'Translator, French to English', meta: 'Freelance', kind: 'Contract' }
+      ],
+      funds: [
+        { title: 'Rent for the next three months', who: 'Ash · Mutual aid', raised: 'Halfway there', bar: 'height: 100%; width: 50%; background: #D97757' },
+        { title: 'Travel for top surgery', who: 'Kito · Wands', raised: 'A quarter of the way', bar: 'height: 100%; width: 25%; background: #D97757' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Resources</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F0EEE6}
+a{color:#B4532F}a:hover{color:#8F3F22}
+.glass{background:rgba(255,255,255,0.72);-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);border:0.5px solid rgba(31,30,29,0.15);box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 8px 24px rgba(20,20,19,0.08)}
+.place{display:flex;gap:14px;padding:16px 0;border-bottom:0.5px solid rgba(31,30,29,0.12);text-decoration:none;color:#141413}
+.place:hover{color:#141413}
+.tag{font-size:11px;font-weight:600;letter-spacing:0.03em;border-radius:8px;padding:3px 7px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #FAF9F5; color: #141413; font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif">
+<div style="padding: 58px 16px 0; display: flex; align-items: center; justify-content: space-between">
+<a href="Suits.dc.html" class="glass" aria-label="Back to Suits" style="width: 44px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #141413">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+</a>
+<button type="button" class="glass" style="min-height: 44px; border-radius: 22px; padding: 0 16px; display: flex; align-items: center; gap: 6px; font-family: inherit; font-size: 15px; font-weight: 600; color: #141413; cursor: pointer">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9z"></path></svg>Kenya
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+</div>
+<div style="padding: 16px 22px 0">
+<h1 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-size: 36px; font-weight: 400">Resources</h1>
+<div style="font-size: 14px; color: #5E5D59; margin-top: 4px">Checked by members and verified professionals</div>
+</div>
+<div style="margin: 16px 16px 0; height: 44px; border-radius: 12px; background: #F0EEE6; display: flex; align-items: center; gap: 8px; padding: 0 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E5D59" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+<label for="res-search" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search resources</label>
+<input id="res-search" type="search" placeholder="Search clinics, pharmacies, lawyers" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font-family: inherit; font-size: 15px; color: #141413">
+</div>
+<div style="display: flex; gap: 18px; padding: 16px 22px 0; border-bottom: 0.5px solid rgba(31,30,29,0.12)">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="5">
+<button type="button" onClick="{{c.pick}}" style="{{c.style}}">{{c.name}}</button>
+</sc-for>
+</div>
+<div style="padding: 0 22px">
+<sc-for list="{{places}}" as="p" hint-placeholder-count="4">
+<a class="place" href="Place.dc.html">
+<div style="width: 46px; height: 46px; border-radius: 12px; background: #F0EEE6; display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', Georgia, serif; font-size: 20px; color: #B4532F; flex-shrink: 0">{{p.mark}}</div>
+<div style="flex: 1; min-width: 0">
+<div style="font-size: 16px; font-weight: 600">{{p.name}}</div>
+<div style="font-size: 13px; color: #5E5D59; margin-top: 2px">{{p.meta}}</div>
+<div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap">
+<span class="tag" style="background: rgba(217,119,87,0.12); color: #8F3F22">{{p.tagA}}</span>
+<span class="tag" style="background: #F0EEE6; color: #3D3D3A">{{p.tagB}}</span>
+</div>
+</div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9C9A92" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="align-self: center"><path d="M9 5l7 7-7 7"></path></svg>
+</a>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { cat: 'Clinics' };
+  }
+  renderVals() {
+    const data = {
+      Clinics: [
+        { mark: 'R', name: 'Riverside Health Clinic', meta: 'Clinic · Nairobi', tagA: 'AFFIRMING', tagB: 'Verified by The Sun' },
+        { mark: 'H', name: 'Harbour Community Clinic', meta: 'Clinic · Mombasa', tagA: 'AFFIRMING', tagB: 'Cost estimates' },
+        { mark: 'K', name: 'Kilele Wellness Centre', meta: 'Clinic · Kisumu', tagA: 'MEMBER NOTES', tagB: 'Swahili · English' }
+      ],
+      Pharmacies: [
+        { mark: 'G', name: 'Green Door Pharmacy', meta: 'Pharmacy · Nairobi', tagA: 'AFFIRMING', tagB: 'Stocks HRT' },
+        { mark: 'B', name: 'Baobab Chemists', meta: 'Pharmacy · Nakuru', tagA: 'MEMBER NOTES', tagB: 'Discreet packaging' }
+      ],
+      HRT: [
+        { mark: 'S', name: 'Sunrise Endocrinology', meta: 'Specialist · Nairobi', tagA: 'AFFIRMING', tagB: 'Verified by The Sun' }
+      ],
+      Lawyers: [
+        { mark: 'M', name: 'Mwangi & Partners', meta: 'Human rights law · Nairobi', tagA: 'VERIFIED', tagB: 'By Justice' }
+      ],
+      Shelters: [
+        { mark: 'N', name: 'Nyumba Safe House', meta: 'Shelter · location shared privately', tagA: 'MEMBERS ONLY', tagB: 'Ask a moderator' }
+      ]
+    };
+    const cats = Object.keys(data).map((n) => ({
+      name: n,
+      pick: () => this.setState({ cat: n }),
+      style: 'border: 0; background: transparent; font-family: inherit; font-size: 15px; cursor: pointer; padding: 0 0 12px; min-height: 36px; ' + (this.state.cat === n ? 'color: #141413; font-weight: 600; box-shadow: inset 0 -2px 0 #141413' : 'color: #73726C; font-weight: 500')
+    }));
+    return { cats, places: data[this.state.cat] };
+  }
+}
+</script>
+</body>
+</html>

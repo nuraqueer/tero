@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Live Space</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F0EEE6}
+a{color:#B4532F}a:hover{color:#8F3F22}
+.glass{background:rgba(255,255,255,0.72);-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);border:0.5px solid rgba(31,30,29,0.15);box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 8px 24px rgba(20,20,19,0.08)}
+.ico{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.bar{width:3px;border-radius:2px;background:#D97757}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #FAF9F5; color: #141413; font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif">
+<div style="padding: 58px 16px 0; display: flex; align-items: center; gap: 12px">
+<a href="Circle.dc.html" class="glass" aria-label="Minimise" style="width: 44px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #141413; flex-shrink: 0">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+</a>
+<div style="flex: 1; min-width: 0">
+<div style="font-size: 11px; font-weight: 600; color: #B4532F; letter-spacing: 0.06em">LIVE · NIGHT LIBRARY</div>
+<div style="font-family: 'Newsreader', Georgia, serif; font-size: 21px; font-weight: 500; margin-top: 1px">Learning Swahili basics</div>
+</div>
+<a href="Circle.dc.html" style="color: #B4532F; text-decoration: none; font-weight: 600; font-size: 15px; min-height: 44px; display: flex; align-items: center">Leave</a>
+</div>
+
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 0">
+<div style="font-size: 12px; font-weight: 600; color: #5E5D59; letter-spacing: 0.05em">SPEAKERS · 4 OF 6</div>
+<button type="button" onClick="{{toggleRequest}}" style="{{requestStyle}}">{{requestLabel}}</button>
+</div>
+<div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); padding: 12px 12px 0; justify-items: center">
+<sc-for list="{{speakers}}" as="s" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px; width: 56px">
+<div style="{{s.avatarStyle}}">{{s.initial}}</div>
+<div style="font-size: 12px; font-weight: 600; color: {{s.nameColor}}">{{s.name}}</div>
+<div style="height: 12px; display: flex; align-items: flex-end; gap: 2px">
+<sc-if value="{{s.speaking}}" hint-placeholder-val="{{ false }}">
+<div class="bar" style="height: 6px"></div><div class="bar" style="height: 12px"></div><div class="bar" style="height: 8px"></div>
+</sc-if>
+</div>
+</div>
+</sc-for>
+</div>
+
+<div style="margin: 10px 16px 0; padding: 12px 14px; background: #FFFFFF; border: 0.5px solid rgba(31,30,29,0.15); border-radius: 14px">
+<div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: #5E5D59; letter-spacing: 0.05em">
+<span>{{speakingLabel}}</span><span>SUBTITLES · FROM SWAHILI</span>
+</div>
+<p style="margin: 6px 0 0; font-size: 15px; line-height: 1.4">{{caption}}</p>
+</div>
+
+<div style="display: flex; align-items: center; gap: 10px; padding: 14px 20px 0">
+<div style="display: flex">
+<sc-for list="{{listeners}}" as="l" hint-placeholder-count="9">
+<div style="{{l.style}}">{{l.initial}}</div>
+</sc-for>
+</div>
+<div style="font-size: 13px; color: #5E5D59">+29 listening</div>
+</div>
+
+<div style="margin: 14px 0 0; border-top: 0.5px solid rgba(31,30,29,0.15); padding: 10px 20px 0">
+<div style="font-size: 12px; font-weight: 600; color: #5E5D59; letter-spacing: 0.05em">CHAT</div>
+<div style="display: flex; flex-direction: column; gap: 9px; margin-top: 9px">
+<sc-for list="{{chat}}" as="c" hint-placeholder-count="4">
+<div style="display: flex; gap: 10px; align-items: flex-start">
+<div style="{{c.avatarStyle}}">{{c.initial}}</div>
+<div style="font-size: 14px; line-height: 1.38"><span style="font-weight: 600">{{c.name}}</span> <span style="color: #3D3D3A">{{c.text}}</span></div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div class="glass" style="position: absolute; left: 12px; right: 12px; bottom: 28px; border-radius: 28px; display: flex; align-items: center; gap: 2px; padding: 6px">
+<label for="space-chat" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Chat in this Space</label>
+<input id="space-chat" type="text" placeholder="Say something" value="{{draft}}" onChange="{{onDraft}}" style="flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: #141413; font-size: 16px; padding: 0 10px; font-family: inherit">
+<button type="button" class="ico" aria-label="Send" onClick="{{send}}" style="background: transparent; border: 0; color: #B4532F">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"></path></svg>
+</button>
+<button type="button" class="ico" aria-label="Raise hand" onClick="{{toggleHand}}" style="{{handStyle}}">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V11M11 10V4.5a1.5 1.5 0 0 1 3 0V11M14 10.5V6a1.5 1.5 0 0 1 3 0v7c0 4-2.5 7-6 7-2.5 0-4-1.2-5.2-3.2L4 13.6a1.5 1.5 0 0 1 2.6-1.5L8 14"></path></svg>
+</button>
+<button type="button" class="ico" aria-label="Heart" style="background: transparent; border: 0; color: #141413">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"></path></svg>
+</button>
+<button type="button" class="ico" aria-label="Disguise my voice" onClick="{{toggleVoice}}" style="{{voiceStyle}}">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h1M7.5 8v8M11 5v14M14.5 8v8M18 10v4M21 12h-0.5"></path></svg>
+</button>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { hand: false, voice: false, requested: false, turn: 0, draft: '', extra: [] };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => this.setState({ turn: (this.state.turn + 1) % 4 }), 2600);
+  }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+  renderVals() {
+    const st = this.state;
+    const people = [
+      { initial: 'E', name: 'Ember', line: 'Let’s start with greetings. “Habari za asubuhi” means good morning.' },
+      { initial: 'Q', name: 'Quill', line: 'And you answer “nzuri”, which means good, or fine.' },
+      { initial: 'W', name: 'Wren', line: 'Is “asante” the word for thank you?' },
+      { initial: 'S', name: 'Sol', line: 'Yes, and “asante sana” is thank you very much.' }
+    ];
+    const av = (speaking) => 'width: 52px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; font-family: Newsreader, Georgia, serif; font-size: 22px; color: #141413; background: #EDE8DF' + (speaking ? '; box-shadow: 0 0 0 2px #FAF9F5, 0 0 0 3.5px #D97757' : '');
+    const open = 'width: 52px; height: 52px; border-radius: 26px; box-sizing: border-box; border: 1px dashed rgba(31,30,29,0.3); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #5E5D59';
+    const speakers = people.map((p, i) => ({
+      initial: p.initial,
+      name: p.name,
+      speaking: i === st.turn,
+      nameColor: i === st.turn ? '#B4532F' : '#141413',
+      avatarStyle: av(i === st.turn)
+    })).concat([
+      { initial: '+', name: 'Open', speaking: false, nameColor: '#5E5D59', avatarStyle: open },
+      { initial: '+', name: 'Open', speaking: false, nameColor: '#5E5D59', avatarStyle: open }
+    ]);
+    const cur = people[st.turn];
+    const lInit = ['A', 'K', 'M', 'R', 'J', 'N', 'T', 'L', 'D'];
+    const listeners = lInit.map((x, i) => ({
+      initial: x,
+      style: 'width: 30px; height: 30px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-family: Newsreader, Georgia, serif; font-size: 14px; color: #141413; background: ' + (i % 2 ? '#E3DACC' : '#EDE8DF') + '; border: 2px solid #FAF9F5' + (i ? '; margin-left: -9px' : '')
+    }));
+    const cav = 'width: 26px; height: 26px; border-radius: 13px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: Newsreader, Georgia, serif; font-size: 13px; color: #141413; background: #EDE8DF';
+    const base = [
+      { initial: 'A', name: 'Ash', text: 'Joining from the bus, listening only.' },
+      { initial: 'K', name: 'Kito', text: 'Can we do numbers next week?' },
+      { initial: 'M', name: 'Mira', text: 'Habari! First time here.' },
+      { initial: 'R', name: 'Rowan', text: 'Subtitles in French are working for me.' }
+    ];
+    const chat = base.concat(st.extra).slice(-4).map((c) => ({ ...c, avatarStyle: cav }));
+    const on = 'background: #141413; border: 0; color: #FAF9F5';
+    const off = 'background: transparent; border: 0; color: #141413';
+    return {
+      speakers,
+      listeners,
+      chat,
+      speakingLabel: cur.name.toUpperCase() + ' IS SPEAKING',
+      caption: cur.line,
+      draft: st.draft,
+      onDraft: (e) => this.setState({ draft: e.target.value }),
+      send: () => {
+        const t = st.draft.trim();
+        if (!t) return;
+        this.setState({ draft: '', extra: st.extra.concat([{ initial: 'Y', name: 'You', text: t }]) });
+      },
+      handStyle: st.hand ? on : off,
+      voiceStyle: st.voice ? on : off,
+      toggleHand: () => this.setState({ hand: !st.hand }),
+      toggleVoice: () => this.setState({ voice: !st.voice }),
+      toggleRequest: () => this.setState({ requested: !st.requested }),
+      requestLabel: st.requested ? 'Request sent' : 'Ask to speak',
+      requestStyle: 'min-height: 36px; padding: 0 16px; border-radius: 18px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; ' + (st.requested ? 'background: transparent; color: #141413; border: 0.5px solid rgba(31,30,29,0.3)' : 'background: #141413; color: #FAF9F5; border: 0')
+    };
+  }
+}
+</script>
+</body>
+</html>

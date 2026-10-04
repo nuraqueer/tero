@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tero lock screen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F0EEE6}
+a{color:#B4532F}a:hover{color:#8F3F22}
+.glass{background:rgba(255,255,255,0.72);-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);border:0.5px solid rgba(31,30,29,0.15);box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 8px 24px rgba(20,20,19,0.08)}
+.key{width:76px;height:76px;border-radius:38px;color:#141413;font:400 32px 'Newsreader',Georgia,serif;background:transparent;border:0.5px solid rgba(31,30,29,0.22);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.key:active{background:rgba(31,30,29,0.18)}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #FAF9F5; color: #141413; font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif">
+<div style="position: relative; display: flex; flex-direction: column; align-items: center; padding-top: 110px; gap: 14px">
+<div style="font-family: 'Newsreader', Georgia, serif; font-size: 60px; font-weight: 500">Tero</div>
+<div style="font-size: 16px; color: #5E5D59">Enter your passcode</div>
+<div style="display: flex; gap: 16px; margin-top: 22px" aria-label="Passcode progress">
+<sc-for list="{{dots}}" as="d" hint-placeholder-count="6">
+<div style="{{d.style}}"></div>
+</sc-for>
+</div>
+</div>
+<div style="position: absolute; left: 0; right: 0; top: 372px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 18px; justify-items: center; padding: 0 44px">
+<sc-for list="{{keys}}" as="k" hint-placeholder-count="12">
+<sc-if value="{{k.isDigit}}" hint-placeholder-val="{{ true }}">
+<button class="key" type="button" onClick="{{k.press}}" aria-label="{{k.label}}">{{k.label}}</button>
+</sc-if>
+<sc-if value="{{k.isDel}}" hint-placeholder-val="{{ false }}">
+<button class="key" type="button" onClick="{{k.press}}" aria-label="Delete" style="background: transparent; border: 0">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-6-7z"></path><path d="M12 10l4 4M16 10l-4 4"></path></svg>
+</button>
+</sc-if>
+<sc-if value="{{k.isBlank}}" hint-placeholder-val="{{ false }}">
+<div style="width: 76px; height: 76px"></div>
+</sc-if>
+</sc-for>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 46px; display: flex; flex-direction: column; align-items: center; gap: 14px">
+<sc-if value="{{full}}" hint-placeholder-val="{{ false }}">
+<a href="Gathering.dc.html" class="glass" style="text-decoration: none; color: #141413; background: #D97757; border-radius: 26px; padding: 14px 44px; font-weight: 600; font-size: 17px">Enter</a>
+</sc-if>
+<button type="button" style="background: transparent; border: 0; color: #5E5D59; font-size: 15px; min-height: 44px; cursor: pointer">Recover with your cards</button>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { code: '' };
+  }
+  renderVals() {
+    const code = this.state.code;
+    const press = (v) => () => {
+      if (v === 'del') { this.setState({ code: code.slice(0, -1) }); return; }
+      if (code.length < 6) this.setState({ code: code + v });
+    };
+    const labels = ['1','2','3','4','5','6','7','8','9','','0','del'];
+    const keys = labels.map((l) => ({
+      label: l,
+      isDigit: l !== '' && l !== 'del',
+      isDel: l === 'del',
+      isBlank: l === '',
+      press: press(l)
+    }));
+    const dots = [0,1,2,3,4,5].map((i) => ({
+      style: 'width: 14px; height: 14px; border-radius: 7px; box-sizing: border-box; border: 1.5px solid #D97757; background: ' + (i < code.length ? '#D97757' : 'transparent')
+    }));
+    return { keys, dots, full: code.length === 6 };
+  }
+}
+</script>
+</body>
+</html>

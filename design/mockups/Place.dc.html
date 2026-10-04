@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Resource detail</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F0EEE6}
+a{color:#B4532F}a:hover{color:#8F3F22}
+.glass{background:rgba(255,255,255,0.72);-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);border:0.5px solid rgba(31,30,29,0.15);box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 8px 24px rgba(20,20,19,0.08)}
+.est{display:flex;justify-content:space-between;padding:11px 0;border-bottom:0.5px solid rgba(31,30,29,0.12);font-size:15px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #FAF9F5; color: #141413; font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif">
+<div style="padding: 58px 16px 0; display: flex; justify-content: space-between">
+<a href="Resources.dc.html" class="glass" aria-label="Back to Resources" style="width: 44px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #141413">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+</a>
+<button type="button" class="glass" aria-label="Save for offline" style="width: 44px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #141413; cursor: pointer">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg>
+</button>
+</div>
+<div style="padding: 18px 22px 0">
+<div style="font-size: 12px; font-weight: 600; color: #B4532F; letter-spacing: 0.06em">CLINIC · NAIROBI</div>
+<h1 style="margin: 6px 0 0; font-family: 'Newsreader', Georgia, serif; font-size: 34px; font-weight: 400; line-height: 1.1">Riverside Health Clinic</h1>
+<div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 13px; color: #3D3D3A">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B4532F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z"></path><path d="M9 12l2 2 4-4"></path></svg>
+Verified by The Sun · affirming to queer and trans people
+</div>
+</div>
+
+<div style="padding: 22px 22px 0">
+<h2 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-size: 20px; font-weight: 500">What to expect</h2>
+<p style="margin: 8px 0 0; font-size: 15px; line-height: 1.5; color: #3D3D3A">Staff use the name and pronouns you give. HRT starts after a first consultation and blood tests, with check-ups every few months.</p>
+</div>
+
+<div style="padding: 20px 22px 0">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<h2 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-size: 20px; font-weight: 500">Estimates</h2>
+<span style="font-size: 12px; color: #5E5D59">from member reports</span>
+</div>
+<div style="margin-top: 6px">
+<div class="est"><span>First consultation</span><span style="color: #5E5D59">[KES range]</span></div>
+<div class="est"><span>Blood tests</span><span style="color: #5E5D59">[KES range]</span></div>
+<div class="est"><span>HRT, per month</span><span style="color: #5E5D59">[KES range]</span></div>
+</div>
+</div>
+
+<div style="margin: 20px 16px 0; padding: 14px 16px; background: #F0EEE6; border-radius: 14px">
+<div style="font-size: 12px; font-weight: 600; color: #5E5D59; letter-spacing: 0.05em">FROM A MEMBER · SEQUENCE 5</div>
+<p style="margin: 6px 0 0; font-family: 'Newsreader', Georgia, serif; font-size: 17px; line-height: 1.4">"Go in the morning, it's quieter. The nurse at reception already knew what Tero was."</p>
+</div>
+
+<div style="position: absolute; left: 16px; right: 16px; bottom: 28px; display: flex; gap: 10px">
+<a href="Messages.dc.html" style="flex: 1; min-height: 48px; border-radius: 24px; background: #141413; color: #FAF9F5; text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; justify-content: center">Ask a member who's been</a>
+<button type="button" style="min-height: 48px; padding: 0 20px; border-radius: 24px; border: 0.5px solid rgba(31,30,29,0.3); background: transparent; font-family: inherit; font-weight: 600; font-size: 15px; color: #141413; cursor: pointer">Directions</button>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

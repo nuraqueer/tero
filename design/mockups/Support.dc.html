@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Support</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F0EEE6}
+a{color:#B4532F}a:hover{color:#8F3F22}
+.glass{background:rgba(255,255,255,0.72);-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);border:0.5px solid rgba(31,30,29,0.15);box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 8px 24px rgba(20,20,19,0.08)}
+.pro{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:0.5px solid rgba(31,30,29,0.12)}
+.chip{font-size:12px;color:#3D3D3A;border:0.5px solid rgba(31,30,29,0.25);border-radius:10px;padding:3px 8px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #FAF9F5; color: #141413; font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif">
+<div style="padding: 58px 16px 0">
+<a href="Suits.dc.html" class="glass" aria-label="Back to Suits" style="width: 44px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #141413">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+</a>
+</div>
+<div style="padding: 14px 22px 0">
+<div style="font-size: 12px; font-weight: 600; color: #B4532F; letter-spacing: 0.06em">CUPS</div>
+<h1 style="margin: 4px 0 0; font-family: 'Newsreader', Georgia, serif; font-size: 36px; font-weight: 400; line-height: 1.1">You don't have to carry it alone.</h1>
+</div>
+
+<div style="margin: 22px 16px 0; background: #141413; color: #FAF9F5; border-radius: 20px; padding: 20px">
+<div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #D1CFC5">
+<span style="width: 8px; height: 8px; border-radius: 4px; background: #D97757"></span>Listeners are here now
+</div>
+<div style="font-family: 'Newsreader', Georgia, serif; font-size: 26px; margin-top: 10px">Talk to someone</div>
+<p style="margin: 6px 0 0; font-size: 14px; line-height: 1.45; color: #D1CFC5">Anonymous on both sides. The chat clears when either of you leaves.</p>
+<a href="Listen.dc.html" style="margin-top: 16px; display: inline-flex; align-items: center; min-height: 44px; padding: 0 22px; border-radius: 22px; background: #FAF9F5; color: #141413; text-decoration: none; font-weight: 600; font-size: 15px">Start talking</a>
+</div>
+
+<div style="padding: 26px 22px 0; display: flex; align-items: baseline; justify-content: space-between">
+<h2 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-size: 22px; font-weight: 500">Verified professionals</h2>
+<a href="Support.dc.html" style="font-size: 14px; text-decoration: none">See all</a>
+</div>
+<div style="padding: 4px 22px 0">
+<sc-for list="{{pros}}" as="p" hint-placeholder-count="3">
+<div class="pro">
+<div style="width: 44px; height: 44px; border-radius: 22px; background: #EDE8DF; font-family: 'Newsreader', Georgia, serif; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0">{{p.initial}}</div>
+<div style="flex: 1; min-width: 0">
+<div style="font-size: 15px; font-weight: 600">{{p.name}}</div>
+<div style="font-size: 13px; color: #5E5D59; margin-top: 1px">{{p.role}}</div>
+<div style="display: flex; gap: 6px; margin-top: 6px"><span class="chip">{{p.langs}}</span><span class="chip">{{p.cost}}</span></div>
+</div>
+<a href="Messages.dc.html" style="min-height: 36px; padding: 0 14px; border-radius: 18px; border: 0.5px solid rgba(31,30,29,0.3); color: #141413; text-decoration: none; font-size: 14px; font-weight: 600; display: flex; align-items: center">Message</a>
+</div>
+</sc-for>
+</div>
+
+<div style="position: absolute; left: 16px; right: 16px; bottom: 28px; display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 16px; background: #F0EEE6">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B4532F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"></path></svg>
+<div style="flex: 1"><div style="font-size: 15px; font-weight: 600">In danger right now?</div><div style="font-size: 13px; color: #5E5D59">Crisis lines for your country</div></div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E5D59" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      pros: [
+        { initial: 'A', name: 'Amani', role: 'Therapist · verified by The Moon', langs: 'Swahili · English', cost: 'First session free' },
+        { initial: 'L', name: 'Lin', role: 'Counsellor, couples and families', langs: '中文 · English', cost: 'Sliding scale' },
+        { initial: 'J', name: 'Jo', role: 'Peer supporter, trans people', langs: 'French · English', cost: 'Free' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Council dashboard</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Cinzel:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#FAF9F5}
+a{color:#B4532F}a:hover{color:#8F3F22}
+.side a{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:10px;color:#3D3D3A;text-decoration:none;font-size:15px}
+.side a:hover{background:rgba(115,114,108,0.1);color:#141413}
+.side a.on{background:#FFFFFF;color:#141413;font-weight:600;box-shadow:0 0 0 0.5px rgba(31,30,29,0.15)}
+.badge{font-size:12px;font-weight:600;background:#141413;color:#FAF9F5;border-radius:9px;padding:1px 7px}
+.panel{background:#FFFFFF;border:0.5px solid rgba(31,30,29,0.15);border-radius:16px;padding:22px}
+.stat{flex:1 1 180px;min-width:0}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-weight:600;color:#5E5D59;font-size:12px;letter-spacing:0.04em;padding:10px 12px;border-bottom:0.5px solid rgba(31,30,29,0.15)}
+.tbl td{padding:12px;border-bottom:0.5px solid rgba(31,30,29,0.1)}
+.vrow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;align-items:center;padding:12px;border-bottom:0.5px solid rgba(31,30,29,0.1);font-size:14px}
+.crow{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;align-items:center;padding:12px;border-bottom:0.5px solid rgba(31,30,29,0.1);font-size:14px}
+.pill{font-size:12px;font-weight:600;border-radius:9px;padding:3px 8px}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #FAF9F5; color: #141413; font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif; display: flex; flex-wrap: wrap">
+<nav class="side" aria-label="Council" style="flex: 1 1 220px; max-width: 260px; min-width: 0; box-sizing: border-box; padding: 28px 16px; border-right: 0.5px solid rgba(31,30,29,0.15); background: #F5F4ED; display: flex; flex-direction: column; gap: 4px">
+<div style="padding: 0 12px 22px">
+<div style="font-family: 'Newsreader', Georgia, serif; font-size: 26px">Tero</div>
+<div style="font-size: 12px; font-weight: 600; color: #B4532F; letter-spacing: 0.08em; margin-top: 2px">THE COUNCIL</div>
+</div>
+<a class="on" href="Council.dc.html">Overview</a>
+<a href="Council.dc.html">Votes <span class="badge">2</span></a>
+<a href="Council.dc.html">Verifications <span class="badge">4</span></a>
+<a href="Council.dc.html">Countries</a>
+<a href="Moderation.dc.html">Moderators</a>
+<a href="Council.dc.html">Log</a>
+<div style="margin-top: 28px; padding: 14px 12px; border-top: 0.5px solid rgba(31,30,29,0.15); display: flex; align-items: center; gap: 10px">
+<div style="width: 34px; height: 48px; border-radius: 5px; background: #141413; border: 1px solid #C9A27E; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-family: 'Cinzel', Georgia, serif; font-size: 11px; color: #E6C9A8">XIX</div>
+<div><div style="font-size: 14px; font-weight: 600">The Sun</div><div style="font-size: 12px; color: #5E5D59">Health seat</div></div>
+</div>
+</nav>
+
+<main style="flex: 999 1 640px; min-width: 0; box-sizing: border-box; padding: 36px clamp(16px, 4vw, 48px) 56px">
+<h1 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 40px">Good evening, The Sun</h1>
+<div style="font-size: 15px; color: #5E5D59; margin-top: 6px">Two votes and four verifications are waiting for you.</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 28px">
+<div class="panel stat"><div style="font-size: 13px; color: #5E5D59">Open votes</div><div style="font-family: 'Newsreader', Georgia, serif; font-size: 40px; margin-top: 4px">2</div></div>
+<div class="panel stat"><div style="font-size: 13px; color: #5E5D59">Verifications waiting</div><div style="font-family: 'Newsreader', Georgia, serif; font-size: 40px; margin-top: 4px">4</div></div>
+<div class="panel stat"><div style="font-size: 13px; color: #5E5D59">Escalated by moderators</div><div style="font-family: 'Newsreader', Georgia, serif; font-size: 40px; margin-top: 4px">1</div></div>
+<div class="panel stat" style="border-color: rgba(180,83,47,0.45)"><div style="font-size: 13px; color: #8F3F22">Duress alerts, your countries</div><div style="font-family: 'Newsreader', Georgia, serif; font-size: 40px; margin-top: 4px; color: #8F3F22">1</div></div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px">
+<section class="panel" style="flex: 1 1 380px; min-width: 0">
+<div style="font-size: 12px; font-weight: 600; color: #5E5D59; letter-spacing: 0.05em">VOTE · CLOSES IN 2 DAYS</div>
+<h2 style="margin: 8px 0 0; font-family: 'Newsreader', Georgia, serif; font-weight: 500; font-size: 24px">Seat Wren as The Star</h2>
+<p style="margin: 8px 0 0; font-size: 15px; line-height: 1.5; color: #3D3D3A">Proposed by Justice. Wren has led the newcomers' Circle for a year at Sequence 3.</p>
+<div style="height: 8px; border-radius: 4px; background: #F0EEE6; margin-top: 18px; overflow: hidden; display: flex"><div style="{{forBar}}"></div><div style="{{againstBar}}"></div></div>
+<div style="display: flex; justify-content: space-between; font-size: 13px; color: #5E5D59; margin-top: 8px"><span>{{tally}}</span><span>Quorum: 6 of 10 seats</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px">
+<sc-for list="{{choices}}" as="c" hint-placeholder-count="3">
+<button type="button" onClick="{{c.pick}}" style="{{c.style}}">{{c.name}}</button>
+</sc-for>
+</div>
+<div style="font-size: 12px; color: #73726C; margin-top: 14px">The Fool can veto any council vote.</div>
+</section>
+
+<section class="panel" style="flex: 1 1 380px; min-width: 0">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<h2 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 500; font-size: 24px">Countries</h2>
+<span style="font-size: 13px; color: #5E5D59">Risk level sets safety defaults</span>
+</div>
+<div style="margin-top: 10px">
+<div class="crow" style="font-weight: 600; color: #5E5D59; font-size: 12px; letter-spacing: 0.04em; border-bottom: 0.5px solid rgba(31,30,29,0.15)"><span>PLACE</span><span>RISK</span><span>MODERATORS</span></div>
+<div class="crow"><span>Uganda</span><span><span class="pill" style="background: rgba(180,83,47,0.12); color: #8F3F22">High</span></span><span>3</span></div>
+<div class="crow"><span>Kenya</span><span><span class="pill" style="background: rgba(180,83,47,0.12); color: #8F3F22">High</span></span><span>4</span></div>
+<div class="crow"><span>United States · Texas</span><span><span class="pill" style="background: #F0EEE6; color: #3D3D3A">Elevated</span></span><span>2</span></div>
+<div class="crow"><span>France</span><span><span class="pill" style="background: #F0EEE6; color: #3D3D3A">Standard</span></span><span>2</span></div>
+</div>
+</section>
+</div>
+
+<section class="panel" style="margin-top: 20px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+<h2 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 500; font-size: 24px">Verifications</h2>
+<span style="font-size: 13px; color: #5E5D59">Documents are deleted as soon as the vote closes</span>
+</div>
+<div style="overflow-x: auto; margin-top: 10px">
+<div style="min-width: 640px">
+<div class="vrow" style="font-weight: 600; color: #5E5D59; font-size: 12px; letter-spacing: 0.04em; padding-top: 6px; padding-bottom: 10px; border-bottom: 0.5px solid rgba(31,30,29,0.15)"><span>APPLICANT</span><span>PROFESSION</span><span>COUNTRY</span><span>ASSISTANT CHECK</span><span>VOTES</span><span></span></div>
+<sc-for list="{{verifs}}" as="v" hint-placeholder-count="4">
+<div class="vrow"><span style="font-weight: 600">{{v.who}}</span><span>{{v.job}}</span><span>{{v.country}}</span><span><span class="pill" style="{{v.checkStyle}}">{{v.check}}</span></span><span style="color: #5E5D59">{{v.votes}}</span><span style="text-align: right"><a href="Council.dc.html" style="font-weight: 600; text-decoration: none">Review</a></span></div>
+</sc-for>
+</div>
+</div>
+</section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { mine: null };
+  }
+  renderVals() {
+    const mine = this.state.mine;
+    const forN = 4 + (mine === 'For' ? 1 : 0);
+    const againstN = 1 + (mine === 'Against' ? 1 : 0);
+    const names = ['For', 'Against', 'Abstain'];
+    const ok = 'background: rgba(31,30,29,0.06); color: #3D3D3A';
+    const warn = 'background: rgba(180,83,47,0.12); color: #8F3F22';
+    return {
+      forBar: 'height: 100%; background: #141413; width: ' + (forN * 10) + '%',
+      againstBar: 'height: 100%; background: #D97757; width: ' + (againstN * 10) + '%',
+      tally: forN + ' for · ' + againstN + ' against' + (mine ? ' · you voted ' + mine.toLowerCase() : ''),
+      choices: names.map((n) => ({
+        name: mine === n ? n + ' ✓' : n,
+        pick: () => this.setState({ mine: mine === n ? null : n }),
+        style: 'min-height: 40px; padding: 0 20px; border-radius: 20px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; ' + (mine === n ? 'background: #141413; color: #FAF9F5; border: 0' : 'background: transparent; color: #141413; border: 0.5px solid rgba(31,30,29,0.3)')
+      })),
+      verifs: [
+        { who: 'Amani', job: 'Therapist', country: 'Kenya', check: 'Register match', checkStyle: ok, votes: '2 of 3' },
+        { who: 'Dr. Okello', job: 'Doctor', country: 'Uganda', check: 'Register match', checkStyle: ok, votes: '1 of 3' },
+        { who: 'Lin', job: 'Counsellor', country: 'France', check: 'Needs a closer look', checkStyle: warn, votes: '0 of 3' },
+        { who: 'Mwangi', job: 'Lawyer', country: 'Kenya', check: 'Bar list match', checkStyle: ok, votes: '0 of 3' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

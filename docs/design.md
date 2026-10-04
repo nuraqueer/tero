@@ -102,4 +102,20 @@ private and are not used.
 
 ## Mockups
 
-Clickable mockups of the main screens: https://claude.ai/artifact/TpPoDJbAyYFAFGKgxdzqYd
+Clickable mockups: https://claude.ai/artifact/TpPoDJbAyYFAFGKgxdzqYd
+
+The source of every screen is in [`design/mockups/`](../design/mockups), and
+the screenshots used in the README are in [`docs/screens/`](screens).
+`design/render.mjs` and `design/compose.mjs` regenerate the screenshots.
+
+| Group | Screens |
+|---|---|
+| App | Lock, Gathering, Circle, Live Space, Messages, Suits, You, New post |
+| Inside the Suits | Support (Cups), Someone to talk to, Resources and a resource page (Swords), Opportunities (Pentacles), Journey planner (Wands) |
+| Public website | Home, guide page |
+| Running Tero | Council dashboard, moderation dashboard |
+| Brand | Wordmark options (not chosen yet) |
+
+Each suit has its own layout: Cups is calm and conversational, Swords is a
+directory, Pentacles mixes a showcase with lists, and Wands is a step-by-step
+timeline.

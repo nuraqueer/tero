@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gathering</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F0EEE6}
+a{color:#B4532F}a:hover{color:#8F3F22}
+.glass{background:rgba(255,255,255,0.72);-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);border:0.5px solid rgba(31,30,29,0.15);box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 8px 24px rgba(20,20,19,0.08)}
+.tab{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:58px;min-height:48px;justify-content:center;text-decoration:none;color:#5E5D59;font-size:10px;font-weight:600}
+.tab:hover{color:#141413}
+.tab.on{color:#B4532F}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #FAF9F5; color: #141413; font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif">
+<div style="padding: 62px 20px 0; display: flex; align-items: center; justify-content: space-between">
+<h1 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-size: 36px; font-weight: 500">Gathering</h1>
+<a href="Compose.dc.html" class="glass" aria-label="New post" style="width: 44px; height: 44px; border-radius: 22px; color: #141413; display: flex; align-items: center; justify-content: center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+</a>
+</div>
+<a href="Space.dc.html" class="glass" style="margin: 18px 16px 0; border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: #141413; border-color: rgba(217,119,87,0.45)">
+<div style="width: 10px; height: 10px; border-radius: 5px; background: #D97757; flex-shrink: 0"></div>
+<div style="flex: 1; min-width: 0">
+<div style="font-size: 12px; font-weight: 600; color: #B4532F; letter-spacing: 0.06em">LIVE SPACE</div>
+<div style="font-size: 16px; font-weight: 600; margin-top: 2px">Learning Swahili basics</div>
+<div style="font-size: 13px; color: #5E5D59; margin-top: 2px">Night Library · 4 speaking</div>
+</div>
+<div style="background: #141413; color: #FAF9F5; font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 18px">Join</div>
+</a>
+<div style="padding: 26px 20px 10px; font-size: 13px; font-weight: 600; color: #5E5D59; letter-spacing: 0.04em">FROM YOUR CIRCLES</div>
+<div style="display: flex; flex-direction: column; padding: 0 16px">
+<sc-for list="{{posts}}" as="p" hint-placeholder-count="3">
+<article style="padding: 18px 4px; border-bottom: 0.5px solid rgba(31,30,29,0.15)">
+<div style="display: flex; align-items: center; gap: 10px">
+<div style="{{p.avatarStyle}}">{{p.initial}}</div>
+<div style="flex: 1; min-width: 0">
+<div style="font-size: 15px; font-weight: 600">{{p.name}} <span style="font-weight: 500; color: #B4532F; font-size: 12px; margin-left: 4px">{{p.badge}}</span></div>
+<div style="font-size: 12px; color: #5E5D59">{{p.circle}}</div>
+</div>
+</div>
+<p style="margin: 12px 0 0; font-size: 15px; line-height: 1.45">{{p.text}}</p>
+<div style="display: flex; gap: 20px; margin-top: 12px; color: #5E5D59; font-size: 13px">
+<span style="display: flex; align-items: center; gap: 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H10l-5 4V6a1 1 0 0 1 1-1z"></path></svg>Reply</span>
+<span style="display: flex; align-items: center; gap: 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"></path></svg>Support</span>
+</div>
+</article>
+</sc-for>
+</div>
+<nav class="glass" aria-label="Tabs" style="position: absolute; left: 16px; right: 16px; bottom: 24px; height: 64px; border-radius: 32px; display: flex; justify-content: space-around; align-items: center; padding: 0 6px">
+<a class="tab on" href="Gathering.dc.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="8.5" r="1.6"></circle><circle cx="8.6" cy="14.2" r="1.6"></circle><circle cx="15.4" cy="14.2" r="1.6"></circle></svg><span>Gathering</span></a>
+<a class="tab" href="Circle.dc.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="6"></circle><circle cx="15" cy="12" r="6"></circle></svg><span>Circles</span></a>
+<a class="tab" href="Messages.dc.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H10l-5 4V6a1 1 0 0 1 1-1z"></path></svg><span>Messages</span></a>
+<a class="tab" href="Suits.dc.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"></rect><rect x="13" y="4" width="7" height="7" rx="2"></rect><rect x="4" y="13" width="7" height="7" rx="2"></rect><rect x="13" y="13" width="7" height="7" rx="2"></rect></svg><span>Suits</span></a>
+<a class="tab" href="You.dc.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="3" width="12" height="18" rx="2"></rect><path d="M12 8.5l1.1 2.3 2.5.3-1.8 1.7.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.7 2.5-.3z"></path></svg><span>You</span></a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const av = (bg) => 'width: 36px; height: 36px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-family: Newsreader, Georgia, serif; font-weight: 400; font-size: 18px; color: #141413; flex-shrink: 0; background: ' + bg;
+    return {
+      posts: [
+        { initial: 'Q', name: 'Quill', badge: 'Sequence 6', circle: 'Night Library', avatarStyle: av('#EDE8DF'), text: 'Finished the first week of the bookbinding course. Sharing my notes in the Circle tonight.' },
+        { initial: 'S', name: 'Sol', badge: 'Verified doctor', circle: 'Health · Wands', avatarStyle: av('#EDE8DF'), text: 'The HRT guide for East Africa has been updated. You can find it under Suits, in Wands.' },
+        { initial: 'A', name: 'Ash', badge: 'Sequence 8', circle: 'Mutual aid · Pentacles', avatarStyle: av('#EDE8DF'), text: 'My rent fundraiser is halfway there. Thank you, everyone who helped.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

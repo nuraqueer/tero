@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Moderation dashboard</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#FAF9F5}
+a{color:#B4532F}a:hover{color:#8F3F22}
+.side a{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:10px;color:#3D3D3A;text-decoration:none;font-size:15px}
+.side a:hover{background:rgba(115,114,108,0.1);color:#141413}
+.side a.on{background:#FFFFFF;color:#141413;font-weight:600;box-shadow:0 0 0 0.5px rgba(31,30,29,0.15)}
+.badge{font-size:12px;font-weight:600;background:#141413;color:#FAF9F5;border-radius:9px;padding:1px 7px}
+.panel{background:#FFFFFF;border:0.5px solid rgba(31,30,29,0.15);border-radius:16px}
+.act{min-height:40px;padding:0 18px;border-radius:20px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;background:transparent;color:#141413;border:0.5px solid rgba(31,30,29,0.3)}
+.act:hover{background:rgba(115,114,108,0.1)}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #FAF9F5; color: #141413; font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif; display: flex; flex-wrap: wrap">
+<nav class="side" aria-label="Moderation" style="flex: 1 1 220px; max-width: 260px; min-width: 0; box-sizing: border-box; padding: 28px 16px; border-right: 0.5px solid rgba(31,30,29,0.15); background: #F5F4ED; display: flex; flex-direction: column; gap: 4px">
+<div style="padding: 0 12px 22px">
+<div style="font-family: 'Newsreader', Georgia, serif; font-size: 26px">Tero</div>
+<div style="font-size: 12px; font-weight: 600; color: #B4532F; letter-spacing: 0.08em; margin-top: 2px">MODERATION · KENYA</div>
+</div>
+<a class="on" href="Moderation.dc.html">Reports <span class="badge">{{openCount}}</span></a>
+<a href="Moderation.dc.html">Live Spaces</a>
+<a href="Moderation.dc.html">Circles</a>
+<a href="Moderation.dc.html">Appeals</a>
+<a href="Moderation.dc.html">Community rules</a>
+<a href="Council.dc.html">Escalated to council</a>
+<div style="margin-top: 28px; padding: 14px 12px; border-top: 0.5px solid rgba(31,30,29,0.15); font-size: 13px; line-height: 1.45; color: #5E5D59">Moderators only see a private message if someone in that chat reports it.</div>
+</nav>
+
+<main style="flex: 999 1 640px; min-width: 0; box-sizing: border-box; padding: 36px clamp(16px, 4vw, 48px) 56px">
+<h1 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 40px">Reports</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="5">
+<button type="button" onClick="{{f.pick}}" style="{{f.style}}">{{f.name}}</button>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px; align-items: flex-start">
+<div class="panel" style="flex: 1 1 320px; min-width: 0; overflow: hidden">
+<sc-for list="{{reports}}" as="r" hint-placeholder-count="4">
+<button type="button" onClick="{{r.pick}}" style="{{r.rowStyle}}">
+<div style="display: flex; justify-content: space-between; gap: 10px">
+<span style="font-size: 15px; font-weight: 600">{{r.title}}</span>
+<span style="{{r.tagStyle}}">{{r.kind}}</span>
+</div>
+<div style="font-size: 13px; color: #5E5D59; margin-top: 4px">{{r.meta}}</div>
+</button>
+</sc-for>
+</div>
+
+<div class="panel" style="flex: 2 1 420px; min-width: 0; padding: 24px">
+<div style="font-size: 12px; font-weight: 600; color: #5E5D59; letter-spacing: 0.05em">{{sel.kindUpper}} · {{sel.where}}</div>
+<h2 style="margin: 8px 0 0; font-family: 'Newsreader', Georgia, serif; font-weight: 500; font-size: 26px">{{sel.title}}</h2>
+<div style="font-size: 14px; color: #5E5D59; margin-top: 6px">{{sel.meta}}</div>
+<div style="margin-top: 18px; border-radius: 12px; background: #F0EEE6; padding: 16px; position: relative">
+<sc-if value="{{hidden}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px">
+<span style="font-size: 14px; color: #5E5D59">Content is hidden until you choose to look.</span>
+<button type="button" class="act" onClick="{{reveal}}">Show content</button>
+</div>
+</sc-if>
+<sc-if value="{{shown}}" hint-placeholder-val="{{ false }}">
+<p style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-size: 18px; line-height: 1.5">{{sel.content}}</p>
+</sc-if>
+</div>
+<sc-if value="{{open}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px">
+<button type="button" class="act" onClick="{{resolve}}" style="background: #141413; color: #FAF9F5; border: 0">Remove and warn</button>
+<button type="button" class="act" onClick="{{resolve}}">Dismiss</button>
+<button type="button" class="act" onClick="{{resolve}}">Escalate to council</button>
+</div>
+</sc-if>
+<sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 20px; font-size: 15px; font-weight: 600; color: #3D3D3A">Resolved · written to the moderation log</div>
+</sc-if>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: 0, filter: 'All', shown: {}, done: {} };
+  }
+  renderVals() {
+    const st = this.state;
+    const all = [
+      { title: 'Asking members to meet alone', kind: 'Outing risk', where: 'Night Library', meta: 'Reported by 3 members · 20 minutes ago', content: 'A new account keeps asking people in the Circle where they live and offering to meet one to one.' },
+      { title: 'Fake fundraiser link', kind: 'Scam', where: 'Mutual aid', meta: 'Reported by 2 members · 1 hour ago', content: 'A post copies a real member’s fundraiser but with a different wallet address.' },
+      { title: 'Insults in a live Space', kind: 'Harassment', where: 'Learning Swahili basics', meta: 'Reported by the host · 2 hours ago', content: 'A listener repeatedly posted insults in the Space chat during the session.' },
+      { title: 'Repeated job adverts', kind: 'Spam', where: 'Gathering', meta: 'Reported by 1 member · yesterday', content: 'The same advert was posted twelve times in one hour.' }
+    ];
+    const kinds = ['All', 'Outing risk', 'Scam', 'Harassment', 'Spam'];
+    const list = all.map((r, i) => ({ ...r, i })).filter((r) => st.filter === 'All' || r.kind === st.filter);
+    const selIdx = list.some((r) => r.i === st.sel) ? st.sel : (list[0] ? list[0].i : 0);
+    const sel = all[selIdx];
+    const urgent = (k) => k === 'Outing risk' || k === 'Scam';
+    return {
+      openCount: String(all.filter((r, i) => !st.done[i]).length),
+      filters: kinds.map((k) => ({
+        name: k,
+        pick: () => this.setState({ filter: k }),
+        style: 'min-height: 36px; padding: 0 14px; border-radius: 18px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (st.filter === k ? 'background: #141413; color: #FAF9F5; border: 0' : 'background: transparent; color: #3D3D3A; border: 0.5px solid rgba(31,30,29,0.3)')
+      })),
+      reports: list.map((r) => ({
+        title: st.done[r.i] ? r.title + ' ✓' : r.title,
+        kind: r.kind,
+        meta: r.meta,
+        pick: () => this.setState({ sel: r.i }),
+        rowStyle: 'display: block; width: 100%; text-align: left; border: 0; border-bottom: 0.5px solid rgba(31,30,29,0.1); padding: 16px 18px; cursor: pointer; font-family: inherit; color: #141413; ' + (r.i === selIdx ? 'background: #F5F4ED' : 'background: #FFFFFF') + (st.done[r.i] ? '; opacity: 0.55' : ''),
+        tagStyle: 'font-size: 11px; font-weight: 600; border-radius: 8px; padding: 3px 7px; white-space: nowrap; ' + (urgent(r.kind) ? 'background: rgba(180,83,47,0.12); color: #8F3F22' : 'background: #F0EEE6; color: #3D3D3A')
+      })),
+      sel: { ...sel, kindUpper: sel.kind.toUpperCase(), where: sel.where.toUpperCase() },
+      hidden: !st.shown[selIdx],
+      shown: !!st.shown[selIdx],
+      reveal: () => this.setState({ shown: { ...st.shown, [selIdx]: true } }),
+      open: !st.done[selIdx],
+      done: !!st.done[selIdx],
+      resolve: () => this.setState({ done: { ...st.done, [selIdx]: true } })
+    };
+  }
+}
+</script>
+</body>
+</html>
