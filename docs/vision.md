@@ -26,7 +26,7 @@ known by their card and pseudonym, not by their real identity.
 
 ## Key features
 
-- **Communities**: Discord-style, with text channels and voice Spaces.
+- **Circles**: communities, each one calm conversation with topics and live Spaces (see [design.md](design.md)).
 - **Spaces**: end-to-end encrypted live audio rooms like X Spaces, for communities, groups, skills and learning. Up to 6 speakers, everyone else listens. Voice disguise. Not recorded by default.
 - **Voice with professionals**: private, end-to-end encrypted calls for consultations and enquiries.
 - **Someone to talk to**: anonymous, random matching for emotional relief. Neither person knows who the other is. Only vouched members, with reporting.
