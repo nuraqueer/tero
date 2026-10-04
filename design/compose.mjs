@@ -3,8 +3,9 @@ import fs from 'fs';
 const out = 'out';
 const uri = (f) => 'data:image/png;base64,' + fs.readFileSync(`${out}/${f}`).toString('base64');
 const sets = {
+  'check.png': ['lock.png', 'suits1.png', 'compose.png', 'showcard.png', 'place.png'],
   'hero.png': ['lock.png', 'gathering.png', 'space.png', 'messages.png', 'you.png'],
-  'suits.png': ['support.png', 'resources.png', 'opportunities.png', 'journey.png'],
+  'suits.png': ['suits1.png', 'support.png', 'place.png', 'showcard.png', 'journey.png'],
 };
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
 for (const [name, files] of Object.entries(sets)) {

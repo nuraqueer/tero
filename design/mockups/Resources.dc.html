@@ -45,13 +45,13 @@ a{color:#B4532F}a:hover{color:#8F3F22}
 </div>
 <div style="padding: 0 22px">
 <sc-for list="{{places}}" as="p" hint-placeholder-count="4">
-<a class="place" href="Place.dc.html">
+<a class="place" href="{{p.href}}">
 <div style="width: 46px; height: 46px; border-radius: 12px; background: #F0EEE6; display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', Georgia, serif; font-size: 20px; color: #B4532F; flex-shrink: 0">{{p.mark}}</div>
 <div style="flex: 1; min-width: 0">
 <div style="font-size: 16px; font-weight: 600">{{p.name}}</div>
 <div style="font-size: 13px; color: #5E5D59; margin-top: 2px">{{p.meta}}</div>
 <div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap">
-<span class="tag" style="background: rgba(217,119,87,0.12); color: #8F3F22">{{p.tagA}}</span>
+<span class="tag" style="{{p.tagStyle}}">{{p.tagA}}</span>
 <span class="tag" style="background: #F0EEE6; color: #3D3D3A">{{p.tagB}}</span>
 </div>
 </div>
@@ -70,19 +70,19 @@ class Component extends DCLogic {
   renderVals() {
     const data = {
       Clinics: [
-        { mark: 'R', name: 'Riverside Health Clinic', meta: 'Clinic · Nairobi', tagA: 'AFFIRMING', tagB: 'Verified by The Sun' },
-        { mark: 'H', name: 'Harbour Community Clinic', meta: 'Clinic · Mombasa', tagA: 'AFFIRMING', tagB: 'Cost estimates' },
-        { mark: 'K', name: 'Kilele Wellness Centre', meta: 'Clinic · Kisumu', tagA: 'MEMBER NOTES', tagB: 'Swahili · English' }
+        { mark: 'R', name: 'Riverside Health Clinic', meta: 'Clinic · Nairobi', tagA: 'TERO PARTNER', tagB: 'Verified by The Sun' },
+        { mark: 'H', name: 'Harbour Community Clinic', meta: 'Clinic · Mombasa', tagA: 'TERO PARTNER', tagB: 'Prices confirmed' },
+        { mark: 'K', name: 'Kilele Wellness Centre', meta: 'Clinic · Kisumu', tagA: 'NOT AWARE OF TERO', tagB: 'Member report' }
       ],
       Pharmacies: [
-        { mark: 'G', name: 'Green Door Pharmacy', meta: 'Pharmacy · Nairobi', tagA: 'AFFIRMING', tagB: 'Stocks HRT' },
-        { mark: 'B', name: 'Baobab Chemists', meta: 'Pharmacy · Nakuru', tagA: 'MEMBER NOTES', tagB: 'Discreet packaging' }
+        { mark: 'G', name: 'Green Door Pharmacy', meta: 'Pharmacy · Nairobi', tagA: 'TERO PARTNER', tagB: 'Stocks HRT' },
+        { mark: 'B', name: 'Baobab Chemists', meta: 'Pharmacy · Nakuru', tagA: 'NOT AWARE OF TERO', tagB: 'HRT with prescription' }
       ],
       HRT: [
-        { mark: 'S', name: 'Sunrise Endocrinology', meta: 'Specialist · Nairobi', tagA: 'AFFIRMING', tagB: 'Verified by The Sun' }
+        { mark: 'S', name: 'Sunrise Endocrinology', meta: 'Specialist · Nairobi', tagA: 'TERO PARTNER', tagB: 'Verified by The Sun' }
       ],
       Lawyers: [
-        { mark: 'M', name: 'Mwangi & Partners', meta: 'Human rights law · Nairobi', tagA: 'VERIFIED', tagB: 'By Justice' }
+        { mark: 'M', name: 'Mwangi & Partners', meta: 'Human rights law · Nairobi', tagA: 'TERO PARTNER', tagB: 'Verified by Justice' }
       ],
       Shelters: [
         { mark: 'N', name: 'Nyumba Safe House', meta: 'Shelter · location shared privately', tagA: 'MEMBERS ONLY', tagB: 'Ask a moderator' }
@@ -93,7 +93,8 @@ class Component extends DCLogic {
       pick: () => this.setState({ cat: n }),
       style: 'border: 0; background: transparent; font-family: inherit; font-size: 15px; cursor: pointer; padding: 0 0 12px; min-height: 36px; ' + (this.state.cat === n ? 'color: #141413; font-weight: 600; box-shadow: inset 0 -2px 0 #141413' : 'color: #73726C; font-weight: 500')
     }));
-    return { cats, places: data[this.state.cat] };
+    const places = data[this.state.cat].map((p) => ({ ...p, href: p.tagA === 'NOT AWARE OF TERO' ? 'PlaceUnaware.dc.html' : 'Place.dc.html', tagStyle: p.tagA === 'TERO PARTNER' ? 'background: #141413; color: #E6C9A8' : (p.tagA === 'NOT AWARE OF TERO' ? 'background: rgba(180,83,47,0.12); color: #8F3F22' : 'background: #F0EEE6; color: #3D3D3A') }));
+    return { cats, places };
   }
 }
 </script>

@@ -56,7 +56,11 @@ These documents record what has been decided **before any code is written**.
 | D33 | ~~Discord structure with Apple look.~~ Replaced by D34. |
 | D34 | **Tero's own design**, made the way Apple designs in 2026 (Liquid Glass, content first). Five tabs: Gathering, Circles, Messages, Suits, You. Circles are one conversation with topics and live Spaces. |
 | D35 | Colours: warm ivory, slate text, clay accent. Fonts: Newsreader (serif headings) and Instrument Sans. Calm and grown-up, not playful. |
+| D36 | **Tero partners.** Clinics, pharmacies and lawyers can become verified Tero partners. Members show their Tero card (three words that change every 30 seconds) and partners show the same words back. Places that don't know Tero are marked "Not aware of Tero": members are told not to show their card there, and the listing shows what members found (availability, price ranges). |
+| D37 | Posting has types: Post, Ask for help, Offer help, Event, Fundraiser and Poll, each with its own fields. Photos are blurred and stripped of location before upload. |
+| D38 | The "Tero" word is set in JetBrains Mono beside a small tarot-card mark. Final logo to be picked from the logo concepts. |
 
 ## Open questions
 
-None right now.
+1. Final logo: pick one of the four logo concepts.
+2. Tarot card design for the You screen, to match the reference image.

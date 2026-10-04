@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Show my Tero card</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E0E0D}
+a{color:#E6C9A8}a:hover{color:#F2DDC4}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #141413; color: #F0EEE6; font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif">
+<div style="padding: 58px 16px 0; display: flex; align-items: center; justify-content: space-between">
+<a href="Place.dc.html" style="min-height: 44px; display: flex; align-items: center; padding: 0 16px; border-radius: 22px; border: 0.5px solid rgba(240,238,230,0.25); color: #F0EEE6; text-decoration: none; font-size: 15px">Done</a>
+<div style="font-size: 13px; color: #9C9A92">Screen brightness raised</div>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 30px">
+<div style="width: 232px; height: 360px; border-radius: 16px; background: #1F1E1D; padding: 8px; box-sizing: border-box; box-shadow: 0 30px 60px rgba(0,0,0,0.5)">
+<div style="height: 100%; border: 1.2px solid #C9A27E; border-radius: 10px; padding: 5px; box-sizing: border-box">
+<div style="height: 100%; border: 0.6px solid rgba(201,162,126,0.6); border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 22px 10px 18px; box-sizing: border-box">
+<svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L13.6 10.4L22 12L13.6 13.6L12 22L10.4 13.6L2 12L10.4 10.4Z" fill="#E6C9A8"></path></svg>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+<sc-for list="{{words}}" as="w" hint-placeholder-count="3">
+<div style="font-size: 26px; font-weight: 600; letter-spacing: 0.18em; color: #F0EEE6">{{w}}</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+<div style="width: 150px; height: 3px; border-radius: 2px; background: rgba(201,162,126,0.25); overflow: hidden"><div style="{{bar}}"></div></div>
+<div style="font-size: 11px; color: #C9A27E; letter-spacing: 0.14em">CHANGES IN {{secs}}S</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="padding: 30px 30px 0; text-align: center">
+<div style="font-size: 20px; font-weight: 600">Ask them to show their Tero card</div>
+<p style="margin: 8px 0 0; font-size: 15px; line-height: 1.5; color: #B0AEA5">A real Tero partner will show you the same three words right now. Your name is never shown.</p>
+</div>
+
+<div style="position: absolute; left: 16px; right: 16px; bottom: 30px; display: flex; flex-direction: column; gap: 10px">
+<button type="button" onClick="{{toggleWarn}}" style="min-height: 48px; border-radius: 24px; border: 0.5px solid rgba(240,238,230,0.3); background: transparent; color: #F0EEE6; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Their words don't match</button>
+<sc-if value="{{warn}}" hint-placeholder-val="{{ false }}">
+<div style="border-radius: 16px; background: #3D2A20; padding: 14px 16px; font-size: 14px; line-height: 1.45; color: #F2DDC4">Don't share anything more. Leave calmly when you can. Moderators for this place have been told.</div>
+</sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { t: 0, warn: false };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => this.setState({ t: (this.state.t + 1) % 90 }), 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+  renderVals() {
+    const sets = [['AMBER', 'RIVER', 'SEVEN'], ['LANTERN', 'MOSS', 'NORTH'], ['CEDAR', 'TIDE', 'NINE']];
+    const t = this.state.t;
+    const left = 30 - (t % 30);
+    return {
+      words: sets[Math.floor(t / 30)],
+      secs: String(left),
+      bar: 'height: 100%; background: #C9A27E; width: ' + Math.round((left / 30) * 100) + '%',
+      warn: this.state.warn,
+      toggleWarn: () => this.setState({ warn: !this.state.warn })
+    };
+  }
+}
+</script>
+</body>
+</html>

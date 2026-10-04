@@ -9,7 +9,7 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Cinzel:wght@500&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0;background:#F0EEE6}
 a{color:#B4532F}a:hover{color:#8F3F22}
@@ -17,51 +17,48 @@ a{color:#B4532F}a:hover{color:#8F3F22}
 .tab{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:58px;min-height:48px;justify-content:center;text-decoration:none;color:#5E5D59;font-size:10px;font-weight:600}
 .tab:hover{color:#141413}
 .tab.on{color:#B4532F}
-.suit{background:#FFFFFF;border:0.5px solid rgba(31,30,29,0.15);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;min-height:150px;box-sizing:border-box;text-decoration:none;color:#141413}
-.suit:hover{border-color:rgba(31,30,29,0.35);color:#141413}
-.row{display:flex;align-items:center;gap:12px;padding:14px 16px;min-height:52px;box-sizing:border-box;text-decoration:none;color:#141413}
-.row:hover{color:#141413;background:rgba(115,114,108,0.06)}
+.suit{display:block;height:196px;border-radius:12px;background:#141413;padding:5px;box-sizing:border-box;text-decoration:none;color:#F0EEE6;box-shadow:0 10px 24px rgba(20,20,19,0.16)}
+.suit:hover{color:#F0EEE6;transform:translateY(-2px)}
+.suit-in{height:100%;border:1px solid #C9A27E;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10px 8px 9px;box-sizing:border-box}
+.now{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:0.5px solid rgba(31,30,29,0.12);text-decoration:none;color:#141413}
+.now:hover{color:#141413}
 </style>
 </helmet>
 <div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #FAF9F5; color: #141413; font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif">
-<div style="padding: 62px 20px 0">
+<div style="padding: 62px 20px 0; display: flex; align-items: baseline; justify-content: space-between">
 <h1 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-size: 36px; font-weight: 400">Suits</h1>
+<span style="font-size: 13px; color: #5E5D59">Help, in four kinds</span>
 </div>
-<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 18px 16px 0">
-<a class="suit" href="Support.dc.html">
-<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C15F3C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12v4a6 6 0 0 1-12 0z"></path><path d="M12 14v5M8 21h8"></path></svg>
-<div style="font-family: 'Newsreader', Georgia, serif; font-size: 24px">Cups</div>
-<div style="font-size: 13px; color: #5E5D59; line-height: 1.35">Support, therapy, someone to talk to</div>
-</a>
-<a class="suit" href="Opportunities.dc.html">
-<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C15F3C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 5.5l1.8 4.4 4.7.3-3.6 3 1.2 4.6-4.1-2.6-4.1 2.6 1.2-4.6-3.6-3 4.7-.3z"></path></svg>
-<div style="font-family: 'Newsreader', Georgia, serif; font-size: 24px">Pentacles</div>
-<div style="font-size: 13px; color: #5E5D59; line-height: 1.35">Work, businesses, housing, fundraisers</div>
-</a>
-<a class="suit" href="Resources.dc.html">
-<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C15F3C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l1.5 2.5v10h-3V5z"></path><path d="M7.5 15h9M12 15v4.5"></path><circle cx="12" cy="21" r="1"></circle></svg>
-<div style="font-family: 'Newsreader', Georgia, serif; font-size: 24px">Swords</div>
-<div style="font-size: 13px; color: #5E5D59; line-height: 1.35">Lawyers, safety, resources</div>
-</a>
-<a class="suit" href="Journey.dc.html">
-<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C15F3C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19L16 8"></path><path d="M16 8l2.5-2.5M18 3v2M21 6h-2M20.5 3.5l-1 1"></path></svg>
-<div style="font-family: 'Newsreader', Georgia, serif; font-size: 24px">Wands</div>
-<div style="font-size: 13px; color: #5E5D59; line-height: 1.35">Skills, HRT, surgery and travel</div>
-</a>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 16px 16px 0">
+<sc-for list="{{suits}}" as="s" hint-placeholder-count="4">
+<a class="suit" href="{{s.href}}">
+<div class="suit-in">
+<div style="width: 100%; display: flex; justify-content: space-between; font-family: 'Cinzel', Georgia, serif; font-size: 11px; color: #C9A27E; letter-spacing: 0.1em"><span>{{s.num}}</span><span>{{s.live}}</span></div>
+<div style="{{s.iconStyle}}"></div>
+<div style="text-align: center">
+<div style="font-family: 'Cinzel', Georgia, serif; font-size: 15px; letter-spacing: 0.16em; color: #F0EEE6">{{s.name}}</div>
+<div style="font-size: 11px; color: #B0AEA5; margin-top: 3px">{{s.sub}}</div>
 </div>
-<div style="padding: 24px 20px 10px; font-size: 13px; font-weight: 600; color: #5E5D59; letter-spacing: 0.04em">IN YOUR COUNTRY</div>
-<div style="margin: 0 16px; background: #FFFFFF; border: 0.5px solid rgba(31,30,29,0.15); border-radius: 14px; overflow: hidden">
-<a class="row" href="PublicGuide.dc.html" style="border-bottom: 0.5px solid rgba(31,30,29,0.12)">
-<div style="flex: 1"><div style="font-size: 16px">Safety guide</div><div style="font-size: 12px; color: #5E5D59">Updated by Justice</div></div>
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E5D59" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+</div>
 </a>
-<a class="row" href="Resources.dc.html" style="border-bottom: 0.5px solid rgba(31,30,29,0.12)">
-<div style="flex: 1"><div style="font-size: 16px">Clinics and pharmacies</div><div style="font-size: 12px; color: #5E5D59">Checked by The Sun</div></div>
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E5D59" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+</sc-for>
+</div>
+<div style="padding: 20px 22px 2px; font-size: 12px; font-weight: 600; color: #5E5D59; letter-spacing: 0.05em">FOR YOU RIGHT NOW</div>
+<div style="padding: 0 22px">
+<a class="now" href="Space.dc.html">
+<span style="width: 8px; height: 8px; border-radius: 4px; background: #D97757; flex-shrink: 0"></span>
+<div style="flex: 1; min-width: 0"><div style="font-size: 15px; font-weight: 600">Coming out stories</div><div style="font-size: 12px; color: #5E5D59">Live Space in Cups · 12 listening</div></div>
+<span style="font-size: 13px; font-weight: 600; color: #B4532F">Join</span>
 </a>
-<a class="row" href="Support.dc.html">
-<div style="flex: 1"><div style="font-size: 16px">Verified professionals</div><div style="font-size: 12px; color: #5E5D59">Doctors, lawyers, therapists</div></div>
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E5D59" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+<a class="now" href="Place.dc.html">
+<span style="width: 8px; height: 8px; border-radius: 4px; background: #141413; flex-shrink: 0"></span>
+<div style="flex: 1; min-width: 0"><div style="font-size: 15px; font-weight: 600">Riverside Health Clinic</div><div style="font-size: 12px; color: #5E5D59">Tero partner in your city</div></div>
+<span style="font-size: 13px; font-weight: 600; color: #B4532F">Open</span>
+</a>
+<a class="now" href="Journey.dc.html" style="border-bottom: 0">
+<span style="width: 8px; height: 8px; border-radius: 4px; border: 1.5px solid #141413; box-sizing: border-box; flex-shrink: 0"></span>
+<div style="flex: 1; min-width: 0"><div style="font-size: 15px; font-weight: 600">Your journey: consultation</div><div style="font-size: 12px; color: #5E5D59">Step 2 of 5 in Wands</div></div>
+<span style="font-size: 13px; font-weight: 600; color: #B4532F">Continue</span>
 </a>
 </div>
 <nav class="glass" aria-label="Tabs" style="position: absolute; left: 16px; right: 16px; bottom: 24px; height: 64px; border-radius: 32px; display: flex; justify-content: space-around; align-items: center; padding: 0 6px">
@@ -76,7 +73,16 @@ a{color:#B4532F}a:hover{color:#8F3F22}
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   renderVals() {
-    return {};
+    const icon = (svg) => 'width: 56px; height: 56px; background-repeat: no-repeat; background-position: center; background-size: contain; background-image: url("data:image/svg+xml;utf8,' + encodeURIComponent(svg) + '")';
+    const head = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#C9A27E" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round">';
+    return {
+      suits: [
+        { name: 'CUPS', num: 'I', live: '2 LIVE', sub: 'Support and care', href: 'Support.dc.html', iconStyle: icon(head + '<path d="M6 4h12v4a6 6 0 0 1-12 0z"/><path d="M12 14v5M8 21h8"/><path d="M9 7.5c1 1 5 1 6 0"/></svg>') },
+        { name: 'PENTACLES', num: 'II', live: '6 NEW', sub: 'Work and money', href: 'Opportunities.dc.html', iconStyle: icon(head + '<circle cx="12" cy="12" r="9"/><path d="M12 5.5l1.8 4.4 4.7.3-3.6 3 1.2 4.6-4.1-2.6-4.1 2.6 1.2-4.6-3.6-3 4.7-.3z"/></svg>') },
+        { name: 'SWORDS', num: 'III', live: '3 NEAR', sub: 'Safety and law', href: 'Resources.dc.html', iconStyle: icon(head + '<path d="M12 2.5l1.5 2.5v10h-3V5z"/><path d="M7.5 15h9M12 15v4.5"/><circle cx="12" cy="21" r="1"/></svg>') },
+        { name: 'WANDS', num: 'IV', live: 'STEP 2', sub: 'Growth and journeys', href: 'Journey.dc.html', iconStyle: icon(head + '<path d="M5 19L16 8"/><path d="M16 8l2.5-2.5M18 3v2M21 6h-2M20.5 3.5l-1 1"/></svg>') }
+      ]
+    };
   }
 }
 </script>

@@ -93,7 +93,9 @@ open, so they can ship on every platform.
 
 | Use | Font |
 |---|---|
-| Headings, the Tero wordmark, card names, numbers on the lock keypad | **Newsreader** (serif) |
+| Headings and numbers on the lock keypad | **Newsreader** (serif) |
+| The word "Tero" | **JetBrains Mono**, beside a small tarot-card mark |
+| Tarot card lettering | **Cinzel** |
 | Everything else | **Instrument Sans** |
 | Chinese | The system's Chinese font on each platform |
 
@@ -111,10 +113,10 @@ the screenshots used in the README are in [`docs/screens/`](screens).
 | Group | Screens |
 |---|---|
 | App | Lock, Gathering, Circle, Live Space, Messages, Suits, You, New post |
-| Inside the Suits | Support (Cups), Someone to talk to, Resources and a resource page (Swords), Opportunities (Pentacles), Journey planner (Wands) |
+| Inside the Suits | Support (Cups), Someone to talk to, Resources with Tero partner and not-aware places, Show my Tero card (Swords), Opportunities (Pentacles), Journey planner (Wands) |
 | Public website | Home, guide page |
 | Running Tero | Council dashboard, moderation dashboard |
-| Brand | Wordmark options (not chosen yet) |
+| Brand | Logo concepts: Tero inside a tarot card (not chosen yet) |
 
 Each suit has its own layout: Cups is calm and conversational, Swords is a
 directory, Pentacles mixes a showcase with lists, and Wands is a step-by-step

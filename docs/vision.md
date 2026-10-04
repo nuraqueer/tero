@@ -31,6 +31,7 @@ known by their card and pseudonym, not by their real identity.
 - **Voice with professionals**: private, end-to-end encrypted calls for consultations and enquiries.
 - **Someone to talk to**: anonymous, random matching for emotional relief. Neither person knows who the other is. Only vouched members, with reporting.
 - **Verified professionals**: doctors, therapists, lawyers and others, checked per country.
+- **Tero partners**: clinics, pharmacies and lawyers who know what a Tero card means. A member shows their card and the partner shows the same three words back. Places that don't know Tero are clearly marked, so nobody shows their card there by mistake.
 - **Resource directories**: hospitals, pharmacies, HRT providers and surgeons, with cost estimates and what to expect, per country.
 - **Travel help**: someone travelling to a country posts it, and members can request help (for example legal, personal-use HRT). Trust is voted only after a confirmed handover.
 - **Surgery planning**: guides, estimates and verified coordinators for any surgery, from any country to any country. Directory first; booking only with real partnerships later.

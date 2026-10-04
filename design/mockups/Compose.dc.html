@@ -13,52 +13,93 @@
 <style>
 body{margin:0;background:#F0EEE6}
 a{color:#B4532F}a:hover{color:#8F3F22}
-.glass{background:rgba(255,255,255,0.72);-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);border:0.5px solid rgba(31,30,29,0.15);box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 8px 24px rgba(20,20,19,0.08)}
-.tool{width:44px;height:44px;border-radius:22px;border:0;background:transparent;color:#5E5D59;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.tool{width:42px;height:42px;border-radius:21px;border:0;background:transparent;color:#5E5D59;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .tool:hover{background:rgba(115,114,108,0.1);color:#141413}
-.set{display:flex;align-items:center;gap:12px;min-height:52px;padding:0 16px;box-sizing:border-box}
+.field{display:flex;align-items:center;justify-content:space-between;min-height:46px;padding:0 14px;border-bottom:0.5px solid rgba(31,30,29,0.12);font-size:15px}
+.field:last-child{border-bottom:0}
+.inp{border:0;outline:none;background:transparent;font-family:inherit;font-size:15px;color:#141413;text-align:right;min-width:0}
+.mini{min-height:30px;padding:0 11px;border-radius:15px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer}
 </style>
 </helmet>
 <div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #FAF9F5; color: #141413; font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif">
 <div style="padding: 58px 16px 0; display: flex; align-items: center; justify-content: space-between">
 <a href="Gathering.dc.html" style="color: #141413; text-decoration: none; font-size: 16px; min-height: 44px; display: flex; align-items: center; padding: 0 4px">Cancel</a>
-<div style="font-size: 16px; font-weight: 600">New post</div>
-<button type="button" style="{{postStyle}}">Post</button>
+<div style="font-size: 16px; font-weight: 600">{{heading}}</div>
+<button type="button" style="{{postStyle}}">{{postLabel}}</button>
 </div>
 
-<div style="display: flex; align-items: center; gap: 10px; padding: 22px 20px 0">
-<div style="width: 40px; height: 40px; border-radius: 20px; background: #EDE8DF; font-family: 'Newsreader', Georgia, serif; font-size: 19px; display: flex; align-items: center; justify-content: center">{{authorInitial}}</div>
-<div style="display: flex; flex-direction: column; gap: 3px">
-<div style="font-size: 15px; font-weight: 600">{{authorName}}</div>
-<div style="display: flex; gap: 6px">
-<sc-for list="{{audiences}}" as="a" hint-placeholder-count="3">
-<button type="button" onClick="{{a.pick}}" style="{{a.style}}">{{a.name}}</button>
+<div style="display: flex; gap: 6px; padding: 14px 16px 0; overflow: hidden">
+<sc-for list="{{types}}" as="t" hint-placeholder-count="6">
+<button type="button" onClick="{{t.pick}}" style="{{t.style}}">{{t.name}}</button>
 </sc-for>
 </div>
+
+<div style="display: flex; align-items: center; gap: 10px; padding: 16px 20px 0">
+<div style="width: 38px; height: 38px; border-radius: 19px; background: #EDE8DF; font-family: 'Newsreader', Georgia, serif; font-size: 18px; display: flex; align-items: center; justify-content: center">{{authorInitial}}</div>
+<div style="flex: 1; min-width: 0">
+<div style="font-size: 15px; font-weight: 600">{{authorName}}</div>
+<button type="button" onClick="{{cycleAudience}}" style="margin-top: 2px; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 13px; font-weight: 600; color: #B4532F; cursor: pointer; display: flex; align-items: center; gap: 4px">{{audience}}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
 </div>
+<button type="button" role="switch" aria-checked="{{anon}}" onClick="{{toggleAnon}}" style="{{anonStyle}}">{{anonLabel}}</button>
 </div>
 
 <label for="post-body" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Your post</label>
-<textarea id="post-body" placeholder="What would you like to share?" value="{{body}}" onChange="{{onBody}}" style="display: block; box-sizing: border-box; width: 100%; height: 230px; margin-top: 14px; padding: 6px 20px; border: 0; outline: none; resize: none; background: transparent; font-family: 'Newsreader', Georgia, serif; font-size: 22px; line-height: 1.4; color: #141413"></textarea>
+<textarea id="post-body" placeholder="{{placeholder}}" value="{{body}}" onChange="{{onBody}}" style="display: block; box-sizing: border-box; width: 100%; height: 132px; margin-top: 8px; padding: 6px 20px; border: 0; outline: none; resize: none; background: transparent; font-family: 'Newsreader', Georgia, serif; font-size: 21px; line-height: 1.4; color: #141413"></textarea>
 
-<div style="display: flex; align-items: center; padding: 0 10px; border-top: 0.5px solid rgba(31,30,29,0.15); border-bottom: 0.5px solid rgba(31,30,29,0.15)">
-<button type="button" class="tool" aria-label="Add photo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><circle cx="9" cy="10" r="1.6"></circle><path d="M21 16l-5-5-8 8"></path></svg></button>
-<button type="button" class="tool" aria-label="Add poll"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"></path></svg></button>
-<button type="button" class="tool" aria-label="Add event"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"></rect><path d="M4 10h16M9 3v4M15 3v4"></path></svg></button>
-<button type="button" class="tool" aria-label="Start a fundraiser"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M14.5 9.5c-.5-1-1.4-1.5-2.5-1.5-1.5 0-2.5.8-2.5 2s1 1.6 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1.1 0-2-.5-2.5-1.5M12 6.5V8M12 16v1.5"></path></svg></button>
-<button type="button" class="tool" aria-label="Add a content note"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l9 16H3z"></path><path d="M12 10v4M12 17h.01"></path></svg></button>
-<div style="margin-left: auto; padding-right: 10px; font-size: 13px; color: {{countColor}}">{{count}}</div>
+<div style="margin: 0 16px; background: #FFFFFF; border: 0.5px solid rgba(31,30,29,0.15); border-radius: 14px">
+<sc-if value="{{isPost}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; gap: 8px; padding: 12px">
+<div style="width: 92px; height: 92px; border-radius: 10px; background: #E3DACC; display: flex; align-items: center; justify-content: center; position: relative">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5E5D59" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 5.1A9.8 9.8 0 0 1 12 5c5 0 8.5 4.5 9.5 7a13 13 0 0 1-2.3 3.4M6.6 6.6A13.7 13.7 0 0 0 2.5 12c1 2.5 4.5 7 9.5 7a9.6 9.6 0 0 0 5.4-1.6"></path></svg>
+<span style="position: absolute; bottom: 6px; font-size: 10px; font-weight: 600; color: #3D3D3A">Blurred</span>
+</div>
+<button type="button" style="width: 92px; height: 92px; border-radius: 10px; border: 1px dashed rgba(31,30,29,0.3); background: transparent; color: #5E5D59; font-family: inherit; font-size: 13px; cursor: pointer">Add photo</button>
+<div style="flex: 1; font-size: 12px; color: #5E5D59; line-height: 1.45; align-self: center">Faces are blurred and location data is removed before anything leaves your phone.</div>
+</div>
+</sc-if>
+<sc-if value="{{isAsk}}" hint-placeholder-val="{{ false }}">
+<div class="field"><span>Kind of help</span><span style="color: #5E5D59">Health</span></div>
+<div class="field"><span>How soon</span>
+<div style="display: flex; gap: 6px">
+<sc-for list="{{urgency}}" as="u" hint-placeholder-count="3"><button type="button" class="mini" onClick="{{u.pick}}" style="{{u.style}}">{{u.name}}</button></sc-for>
+</div></div>
+<div class="field"><span>Who can answer</span><span style="color: #5E5D59">Sequence 5 and above</span></div>
+</sc-if>
+<sc-if value="{{isOffer}}" hint-placeholder-val="{{ false }}">
+<div class="field"><span>I can offer</span><span style="color: #5E5D59">A room for a night</span></div>
+<div class="field"><span>Where</span><span style="color: #5E5D59">Nairobi · city only</span></div>
+<div class="field"><span>Until</span><span style="color: #5E5D59">Sunday</span></div>
+</sc-if>
+<sc-if value="{{isEvent}}" hint-placeholder-val="{{ false }}">
+<div class="field"><span>When</span><span style="color: #5E5D59">Sat 18 Oct · 7:00 pm</span></div>
+<div class="field"><span>Where</span>
+<div style="display: flex; gap: 6px">
+<sc-for list="{{places}}" as="p" hint-placeholder-count="2"><button type="button" class="mini" onClick="{{p.pick}}" style="{{p.style}}">{{p.name}}</button></sc-for>
+</div></div>
+<div class="field"><span>Guests can see who's going</span><span style="color: #5E5D59">No</span></div>
+</sc-if>
+<sc-if value="{{isFund}}" hint-placeholder-val="{{ false }}">
+<div class="field"><label for="goal">Goal</label><input id="goal" class="inp" type="text" placeholder="0 USDT" style="width: 120px"></div>
+<div class="field"><span>Ends</span><span style="color: #5E5D59">In 30 days</span></div>
+<div style="padding: 10px 14px 12px; font-size: 12px; color: #5E5D59; line-height: 1.45">A new wallet address is made just for this fundraiser. Anyone can check the total on Celo.</div>
+</sc-if>
+<sc-if value="{{isPoll}}" hint-placeholder-val="{{ false }}">
+<sc-for list="{{pollOpts}}" as="o" hint-placeholder-count="2">
+<div class="field"><label for="{{o.id}}" style="color: #5E5D59; font-size: 13px">{{o.label}}</label><input id="{{o.id}}" class="inp" type="text" placeholder="{{o.ph}}" style="flex: 1; margin-left: 12px"></div>
+</sc-for>
+<div class="field"><button type="button" onClick="{{addOpt}}" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 15px; font-weight: 600; color: #B4532F; cursor: pointer; min-height: 44px">Add option</button><span style="color: #5E5D59; font-size: 13px">Votes are anonymous</span></div>
+</sc-if>
 </div>
 
-<div style="margin: 20px 16px 0; background: #FFFFFF; border: 0.5px solid rgba(31,30,29,0.15); border-radius: 14px">
-<div class="set" style="border-bottom: 0.5px solid rgba(31,30,29,0.12)">
-<div style="flex: 1"><div style="font-size: 16px">Post without my name</div><div style="font-size: 12px; color: #5E5D59">Shows as "A member of this Circle"</div></div>
-<button type="button" role="switch" aria-checked="{{anon}}" aria-label="Post without my name" onClick="{{toggleAnon}}" style="{{anonTrack}}"><span style="{{anonKnob}}"></span></button>
-</div>
-<div class="set">
-<div style="flex: 1"><div style="font-size: 16px">Disappears after</div><div style="font-size: 12px; color: #5E5D59">Removed for everyone after this time</div></div>
-<button type="button" onClick="{{cycleExpiry}}" style="border: 0; background: transparent; font-family: inherit; font-size: 15px; color: #B4532F; font-weight: 600; cursor: pointer; min-height: 44px">{{expiry}}</button>
-</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 8px 10px 30px; border-top: 0.5px solid rgba(31,30,29,0.15); background: #FAF9F5; display: flex; align-items: center">
+<button type="button" class="tool" aria-label="Add photo"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><circle cx="9" cy="10" r="1.6"></circle><path d="M21 16l-5-5-8 8"></path></svg></button>
+<button type="button" class="tool" aria-label="Voice note"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path></svg></button>
+<button type="button" class="tool" aria-label="Add city"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></button>
+<button type="button" class="tool" aria-label="Add a topic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4L7 20M17 4l-2 16M4 9h16M3 15h16"></path></svg></button>
+<button type="button" class="tool" aria-label="Add a content note"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l9 16H3z"></path><path d="M12 10v4M12 17h.01"></path></svg></button>
+<button type="button" onClick="{{cycleExpiry}}" style="margin-left: auto; display: flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: 18px; border: 0.5px solid rgba(31,30,29,0.25); background: transparent; font-family: inherit; font-size: 13px; color: #3D3D3A; cursor: pointer">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2.5 2"></path></svg>{{expiry}}
+</button>
 </div>
 </div>
 </x-dc>
@@ -66,32 +107,41 @@ a{color:#B4532F}a:hover{color:#8F3F22}
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { body: '', audience: 'Night Library', anon: false, expiry: 0 };
+    this.state = { type: 'Post', body: '', aud: 0, anon: false, expiry: 0, urg: 'This week', place: 'Voice Space', opts: 2 };
   }
   renderVals() {
     const st = this.state;
-    const max = 500;
-    const len = st.body.length;
-    const ready = len > 0 && len <= max;
-    const names = ['Gathering', 'Night Library', 'Mutual aid'];
-    const expiries = ['Never', '24 hours', '7 days', '30 days'];
+    const typeNames = ['Post', 'Ask', 'Offer', 'Event', 'Fundraiser', 'Poll'];
+    const heads = { Post: 'New post', Ask: 'Ask for help', Offer: 'Offer help', Event: 'New event', Fundraiser: 'New fundraiser', Poll: 'New poll' };
+    const holders = { Post: 'What would you like to share?', Ask: 'What do you need? Share only what feels safe.', Offer: 'What can you offer?', Event: 'What’s happening?', Fundraiser: 'What is it for?', Poll: 'Ask a question' };
+    const audiences = ['Gathering, all your Circles', 'Night Library', 'Mutual aid', 'Trusted members only'];
+    const expiries = ['Stays', '24 h', '7 days', '30 days'];
+    const ready = st.body.trim().length > 0;
+    const pill = (on) => 'min-height: 32px; padding: 0 12px; border-radius: 16px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; ' + (on ? 'background: #141413; color: #FAF9F5; border: 0' : 'background: transparent; color: #3D3D3A; border: 0.5px solid rgba(31,30,29,0.28)');
+    const mini = (on) => on ? 'background: #141413; color: #FAF9F5; border: 0' : 'background: transparent; color: #3D3D3A; border: 0.5px solid rgba(31,30,29,0.28)';
+    const opts = [];
+    for (let i = 0; i < st.opts; i++) opts.push({ id: 'opt' + i, label: 'Option ' + (i + 1), ph: i === 0 ? 'Saturday' : (i === 1 ? 'Sunday' : 'Another day') });
     return {
+      heading: heads[st.type],
+      placeholder: holders[st.type],
+      types: typeNames.map((n) => ({ name: n, pick: () => this.setState({ type: n }), style: pill(st.type === n) })),
+      isPost: st.type === 'Post', isAsk: st.type === 'Ask', isOffer: st.type === 'Offer', isEvent: st.type === 'Event', isFund: st.type === 'Fundraiser', isPoll: st.type === 'Poll',
       body: st.body,
       onBody: (e) => this.setState({ body: e.target.value }),
-      count: String(max - len),
-      countColor: len > max ? '#B4532F' : '#5E5D59',
+      postLabel: st.type === 'Ask' ? 'Ask' : 'Post',
       postStyle: 'min-height: 36px; padding: 0 18px; border-radius: 18px; border: 0; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; ' + (ready ? 'background: #141413; color: #FAF9F5' : 'background: rgba(31,30,29,0.08); color: #73726C'),
-      authorName: st.anon ? 'A member of this Circle' : 'Ember',
+      authorName: st.anon ? 'A member' : 'Ember',
       authorInitial: st.anon ? '?' : 'E',
-      audiences: names.map((n) => ({
-        name: n,
-        pick: () => this.setState({ audience: n }),
-        style: 'min-height: 28px; padding: 0 10px; border-radius: 14px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; ' + (st.audience === n ? 'background: #141413; color: #FAF9F5; border: 0' : 'background: transparent; color: #3D3D3A; border: 0.5px solid rgba(31,30,29,0.3)')
-      })),
+      audience: audiences[st.aud],
+      cycleAudience: () => this.setState({ aud: (st.aud + 1) % audiences.length }),
       anon: st.anon,
+      anonLabel: st.anon ? 'Hidden' : 'Hide name',
+      anonStyle: 'min-height: 32px; padding: 0 12px; border-radius: 16px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (st.anon ? 'background: #D97757; color: #FFFFFF; border: 0' : 'background: transparent; color: #3D3D3A; border: 0.5px solid rgba(31,30,29,0.28)'),
       toggleAnon: () => this.setState({ anon: !st.anon }),
-      anonTrack: 'width: 50px; height: 30px; border-radius: 15px; border: 0; padding: 2px; cursor: pointer; display: flex; transition: background 0.2s; justify-content: ' + (st.anon ? 'flex-end' : 'flex-start') + '; background: ' + (st.anon ? '#D97757' : 'rgba(31,30,29,0.16)'),
-      anonKnob: 'width: 26px; height: 26px; border-radius: 13px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(20,20,19,0.25)',
+      urgency: ['Today', 'This week', 'Anytime'].map((n) => ({ name: n, pick: () => this.setState({ urg: n }), style: mini(st.urg === n) })),
+      places: ['Voice Space', 'In person'].map((n) => ({ name: n, pick: () => this.setState({ place: n }), style: mini(st.place === n) })),
+      pollOpts: opts,
+      addOpt: () => this.setState({ opts: Math.min(st.opts + 1, 4) }),
       expiry: expiries[st.expiry],
       cycleExpiry: () => this.setState({ expiry: (st.expiry + 1) % expiries.length })
     };
