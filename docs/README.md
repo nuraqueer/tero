@@ -34,12 +34,18 @@ These documents record what has been decided **before any code is written**.
 | D12 | Professional verification is per country and per profession. AI assists, and the council votes. |
 | D13 | Wallet chain: **Celo**, with USDT and USDC. Fees paid in the stablecoin itself. Other EVM chains can be added later with the same code. |
 | D14 | Council: the Fool can add a council member alone. Other council members can only add someone by vote. The Fool can veto any vote. |
-| D15 | Code license: **AGPL-3.0**, with a contributor agreement so Pherus can ship to the app stores. |
+| D15 | Code license: **AGPL-3.0** (in `LICENSE`), with a contributor agreement (`CLA.md`) so Pherus can ship to the app stores. |
 | D16 | Minimum age: **18, or the country's legal age if higher**. |
 | D17 | App store rules and app size are design constraints from day one. |
 | D18 | PassID registration waits until PassID supports pairwise identifiers. `tero.pherus.org` is still in development. |
+| D19 | The app locks every time it's closed. A decoy passcode on the same screen opens only basic info and silently sends a duress alert. No disguised icon. |
+| D20 | Private chats clear by default and are kept only if both agree. Screenshot alerts warn but don't block. |
+| D21 | Spaces (live audio rooms) and anonymous "someone to talk to" are part of Cups. |
+| D22 | The council oversees moderators and countries. Moderators moderate the platform. The Fool can remove a council member alone; otherwise it takes a vote. |
+| D23 | Tor is built into the iOS app when added. |
 
 ## Open questions
 
 1. PassID: pairwise identifiers, and age checks beyond 18 and 21 (see [architecture.md](architecture.md#asked-of-passid)).
-2. Can the Fool remove a council member alone, or does removal need a vote?
+2. Duress alert: default emergency contacts, and recovery after a false alarm.
+3. Spaces: is audio end-to-end encrypted, and can speakers use voice changing?

@@ -11,7 +11,7 @@ known by their card and pseudonym, not by their real identity.
 
 | Suit | Area | Examples |
 |---|---|---|
-| **Cups** | Community and care | Spaces and group chats, posts (like X), meetings, talk to a stranger, therapy, marriage and relationship counselling |
+| **Cups** | Community and care | Spaces (live audio rooms like X Spaces), group chats, posts (like X), meetings, someone to talk to (anonymous emotional support), therapy, marriage and relationship counselling |
 | **Pentacles** | Money and livelihood | Jobs, opportunities, queer-owned businesses (help them trend), housing, mutual aid and donations |
 | **Swords** | Law and safety | Lawyers, legal help, wills the community helps uphold, safety guides, emergency help |
 | **Wands** | Growth and journeys | Learning skills, HRT information, surgery planning (top, bottom and others), travel plans, estimates, people travelling who can bring things |
@@ -26,6 +26,8 @@ known by their card and pseudonym, not by their real identity.
 
 ## Key features
 
+- **Spaces**: live audio rooms like X Spaces, with hosts, speakers and listeners. Not recorded by default.
+- **Someone to talk to**: anonymous, random matching for emotional relief. Neither person knows who the other is. Only vouched members, with reporting.
 - **Verified professionals**: doctors, therapists, lawyers and others, checked per country.
 - **Resource directories**: hospitals, pharmacies, HRT providers and surgeons, with cost estimates and what to expect, per country.
 - **Travel help**: someone travelling to a country posts it, and members can request help (for example legal, personal-use HRT). Trust is voted only after a confirmed handover.
@@ -35,7 +37,7 @@ known by their card and pseudonym, not by their real identity.
 
 ## Phases
 
-1. **Foundation:** passkey sign-in (PassID), Tero cards, Sequences, encrypted vault and decoy PIN, community spaces and chat, moderation, public resources, the four languages.
+1. **Foundation:** passkey sign-in (PassID), Tero cards, Sequences, encrypted vault, decoy passcode and duress alert, ephemeral chats, community spaces and chat, moderation, public resources, the four languages.
 2. **Professionals:** verification flows and council voting, consultations.
 3. **Pentacles:** jobs, skills, businesses, housing, wallet.
 4. **Journeys:** HRT and travel requests, surgery planning.

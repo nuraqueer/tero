@@ -42,11 +42,43 @@ rarely online as peers because iOS and Android stop background apps.
 
 ## On the device
 
-- **Local PIN** unlocks the encrypted vault. This is separate from the passkey.
-- **Decoy PIN** opens a harmless profile with only basic information. The
-  vault is sized and stored so nobody can tell a hidden vault exists.
-- **Alternative app icon** (Calculator, Notes and so on).
-- **Panic wipe**, screenshot blocking on sensitive screens, no notification previews.
+- **Passcode every time.** Each time the app is closed or put in the
+  background, it locks. The passcode unlocks the encrypted vault. This is
+  separate from the passkey.
+- **Decoy passcode, entered on the same lock screen.** It opens only the
+  most basic, harmless information. Nothing on the screen shows that a
+  decoy was used, and nobody can tell a hidden vault exists.
+- **Duress alert.** Entering the decoy passcode also silently sends a
+  panic alert (see below).
+- **Panic wipe** and no notification previews.
+
+### Duress alert
+
+When the decoy passcode is entered:
+
+1. A silent alert goes to the person's chosen emergency contacts and to
+   the council for their country: "this person has been forced to open
+   Tero".
+2. Nothing on the device shows the alert was sent. It leaves no trace in
+   sent messages.
+3. The account's sensitive access is frozen on the server, and other
+   signed-in devices are signed out, until the person checks in with
+   their real passcode and a recovery step.
+4. People who chat with the person are warned that their conversations
+   may be exposed, so they can protect themselves.
+
+Open details: who the emergency contacts are by default (the inviter?),
+and how someone recovers after a false alarm.
+
+## Ephemeral chats
+
+- Private chats **clear automatically** by default.
+- A chat is kept only if **both people agree**, and either can withdraw.
+- **Screenshot alerts** like Snapchat: the other person is told when a
+  screenshot is taken. This warns but can't stop it; a second phone camera
+  always works.
+- Platform limits: iOS can detect screenshots but not block them. Android
+  14 and later can detect them, and Android can block them on chosen screens.
 - **Social recovery**: the recovery key is split among people you trust
   (for example any 3 of 5), because passkey-only means a lost phone would
   otherwise lose the account.

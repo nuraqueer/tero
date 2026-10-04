@@ -7,7 +7,7 @@ its own pack, and the app adapts to it.
 
 | Field | Example use |
 |---|---|
-| Risk level | Decides default safety settings (decoy PIN prompted, Tor route offered, stricter Sequence gates) |
+| Risk level | Decides default safety settings (decoy passcode and duress contacts prompted, Tor route offered, stricter Sequence gates) |
 | Warnings | Shown before sensitive features, such as laws on medication or on queer people |
 | Laws | Plain summary, reviewed by verified lawyers |
 | Resources | Hospitals, pharmacies, HRT providers, surgeons, clinics, NGOs, emergency contacts |

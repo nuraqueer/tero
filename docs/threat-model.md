@@ -6,8 +6,8 @@ Who might attack Tero or its members, and how we defend.
 |---|---|---|
 | **The state** (police, courts, surveillance) | Requests for data, network monitoring, blocking the site | No servers or operators in hostile countries; Cloudflare holds only ciphertext; ECH hides the site name; Tor route; PWA and direct Android download |
 | **Infiltrators** posing as members to trap people | Entrapment, outing people | Invite and vouch; Sequence gates; in-person confirmation codes on Tero cards; coarse location only; inviters accountable |
-| **Blackmailers** | Screenshots, threats to out someone | Pseudonyms; hidden media; screenshot blocking on sensitive screens; fast reporting and banning |
-| **Family, partners, checkpoints** with the phone in hand | Forced unlock | Decoy PIN; disguised icon; panic wipe; no notification previews |
+| **Blackmailers** | Screenshots, threats to out someone | Pseudonyms; chats clear by default; screenshot alerts; fast reporting and banning |
+| **Family, partners, checkpoints** with the phone in hand | Forced unlock | Passcode on every open; decoy passcode with silent duress alert; panic wipe; no notification previews |
 | **Scammers** | Fake HRT couriers, fake fundraisers | Trust votes only after a confirmed handover; donations checkable on the blockchain; verified badges |
 | **Rogue admin or insider** | Abusing the dashboard | Council quorum votes; append-only logs; no admin can read private messages |
 | **Hackers** | Server breach | Only ciphertext stored; ID documents deleted after verification; passkeys, so no passwords to steal |

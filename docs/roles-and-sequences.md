@@ -5,10 +5,13 @@ but the powers never mix.
 
 | Role | What they do | What they can't do |
 |---|---|---|
-| **Card holders (council / admins)** | Govern, verify professionals, vote | Moderate content day to day; read private messages |
-| **Moderators** | Handle reports and content | Vote, verify, change roles |
+| **Card holders (council / admins)** | Govern, verify professionals, vote, oversee moderators and countries | Moderate content day to day; read private messages |
+| **Moderators** | Moderate the platform: reports and content | Vote, verify, change roles |
 | **Professionals** | Offer services with a verified badge | Moderate or govern because of the badge |
 | **Members** | Everything else, by Sequence | — |
+
+Chain of oversight: **the council oversees the moderators and their
+countries; moderators oversee the platform.**
 
 The card is what people **see**. Permissions are stored as a separate
 role underneath, so cards can be renamed or reordered without touching
@@ -42,7 +45,7 @@ More cards can be added as Tero grows.
 - **New council members:** the Fool can add one alone. Other council
   members can only add someone by council vote.
 - **The Fool can veto** any council vote.
-- Removing a council member: *open question*.
+- **Removing a council member:** the Fool can do it alone. Otherwise it takes a council vote.
 
 ## Sequences: trust levels
 
