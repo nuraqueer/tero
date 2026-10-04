@@ -83,7 +83,10 @@ Members invite people by handing them a **Tero card**.
 3. The **first person to scan** claims it. Nobody else can use it after that.
 4. The inviter and the new person confirm a **short code in person**, so a
    screenshot of the QR is useless on its own.
-5. The inviter **approves**. The token is destroyed permanently. Unclaimed
+5. Both secretly pick a **bond card** together, which is used later for
+   account recovery (see [architecture.md](architecture.md#recovering-after-a-duress-alert-or-false-alarm)).
+   The newcomer also secretly picks **their own card**.
+6. The inviter **approves**. The token is destroyed permanently. Unclaimed
    cards expire after a set number of days.
 
 **Card types** decide where the newcomer lands:

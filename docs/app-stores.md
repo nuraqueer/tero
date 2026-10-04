@@ -10,7 +10,7 @@ before submitting.
 |---|---|---|
 | User content (Apple 1.2) | Apps with user content need filtering, reporting, blocking and published contact details | Moderators, report and block everywhere, support contact |
 | "Someone to talk to" (Apple 1.2) | Chatroulette-style random anonymous chat is rejected | Presented as anonymous peer support for emotional relief. Random matching, but only between vouched members, with reporting and moderation. Text first, never video. |
-| Hidden features (Apple 2.3.1) | Undocumented or hidden features are rejected | The decoy passcode and duress alert are explained in the review notes as safety features, with a demo account |
+| Hidden features (Apple 2.3.1) | Undocumented or hidden features are rejected | The decoy passcode, duress alert, danger reaction and safe word are explained in the review notes as safety features, with a demo account |
 | Downloaded code (Apple 2.5.2) | Apps can't download new native code | Tor and other native parts must ship inside the iOS app. JavaScript updates (EAS Update) are fine if the app's purpose doesn't change. |
 | Crypto wallets (Apple 3.1.5) | Wallets must come from a developer enrolled as an organisation | Publish under Pherus (or the subsidiary) as an organisation |
 | Gifts between people (Apple 3.1.1) | Person-to-person gifts can skip in-app purchase if optional and 100% goes to the receiver | Tero takes no cut of donations |

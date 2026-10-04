@@ -7,7 +7,7 @@ its own pack, and the app adapts to it.
 
 | Field | Example use |
 |---|---|
-| Risk level | Decides default safety settings (decoy passcode and duress contacts prompted, Tor route offered, stricter Sequence gates) |
+| Risk level | Decides default safety settings. High risk turns on the duress alert, card recovery and 24-hour wait, offers the Tor route and uses stricter Sequence gates. Can be set for part of a country (for example a US state). |
 | Warnings | Shown before sensitive features, such as laws on medication or on queer people |
 | Laws | Plain summary, reviewed by verified lawyers |
 | Resources | Hospitals, pharmacies, HRT providers, surgeons, clinics, NGOs, emergency contacts |

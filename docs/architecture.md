@@ -78,14 +78,42 @@ The person reaches out to whoever brought them into Tero, who sends a
 | The council | The council |
 | The Fool | The Fool |
 
-Safety rules, because an attacker may still have the person or the phone:
+Recovery has three steps:
 
-- The sender confirms it's really them and that they're safe, outside the
-  app (in person, or with a check agreed beforehand).
-- The recovery passcode only works after a **waiting period** (for example
-  24 hours), and the alert recipients can cancel it during that time.
-- If the person who brought them in is gone or unreachable, the country's
-  council handles it.
+1. **Pick the cards.** The person picks two cards from a full shuffled
+   tarot deck (78 cards, upright or reversed):
+   - **Their own card**, chosen secretly when they joined.
+   - **The bond card**, chosen secretly together with the person who
+     brought them in, at the moment the Tero card invite was approved.
+     Only the two of them know it.
+
+   The deck is shuffled differently every time, so someone watching can't
+   learn the cards from where the person taps. After 3 wrong attempts,
+   recovery locks and the person who brought them in is told.
+2. **Confirm it's them.** The sender confirms, outside the app, that it's
+   really them and that they're safe (in person, or with a check agreed
+   beforehand). Then they send the one-time recovery passcode.
+3. **Wait 24 hours.** Nothing comes back until 24 hours have passed. The
+   alert recipients can cancel during that time.
+
+If the person who brought them in is gone or unreachable, the country's
+council handles it.
+
+The cards are something the person knows, so an attacker can force them
+to reveal them. That's why steps 2 and 3 always stay.
+
+### Where these protections apply
+
+The strict protections (duress alert, card recovery, 24-hour wait) are
+**on by default only where the risk is high**: countries with laws or
+violence against queer people, and specific places within otherwise safer
+countries (for example some US states). The country pack sets this.
+
+- Each person can turn the strict protections on anywhere.
+- In a high-risk place, they can't be turned off.
+- The level follows the country the person chooses in the app, not GPS,
+  so Tero doesn't track location. Travellers are reminded to switch when
+  they move.
 
 ## Ephemeral chats
 
@@ -114,6 +142,43 @@ most protections stop working. We reduce risk; we don't promise zero.
 - **Voice disguise.** Speakers can change their voice. This happens on the
   phone, before encryption, so the real voice never leaves the device.
 - **Not recorded** by default.
+- **Live subtitles.** Each speaker's phone turns their speech into text
+  and sends it encrypted alongside the audio. Each listener's phone
+  translates the text into a language they understand. Everything happens
+  on phones, so it stays end-to-end encrypted. This uses the speech and
+  translation tools built into iOS and Android, so the app doesn't grow.
+  Support for some languages (for example Swahili) differs by phone and
+  may need a one-time language download.
+
+### Signalling danger in a Space
+
+Two ways for a speaker to say "I'm being forced to be here" without the
+person forcing them noticing:
+
+1. **The danger reaction.** It looks exactly like an ordinary reaction
+   (for example the raised hand), but is sent with a different secret
+   gesture (for example a long press instead of a tap). On the speaker's
+   own screen it looks the same as normal.
+2. **A safe word.** Each person sets their own safe word (any word they
+   like, for example a word from the novel). Their own phone listens for
+   it while they speak in a Space. The safe word never leaves the phone
+   and is never shown in subtitles.
+
+What happens next:
+
+- The speaker's icon changes colour, and a message appears for **trusted
+  people in the room only** (moderators, and members the person has
+  marked as trusted): "this person may be being forced to be here".
+  Ordinary listeners don't see it, because the attacker might also be in
+  the room. The speaker never sees it.
+- A duress alert goes out (as above).
+- After a short while, the speaker is dropped and their screen shows
+  "this Space has ended".
+- Their whole app then **slowly switches to basic mode** over the next
+  minutes, without any notice, as if the decoy passcode had been used.
+
+The danger reaction and safe word are both described to Apple's reviewers
+as safety features.
 - Honest limits: everyone in the room can hear, so encryption protects
   against the server, not against a listener in the room. Voice changers
   hide a voice from people, but they aren't perfect against forensic

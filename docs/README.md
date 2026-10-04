@@ -15,6 +15,7 @@ These documents record what has been decided **before any code is written**.
 | [wallet.md](wallet.md) | Non-custodial stablecoin donations |
 | [countries.md](countries.md) | Per-country data: risk, warnings, resources |
 | [app-stores.md](app-stores.md) | App Store and Google Play rules, app size |
+| [design.md](design.md) | Look and feel: Apple style, iMessage-like chats |
 
 ## Decisions log
 
@@ -48,6 +49,11 @@ These documents record what has been decided **before any code is written**.
 | D26 | Voice: end-to-end encrypted Spaces with up to 6 speakers and unlimited listeners, private voice calls with professionals, and voice disguise. |
 | D27 | Recovery phrase is **12 words** (plus social recovery). |
 | D28 | Communities are Discord-style: text channels plus voice Spaces. |
+| D29 | Recovery: pick your own card and the bond card from a shuffled deck, confirmation outside the app, then a 24-hour wait. |
+| D30 | Strict protections are on by default only in high-risk countries or regions (including some US states), set by the country pack. Anyone can turn them on. |
+| D31 | Danger signals in Spaces: a secret danger reaction and a personal safe word. Trusted people in the room are told, the person is dropped, and the app slowly switches to basic mode. |
+| D32 | Live subtitles with translation in Spaces, done on phones so they stay end-to-end encrypted. |
+| D33 | Design: Discord-style structure, Apple and iMessage-style look on every platform. |
 
 ## Open questions
 
