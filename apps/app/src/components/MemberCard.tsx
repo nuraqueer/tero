@@ -40,7 +40,7 @@ const star = (x: number, y: number, r: number) => {
 };
 
 /** Tero's own card art, shared by every card: a sun ringed by rays over the gray fog. */
-function SunArt({ width }: { width: number }) {
+export function SunArt({ width }: { width: number }) {
   return (
     <Svg width={width} height={(width * 190) / 150} viewBox="0 0 150 190">
       <Circle cx={75} cy={88} r={44} fill="none" stroke={colors.gold} strokeWidth={1} />
@@ -75,20 +75,34 @@ function SunArt({ width }: { width: number }) {
 }
 
 /** The member's own tarot card: number, art, name and Sequence. */
-export function MemberCard({ arcana, sequence }: { arcana: number; sequence: number | null }) {
+export function MemberCard({
+  arcana,
+  sequence,
+  width = 200,
+}: {
+  arcana: number;
+  sequence: number | null;
+  width?: number;
+}) {
   const { t } = useLocale();
   const title = useCardTitle(arcana);
-  const width = 200;
+  // Everything is drawn for a 200-wide card and grows with it.
+  const k = width / 200;
   return (
     <TeroCard width={width} bare>
-      <Text style={styles.numeral}>{toRoman(arcana)}</Text>
+      <Text style={[styles.numeral, { fontSize: 17 * k }]}>{toRoman(arcana)}</Text>
       <SunArt width={width * 0.72} />
-      <View style={styles.foot}>
-        <Text style={styles.title} accessibilityRole="header">
+      <View style={[styles.foot, { paddingTop: 8 * k }]}>
+        <Text
+          style={[styles.title, { fontSize: 14 * k, letterSpacing: 3 * k }]}
+          accessibilityRole="header"
+        >
           {title.toUpperCase()}
         </Text>
         {sequence !== null && (
-          <Text style={styles.sequence}>{t('home.sequence', { sequence }).toUpperCase()}</Text>
+          <Text style={[styles.sequence, { fontSize: 9 * k, letterSpacing: 1.6 * k }]}>
+            {t('home.sequence', { sequence }).toUpperCase()}
+          </Text>
         )}
       </View>
     </TeroCard>

@@ -74,6 +74,10 @@ function Screens() {
         <Stack.Screen name="words" />
         <Stack.Screen name="cards" />
         <Stack.Screen name="language" />
+        <Stack.Screen
+          name="my-card"
+          options={{ animation: 'fade', contentStyle: { backgroundColor: '#0E0E0D' } }}
+        />
         <Stack.Screen name="suit/[suit]" />
       </Stack.Protected>
       <Stack.Protected guard={basic}>

@@ -5,7 +5,8 @@ import { localeNames } from '@tero/i18n';
 import { colors, fonts, radii, space } from '@tero/ui';
 import { Button } from '@/components/Button';
 import { Code } from '@/components/Code';
-import { MemberCard } from '@/components/MemberCard';
+import { CardAvatar } from '@/components/CardAvatar';
+import { useCardTitle } from '@/components/MemberCard';
 import { Page } from '@/components/Page';
 import { TabHeader } from '@/components/TabHeader';
 import { useLocale } from '@/lib/locale';
@@ -18,6 +19,7 @@ export default function You() {
   const { t, locale } = useLocale();
   const session = useFullSession();
   const [openCards, setOpenCards] = useState<number | null>(null);
+  const cardTitle = useCardTitle(session?.arcana ?? 0);
 
   const member = session?.member;
   const connected = session?.connection === 'connected';
@@ -69,9 +71,23 @@ export default function You() {
       />
 
       {member && session.arcana !== null && (
-        <View style={styles.memberCard}>
-          <MemberCard arcana={session.arcana} sequence={session.sequence} />
-        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityHint={t('myCard.reveal')}
+          onPress={() => router.push('/my-card')}
+          style={({ pressed }) => [styles.me, pressed && styles.pressed]}
+        >
+          <CardAvatar size={64} />
+          <View style={styles.meText}>
+            <Text style={styles.meName}>{cardTitle}</Text>
+            <Text style={styles.meSub}>
+              {session.sequence !== null &&
+                `${t('home.sequence', { sequence: session.sequence })} · `}
+              {t('myCard.reveal')}
+            </Text>
+          </View>
+          <Text style={styles.chevron}>›</Text>
+        </Pressable>
       )}
 
       {member === false && session.join && (
@@ -125,7 +141,19 @@ export default function You() {
 }
 
 const styles = StyleSheet.create({
-  memberCard: { marginTop: space.sm, marginBottom: space.lg },
+  me: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.md,
+    padding: space.md,
+    borderRadius: radii.lg,
+    backgroundColor: colors.paper,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.hairline,
+  },
+  meText: { flex: 1, gap: 2 },
+  meName: { fontFamily: fonts.display, fontSize: 24, lineHeight: 30, color: colors.slate },
+  meSub: { fontFamily: fonts.body, fontSize: 14, color: colors.textSecondary },
   section: { marginTop: space.md, gap: space.sm + 4 },
   heading: { fontFamily: fonts.display, fontSize: 26, lineHeight: 32, color: colors.slate },
   body: {

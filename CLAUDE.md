@@ -102,6 +102,12 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   print). The app locks when closed or after 30 minutes away (`awayLockMs`), not on every
   switch (D19 updated). New phone vaults use scrypt 2^12 (web keeps 2^14). Scroll bars
   hidden.
+- You tab: a round `CardAvatar` with your card name; tapping opens `my-card.tsx`, where
+  the card arrives face down (`CardBack`) and turns over (respects reduce motion). Tero
+  card screen: Show full screen (modal for scanning), Share image and Save image
+  (`lib/card-image.ts`: react-native-view-shot + share sheet / expo-media-library add-only;
+  web: Web Share with files, else download), with a warning that anyone with the image can
+  try to claim the card.
 - M5 public site in progress: guide content in `src/guides/` (online safety, HRT basics, in
   four languages); landing page and guide screens not built yet. Other guides stay
   "being written" until experts can write them.

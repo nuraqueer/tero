@@ -173,4 +173,16 @@ export const zh: Messages = {
   'suit.part.courses.body': '和他人一起学习技能或语言。',
   'suit.soon': '即将推出',
   'cards.body': '把它交给你信任的人。每张卡只能用一次，对方被允许加入后卡就会销毁。',
+  'myCard.reveal': '点击揭示你的卡',
+  'myCard.turn': '翻转卡片',
+  'myCard.hint': '点击卡片翻面',
+  'card.fullScreen': '全屏显示',
+  'card.share': '分享图片',
+  'card.save': '保存图片',
+  'card.saved': '已保存到照片。',
+  'card.saveDenied': 'Tero 需要权限才能把图片添加到照片。',
+  'card.shareFailed': '无法分享图片，请重试。',
+  'card.tapToClose': '点击任意处关闭',
+  'card.shareWarning':
+    '拿到这张图片的任何人都可以尝试领取这张卡，所以只分享给要邀请的那个人。让对方加入前，你仍然要核对对方的验证码。',
 };

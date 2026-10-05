@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useCallback, useRef, useState } from 'react';
+import { Modal, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { base64UrlToBytes, cardCode, cardIdFromToken, cardToken } from '@tero/crypto';
 import { cardUrl, type CardSummary } from '@tero/protocol';
@@ -12,6 +12,7 @@ import { QrCode } from '@/components/QrCode';
 import { TeroCard } from '@/components/TeroCard';
 import { CardName } from '@/components/CardName';
 import { publicOrigin } from '@/lib/api';
+import { saveCardImage, shareCardImage } from '@/lib/card-image';
 import { useLocale } from '@/lib/locale';
 import { useFullSession } from '@/lib/session';
 import { timeLeft } from '@/lib/time';
@@ -32,6 +33,10 @@ export default function CardScreen() {
   const [adult, setAdult] = useState(false);
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string>();
+  const [full, setFull] = useState(false);
+  const [note, setNote] = useState<string>();
+  const cardView = useRef<View>(null);
+  const { width, height } = useWindowDimensions();
   const api = session?.api;
 
   // Follow the card until it is claimed, approved, destroyed or expired.
@@ -72,6 +77,17 @@ export default function CardScreen() {
       setProblem(t('card.failed'));
     } finally {
       setBusy(false);
+    }
+  };
+
+  // Sharing and saving: closing the share sheet without choosing isn't a failure.
+  const run = async (action: () => Promise<unknown>) => {
+    setProblem(undefined);
+    setNote(undefined);
+    try {
+      await action();
+    } catch (e) {
+      if ((e as Error)?.name !== 'AbortError') setProblem(t('card.shareFailed'));
     }
   };
 
@@ -136,22 +152,76 @@ export default function CardScreen() {
         {t('card.title')}
       </Text>
       <Text style={styles.body}>{t('card.show')}</Text>
-      <View style={styles.cardWrap}>
-        <TeroCard>
-          {ours && (
-            <View style={styles.qr}>
-              <QrCode value={cardUrl(publicOrigin(), token)} size={196} label={t('card.qrLabel')} />
-            </View>
-          )}
-          <CardName arcana={card.arcana} />
-        </TeroCard>
-      </View>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('card.fullScreen')}
+        onPress={() => setFull(true)}
+        style={styles.cardWrap}
+      >
+        {/* A plain wrapper so the picture taken for sharing is just the card. */}
+        <View ref={cardView} collapsable={false} style={styles.shot}>
+          <TeroCard>
+            {ours && (
+              <View style={styles.qr}>
+                <QrCode
+                  value={cardUrl(publicOrigin(), token)}
+                  size={196}
+                  label={t('card.qrLabel')}
+                />
+              </View>
+            )}
+            <CardName arcana={card.arcana} />
+          </TeroCard>
+        </View>
+      </Pressable>
       <Text style={styles.expiry}>
         {t('home.cards.open', { time: timeLeft(t, card.expiresAt) })}
       </Text>
+      <View style={styles.shareRow}>
+        <Button label={t('card.fullScreen')} onPress={() => setFull(true)} kind="secondary" />
+        <Button
+          label={t('card.share')}
+          onPress={() => run(() => shareCardImage(cardView, t('card.title')))}
+          kind="secondary"
+          disabled={!ours}
+        />
+        <Button
+          label={t('card.save')}
+          onPress={() =>
+            run(async () =>
+              setNote((await saveCardImage(cardView)) ? t('card.saved') : t('card.saveDenied')),
+            )
+          }
+          kind="secondary"
+          disabled={!ours}
+        />
+      </View>
+      <Text style={styles.warning}>{t('card.shareWarning')}</Text>
       <Text style={styles.error} accessibilityLiveRegion="polite">
-        {problem ?? ''}
+        {problem ?? note ?? ''}
       </Text>
+      <Modal visible={full} animationType="fade" onRequestClose={() => setFull(false)}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('card.done')}
+          onPress={() => setFull(false)}
+          style={styles.full}
+        >
+          <TeroCard width={Math.min(width - 32, (height - 120) / 1.55, 420)}>
+            {ours && (
+              <View style={styles.qr}>
+                <QrCode
+                  value={cardUrl(publicOrigin(), token)}
+                  size={Math.min(width - 32, (height - 120) / 1.55, 420) * 0.78}
+                  label={t('card.qrLabel')}
+                />
+              </View>
+            )}
+            <CardName arcana={card.arcana} />
+          </TeroCard>
+          <Text style={styles.fullHint}>{t('card.tapToClose')}</Text>
+        </Pressable>
+      </Modal>
       <View style={styles.actions}>
         <Button label={t('card.destroy')} onPress={destroy} kind="secondary" disabled={busy} />
         <Button label={t('setup.back')} onPress={() => router.back()} kind="quiet" />
@@ -176,7 +246,31 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: space.md,
   },
-  cardWrap: { marginTop: space.lg },
+  cardWrap: { marginTop: space.lg, alignSelf: 'center' },
+  shot: { padding: 18, backgroundColor: colors.ivory },
+  shareRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space.sm,
+    justifyContent: 'center',
+    marginTop: space.lg,
+  },
+  warning: {
+    fontFamily: fonts.body,
+    fontSize: 13,
+    lineHeight: 19,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: space.md,
+  },
+  full: {
+    flex: 1,
+    backgroundColor: colors.ivory,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: space.lg,
+  },
+  fullHint: { fontFamily: fonts.body, fontSize: 14, color: colors.textSecondary },
   qr: { borderRadius: 6, overflow: 'hidden' },
   expiry: {
     fontFamily: fonts.body,

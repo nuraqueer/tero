@@ -185,4 +185,16 @@ export const sw: Messages = {
   'suit.soon': 'Karibuni',
   'cards.body':
     'Mpe mtu unayemwamini. Kila kadi inafanya kazi mara moja na huharibiwa anaporuhusiwa kuingia.',
+  'myCard.reveal': 'Gusa kufunua kadi yako',
+  'myCard.turn': 'Geuza kadi',
+  'myCard.hint': 'Gusa kadi kuigeuza',
+  'card.fullScreen': 'Onyesha skrini nzima',
+  'card.share': 'Shiriki picha',
+  'card.save': 'Hifadhi picha',
+  'card.saved': 'Imehifadhiwa kwenye Picha.',
+  'card.saveDenied': 'Tero inahitaji ruhusa kuongeza picha kwenye Picha.',
+  'card.shareFailed': 'Picha haikuweza kushirikiwa. Jaribu tena.',
+  'card.tapToClose': 'Gusa popote kufunga',
+  'card.shareWarning':
+    'Yeyote atakayepata picha hii anaweza kujaribu kuichukua kadi, kwa hivyo ishiriki tu na mtu aliyekusudiwa. Bado utakagua msimbo wake kabla ya kumruhusu kuingia.',
 };

@@ -185,4 +185,16 @@ export const fr: Messages = {
   'suit.soon': 'Bientôt',
   'cards.body':
     'Donne-la à quelqu’un en qui tu as confiance. Chaque carte ne sert qu’une fois et est détruite quand la personne est admise.',
+  'myCard.reveal': 'Touche pour révéler ta carte',
+  'myCard.turn': 'Retourner la carte',
+  'myCard.hint': 'Touche la carte pour la retourner',
+  'card.fullScreen': 'Plein écran',
+  'card.share': 'Partager l’image',
+  'card.save': 'Enregistrer l’image',
+  'card.saved': 'Enregistrée dans Photos.',
+  'card.saveDenied': 'Tero a besoin d’une autorisation pour ajouter l’image à Photos.',
+  'card.shareFailed': 'L’image n’a pas pu être partagée. Réessaie.',
+  'card.tapToClose': 'Touche n’importe où pour fermer',
+  'card.shareWarning':
+    'Toute personne qui reçoit cette image peut essayer de prendre la carte, alors partage-la seulement avec la personne à qui elle est destinée. Tu vérifieras quand même son code avant de la laisser entrer.',
 };

@@ -178,6 +178,18 @@ export const en = {
   'suit.soon': 'Soon',
   'cards.body':
     "Hand one to someone you trust. Each card works once and is destroyed when they're let in.",
+  'myCard.reveal': 'Tap to reveal your card',
+  'myCard.turn': 'Turn the card over',
+  'myCard.hint': 'Tap the card to turn it over',
+  'card.fullScreen': 'Show full screen',
+  'card.share': 'Share image',
+  'card.save': 'Save image',
+  'card.saved': 'Saved to Photos.',
+  'card.saveDenied': 'Tero needs permission to add the image to Photos.',
+  'card.shareFailed': "The image couldn't be shared. Try again.",
+  'card.tapToClose': 'Tap anywhere to close',
+  'card.shareWarning':
+    "Anyone who gets this image can try to claim the card, so share it only with the person it's for. You'll still check their code before letting them in.",
 } as const;
 
 export type MessageKey = keyof typeof en;
