@@ -179,6 +179,9 @@ my-card|roles` (re-exports of the shared screens). Phones keep `/lock` and the t
   never inside the console sidebar (`_layout.tsx`: index guard is always on for web, placed
   after the admin screens; `publicPage` skips `WebShell`). The admin side is only at
   `/admin` (lock, then console); there is no link to it on the public site.
+- Help tab (D49): `(tabs)/help.tsx` has one "Share or ask" button (opens `/part/<part>?create=1`,
+  aid takes `create=request|offer`; each part component takes `create` and opens its form),
+  a grid of cards for the parts, and chips for the seven place directories.
 - Face ID / fingerprint unlock (D48): `lib/biometric.ts` (`.web.ts` stub), settings screen
   `app/biometric.tsx` (You → "Face ID or fingerprint", asks the passcode), lock screen asks
   automatically when on (`unlockWithBiometric`). Seed in SecureStore with

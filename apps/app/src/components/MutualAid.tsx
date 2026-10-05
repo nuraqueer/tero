@@ -20,14 +20,14 @@ import { useFullSession } from '@/lib/session';
 type Show = 'all' | 'request' | 'offer' | 'mine';
 
 /** Asking for help and offering it. Replies go only to the person who posted. */
-export function MutualAid() {
+export function MutualAid({ create }: { create?: AidKind }) {
   const { t } = useLocale();
   const session = useFullSession();
   const connected = session?.connection === 'connected';
   const api = session?.api;
   const [posts, setPosts] = useState<AidPost[] | null>(null);
   const [show, setShow] = useState<Show>('all');
-  const [writing, setWriting] = useState<AidKind | null>(null);
+  const [writing, setWriting] = useState<AidKind | null>(create ?? null);
   const [problem, setProblem] = useState<string>();
 
   const load = useCallback(() => {

@@ -14,14 +14,14 @@ import { useFullSession } from '@/lib/session';
 const excerpt = 280;
 
 /** Firsthand experiences, shared without a name. Personal, not advice. */
-export function Stories() {
+export function Stories({ create = false }: { create?: boolean }) {
   const { t } = useLocale();
   const session = useFullSession();
   const connected = session?.connection === 'connected';
   const api = session?.api;
   const [stories, setStories] = useState<Story[] | null>(null);
   const [topic, setTopic] = useState<StoryTopic | null>(null);
-  const [writing, setWriting] = useState(false);
+  const [writing, setWriting] = useState(create);
   const [problem, setProblem] = useState<string>();
 
   const load = useCallback(() => {

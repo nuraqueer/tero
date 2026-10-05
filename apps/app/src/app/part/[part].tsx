@@ -27,20 +27,24 @@ export function generateStaticParams() {
 /** One part of an area of help, laid out for what it holds. Parts not built yet show placeholders. */
 export default function PartScreen() {
   const { t } = useLocale();
-  const { part: param } = useLocalSearchParams<{ part: string }>();
+  const { part: param, create } = useLocalSearchParams<{ part: string; create?: string }>();
+  // Opened from Help's "Share or ask": go straight to the form.
+  const creating = create !== undefined;
   const part = allParts.find((p) => p === param) ?? allParts[0]!;
   const kind = partKind[part] ?? 'list';
   return (
     <Page>
       <ScreenHeader title={t(`part.${part}` as MessageKey)} />
       <Text style={styles.lead}>{t(`part.${part}.body` as MessageKey)}</Text>
-      {isDirectoryPart(part) && <Directory part={part} />}
-      {kind === 'aid' && <MutualAid />}
-      {kind === 'jobs' && <Jobs />}
-      {kind === 'stories' && <Stories />}
-      {kind === 'skills' && <Skills />}
+      {isDirectoryPart(part) && <Directory part={part} create={creating} />}
+      {kind === 'aid' && (
+        <MutualAid create={create === 'offer' ? 'offer' : creating ? 'request' : undefined} />
+      )}
+      {kind === 'jobs' && <Jobs create={creating} />}
+      {kind === 'stories' && <Stories create={creating} />}
+      {kind === 'skills' && <Skills create={creating} />}
       {kind === 'showCard' && <ShowCard />}
-      {kind === 'journeys' && <Journeys />}
+      {kind === 'journeys' && <Journeys create={creating} />}
       {kind === 'list' && <BoneList />}
       {!built.includes(kind) && <SoonNote text={t('part.soon')} />}
     </Page>

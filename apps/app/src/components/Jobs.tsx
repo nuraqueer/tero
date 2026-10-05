@@ -12,7 +12,7 @@ import { useLocale } from '@/lib/locale';
 import { useFullSession } from '@/lib/session';
 
 /** Openings, freelance work and mentoring shared by members. */
-export function Jobs() {
+export function Jobs({ create = false }: { create?: boolean }) {
   const { t } = useLocale();
   const session = useFullSession();
   const connected = session?.connection === 'connected';
@@ -21,7 +21,7 @@ export function Jobs() {
   const [query, setQuery] = useState('');
   const [remoteOnly, setRemoteOnly] = useState(false);
   const [type, setType] = useState<JobType | null>(null);
-  const [writing, setWriting] = useState(false);
+  const [writing, setWriting] = useState(create);
   const [problem, setProblem] = useState<string>();
 
   const load = useCallback(() => {

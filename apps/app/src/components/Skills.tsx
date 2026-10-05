@@ -21,7 +21,7 @@ import { useLocale } from '@/lib/locale';
 import { useFullSession } from '@/lib/session';
 
 /** Teaching, wanting to learn, and resources worth sharing. */
-export function Skills() {
+export function Skills({ create = false }: { create?: boolean }) {
   const { t } = useLocale();
   const session = useFullSession();
   const connected = session?.connection === 'connected';
@@ -29,7 +29,7 @@ export function Skills() {
   const [skills, setSkills] = useState<Skill[] | null>(null);
   const [kind, setKind] = useState<SkillKind | null>(null);
   const [topic, setTopic] = useState<SkillTopic | null>(null);
-  const [writing, setWriting] = useState(false);
+  const [writing, setWriting] = useState(create);
   const [problem, setProblem] = useState<string>();
 
   const load = useCallback(() => {

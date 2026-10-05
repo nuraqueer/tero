@@ -21,7 +21,7 @@ import { useFullSession } from '@/lib/session';
 type Filter = 'vouched' | 'free' | 'international';
 
 /** Places members trust, for one part of Help: search, filters, vouches, and adding one. */
-export function Directory({ part }: { part: DirectoryPart }) {
+export function Directory({ part, create = false }: { part: DirectoryPart; create?: boolean }) {
   const { t } = useLocale();
   const session = useFullSession();
   const connected = session?.connection === 'connected';
@@ -29,7 +29,7 @@ export function Directory({ part }: { part: DirectoryPart }) {
   const [places, setPlaces] = useState<Place[] | null>(null);
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<Filter[]>([]);
-  const [adding, setAdding] = useState(false);
+  const [adding, setAdding] = useState(create);
   const [problem, setProblem] = useState<string>();
 
   const load = useCallback(() => {

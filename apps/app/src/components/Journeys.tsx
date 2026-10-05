@@ -26,14 +26,14 @@ type Status = 'loading' | 'ready' | 'locked' | 'offline';
  * The member's own step-by-step plans. Sealed on this device with a key from the 12
  * words; Tero's server stores the sealed box and can't read it.
  */
-export function Journeys() {
+export function Journeys({ create = false }: { create?: boolean }) {
   const { t } = useLocale();
   const session = useFullSession();
   const connected = session?.connection === 'connected';
   const [book, setBook] = useState<JourneyBook | null>(null);
   const [status, setStatus] = useState<Status>('loading');
   const [problem, setProblem] = useState<string>();
-  const [starting, setStarting] = useState(false);
+  const [starting, setStarting] = useState(create);
   const [open, setOpen] = useState<string | null>(null);
   const version = useRef(0);
   // Saves run one at a time, each carrying the latest book.
