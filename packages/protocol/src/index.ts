@@ -416,3 +416,56 @@ export function isNewJob(value: unknown): value is NewJob {
     isText(v.apply, jobLimits.apply)
   );
 }
+
+// Stories: firsthand experiences, shared without a name. Personal, not advice.
+
+export const storyTopics = [
+  'comingOut',
+  'transition',
+  'health',
+  'family',
+  'work',
+  'moving',
+  'other',
+] as const;
+export type StoryTopic = (typeof storyTopics)[number];
+
+export const storyLimits = { title: 80, text: 4000, warning: 60 } as const;
+
+/** How many stories one member may share in a day. */
+export const storiesPerDay = 2;
+
+export type NewStory = {
+  topic: StoryTopic;
+  title: string;
+  text: string;
+  /** A short content note shown before the story, e.g. "violence". Optional. */
+  warning: string;
+  /** ISO 3166-1 alpha-2, or empty: saying where can identify someone. */
+  country: string;
+};
+
+export type Story = NewStory & {
+  id: string;
+  /** Month it was shared (first day, UTC): less precise on purpose. */
+  addedOn: number;
+  /** Members who said thank you. */
+  thanks: number;
+  thanked: boolean;
+  mine: boolean;
+};
+
+export type StoryListResponse = { stories: Story[] };
+
+export function isNewStory(value: unknown): value is NewStory {
+  const v = asObject(value);
+  return (
+    !!v &&
+    (storyTopics as readonly unknown[]).includes(v.topic) &&
+    isText(v.title, storyLimits.title) &&
+    isText(v.text, storyLimits.text) &&
+    isText(v.warning, storyLimits.warning, false) &&
+    typeof v.country === 'string' &&
+    (v.country === '' || /^[A-Z]{2}$/.test(v.country))
+  );
+}

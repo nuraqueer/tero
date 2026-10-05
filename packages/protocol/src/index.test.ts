@@ -6,6 +6,7 @@ import {
   isNewAidPost,
   isNewAidReply,
   isNewJob,
+  isNewStory,
   isNewPlace,
   isClaimCardRequest,
   isCreateCardRequest,
@@ -140,5 +141,22 @@ describe('isNewJob', () => {
     expect(isNewJob({ ...job, type: 'gig' })).toBe(false);
     expect(isNewJob({ ...job, apply: '' })).toBe(false);
     expect(isNewJob({ ...job, details: 'x'.repeat(801) })).toBe(false);
+  });
+});
+
+describe('isNewStory', () => {
+  const story = {
+    topic: 'family',
+    title: 'Telling my sister',
+    text: 'It went better than I feared.',
+    warning: '',
+    country: '',
+  };
+  it('accepts a story without a country', () => expect(isNewStory(story)).toBe(true));
+  it('refuses unknown topics, bad countries and empty text', () => {
+    expect(isNewStory({ ...story, topic: 'gossip' })).toBe(false);
+    expect(isNewStory({ ...story, country: 'Kenya' })).toBe(false);
+    expect(isNewStory({ ...story, text: '' })).toBe(false);
+    expect(isNewStory({ ...story, text: 'x'.repeat(4001) })).toBe(false);
   });
 });

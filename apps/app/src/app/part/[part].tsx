@@ -10,10 +10,14 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { Bone, BoneRow } from '@/components/Skeleton';
 import { Directory } from '@/components/Directory';
 import { Jobs } from '@/components/Jobs';
+import { Stories } from '@/components/Stories';
 import { MutualAid } from '@/components/MutualAid';
 import { SoonNote } from '@/components/SoonNote';
 import { useLocale } from '@/lib/locale';
-import { allParts, partKind } from '@/lib/areas';
+import { allParts, partKind, type PartKind } from '@/lib/areas';
+
+/** Kinds of part that work for real; the rest still show placeholders. */
+const built: PartKind[] = ['directory', 'aid', 'jobs', 'stories'];
 
 export function generateStaticParams() {
   return allParts.map((part) => ({ part }));
@@ -37,9 +41,7 @@ export default function PartScreen() {
       {kind === 'showCard' && <ShowCard />}
       {kind === 'journeys' && <Journey />}
       {kind === 'list' && <BoneList />}
-      {!isDirectoryPart(part) && kind !== 'aid' && kind !== 'jobs' && (
-        <SoonNote text={t('part.soon')} />
-      )}
+      {!built.includes(kind) && <SoonNote text={t('part.soon')} />}
     </Page>
   );
 }
@@ -51,21 +53,6 @@ function BoneList({ rows = 4 }: { rows?: number }) {
         <BoneRow key={i} />
       ))}
     </View>
-  );
-}
-
-function Stories() {
-  const { t } = useLocale();
-  return (
-    <>
-      <View style={styles.callout}>
-        <Text style={styles.calloutText}>{t('stories.note')}</Text>
-      </View>
-      <BoneList rows={3} />
-      <View style={styles.actions}>
-        <Button label={t('stories.share')} onPress={() => undefined} kind="secondary" disabled />
-      </View>
-    </>
   );
 }
 
@@ -150,15 +137,6 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.hairline,
   },
-  callout: {
-    marginTop: space.lg,
-    padding: space.md,
-    borderRadius: radii.md,
-    backgroundColor: colors.oatLight,
-    borderLeftWidth: 3,
-    borderLeftColor: colors.clay,
-  },
-  calloutText: { fontFamily: fonts.body, fontSize: 14, lineHeight: 21, color: colors.slate },
   cardWrap: { alignItems: 'center', marginTop: space.xl, gap: space.md },
   wordCard: {
     width: 220,

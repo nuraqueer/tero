@@ -8,6 +8,7 @@ import {
   isNewAidPost,
   isNewAidReply,
   isNewJob,
+  isNewStory,
   isNewPlace,
   isPlaceId,
   isPostId,
@@ -64,6 +65,10 @@ export type RegistryApi = Async<
     | 'listJobs'
     | 'addJob'
     | 'removeJob'
+    | 'listStories'
+    | 'addStory'
+    | 'thankStory'
+    | 'removeStory'
   >
 >;
 
@@ -310,6 +315,35 @@ async function handleSignedIn(
     return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
   }
 
+  if (path === '/api/stories') {
+    if (method === 'GET') {
+      const result = await reg.listStories(did);
+      return result.ok ? json({ stories: result.stories }) : error(result.error, 403);
+    }
+    if (method === 'POST') {
+      const body = await readJson(request);
+      if (!isNewStory(body)) return error('bad_request', 400);
+      const result = await reg.addStory(did, body);
+      return result.ok
+        ? json({ id: result.id }, 201)
+        : error(result.error, statusFor[result.error]!);
+    }
+    return error('method_not_allowed', 405);
+  }
+
+  const story = path.match(/^\/api\/stories\/([^/]+)(\/thanks)?$/);
+  if (story && isPostId(story[1])) {
+    const id = story[1];
+    if (story[2]) {
+      if (method !== 'PUT' && method !== 'DELETE') return error('method_not_allowed', 405);
+      const result = await reg.thankStory(did, id, method === 'PUT');
+      return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
+    }
+    if (method !== 'DELETE') return error('method_not_allowed', 405);
+    const result = await reg.removeStory(did, id);
+    return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
+  }
+
   return error('not_found', 404);
 }
 
@@ -327,7 +361,8 @@ async function handleApi(request: Request, path: string, env: Env): Promise<Resp
     path.startsWith('/api/cards') ||
     path.startsWith('/api/places') ||
     path.startsWith('/api/aid') ||
-    path.startsWith('/api/jobs');
+    path.startsWith('/api/jobs') ||
+    path.startsWith('/api/stories');
   if (!known) return error('not_found', 404);
 
   // A short secret would make tokens guessable; refuse to run with one.

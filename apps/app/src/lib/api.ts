@@ -15,6 +15,8 @@ import {
   type JobListResponse,
   type NewAidPost,
   type NewJob,
+  type NewStory,
+  type StoryListResponse,
   type DirectoryPart,
   type NewPlace,
   type PlaceListResponse,
@@ -122,6 +124,12 @@ export function authed(token: string) {
     listJobs: async () => (await request<JobListResponse>('/api/jobs', 'GET', token)).jobs,
     addJob: (job: NewJob) => request<{ id: string }>('/api/jobs', 'POST', token, job),
     removeJob: (id: string) => request<void>(`/api/jobs/${id}`, 'DELETE', token),
+    listStories: async () =>
+      (await request<StoryListResponse>('/api/stories', 'GET', token)).stories,
+    addStory: (story: NewStory) => request<{ id: string }>('/api/stories', 'POST', token, story),
+    thankStory: (id: string, thanks: boolean) =>
+      request<void>(`/api/stories/${id}/thanks`, thanks ? 'PUT' : 'DELETE', token),
+    removeStory: (id: string) => request<void>(`/api/stories/${id}`, 'DELETE', token),
   };
 }
 
