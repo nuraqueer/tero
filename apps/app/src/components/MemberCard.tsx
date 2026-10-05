@@ -25,11 +25,15 @@ export function toRoman(n: number): string {
   return out;
 }
 
+/** The card's name: "The Fool" for Sequence 0, otherwise the Sequence in tarot numbers. */
+export function useCardTitle(sequence: number): string {
+  const { t } = useLocale();
+  return sequence === 0 ? t('card.fool') : t('home.sequence', { sequence: toRoman(sequence) });
+}
+
 /** The member's own tarot card: the Fool for Sequence 0, otherwise their Sequence. */
 export function MemberCard({ sequence }: { sequence: number }) {
-  const { t } = useLocale();
-  const fool = sequence === 0;
-  const title = fool ? t('card.fool') : t('home.sequence', { sequence: toRoman(sequence) });
+  const title = useCardTitle(sequence);
   return (
     <TeroCard width={200}>
       <Text style={styles.numeral}>{toRoman(sequence)}</Text>

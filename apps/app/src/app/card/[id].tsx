@@ -10,6 +10,7 @@ import { Code } from '@/components/Code';
 import { Page } from '@/components/Page';
 import { QrCode } from '@/components/QrCode';
 import { TeroCard } from '@/components/TeroCard';
+import { CardName } from '@/components/CardName';
 import { publicOrigin } from '@/lib/api';
 import { useLocale } from '@/lib/locale';
 import { useFullSession } from '@/lib/session';
@@ -142,6 +143,7 @@ export default function CardScreen() {
               <QrCode value={cardUrl(publicOrigin(), token)} size={196} label={t('card.qrLabel')} />
             </View>
           )}
+          {session.sequence !== null && <CardName sequence={session.sequence} />}
         </TeroCard>
       </View>
       <Text style={styles.expiry}>
