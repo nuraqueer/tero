@@ -2,9 +2,9 @@ import { StyleSheet, Text } from 'react-native';
 import { colors, fonts } from '@tero/ui';
 import { useCardTitle } from './MemberCard';
 
-/** The inviter's card name, shown at the foot of a Tero card under the QR code. */
-export function CardName({ sequence }: { sequence: number }) {
-  const title = useCardTitle(sequence);
+/** The name the newcomer will take, shown at the foot of a Tero card under the QR code. */
+export function CardName({ arcana }: { arcana: number }) {
+  const title = useCardTitle(arcana);
   return <Text style={styles.name}>{title.toUpperCase()}</Text>;
 }
 

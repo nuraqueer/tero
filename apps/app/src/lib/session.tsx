@@ -35,6 +35,8 @@ export type FullSession = {
   /** Null until the server has answered. */
   member: boolean | null;
   sequence: number | null;
+  /** The member's tarot card (0 is the Fool). Null until known. */
+  arcana: number | null;
   join: Join | null;
 };
 
@@ -123,7 +125,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
           .catch(() => undefined);
       }
       const me = await authed(session.token).me();
-      updateFull(current, { connection: 'connected', member: me.member, sequence: me.sequence });
+      updateFull(current, {
+        connection: 'connected',
+        member: me.member,
+        sequence: me.sequence,
+        arcana: me.arcana,
+      });
     } catch {
       updateFull(current, { connection: 'offline' });
     }
@@ -143,6 +150,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         connection: 'connecting',
         member: null,
         sequence: null,
+        arcana: null,
         join,
       });
       void connect(identity, current, founder);
@@ -213,7 +221,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     if (!client) return;
     try {
       const me = await client.me();
-      updateFull(current, { connection: 'connected', member: me.member, sequence: me.sequence });
+      updateFull(current, {
+        connection: 'connected',
+        member: me.member,
+        sequence: me.sequence,
+        arcana: me.arcana,
+      });
     } catch {
       updateFull(current, { connection: 'offline' });
     }

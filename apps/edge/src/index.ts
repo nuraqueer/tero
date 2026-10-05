@@ -123,7 +123,12 @@ async function handleSignedIn(
   if (path === '/api/me') {
     if (method !== 'GET') return error('method_not_allowed', 405);
     const member = await reg.member(did);
-    const me: MeResponse = { did, member: member !== null, sequence: member?.sequence ?? null };
+    const me: MeResponse = {
+      did,
+      member: member !== null,
+      sequence: member?.sequence ?? null,
+      arcana: member?.arcana ?? null,
+    };
     return json(me);
   }
 
@@ -165,7 +170,7 @@ async function handleSignedIn(
       if (!isApproveCardRequest(body)) return error('bad_request', 400);
       const result = await reg.approveCard(did, id, body.claimer);
       return result.ok
-        ? json({ sequence: result.sequence })
+        ? json({ sequence: result.sequence, arcana: result.arcana })
         : error(result.error, statusFor[result.error]!);
     }
     if (method !== 'DELETE') return error('method_not_allowed', 405);

@@ -1,6 +1,8 @@
 import {
   claimedCardTtlMs,
   cardTtlMs,
+  drawArcana,
+  foolArcana,
   openCardLimit,
   type CardSummary,
   type CreateCardRequest,
@@ -44,6 +46,19 @@ const schema = [
   `CREATE INDEX IF NOT EXISTS cards_by_inviter ON cards (inviter)`,
 ];
 
+/** Columns added after launch: [table, column, definition, fill for existing rows]. */
+const additions: Array<[string, string, string, string]> = [
+  ['members', 'arcana', 'INTEGER', `UPDATE members SET arcana = ${foolArcana} WHERE sequence = 0`],
+  ['cards', 'arcana', 'INTEGER', 'UPDATE cards SET arcana = 1 + abs(random()) % 21'],
+];
+
+/** A random number in [0, 1) from the system's secure source. */
+function secureRandom(): number {
+  return crypto.getRandomValues(new Uint32Array(1))[0]! / 2 ** 32;
+}
+
+export type Member = { sequence: number; arcana: number | null };
+
 type CardRow = {
   id: string;
   nonce: string;
@@ -51,6 +66,7 @@ type CardRow = {
   type: 'member';
   expires_at: number;
   claimer: string | null;
+  arcana: number;
 };
 
 function summary(row: CardRow): CardSummary {
@@ -61,6 +77,7 @@ function summary(row: CardRow): CardSummary {
     state: row.claimer ? 'claimed' : 'open',
     expiresAt: row.expires_at,
     claimer: row.claimer,
+    arcana: row.arcana,
   };
 }
 
@@ -69,8 +86,15 @@ export class Registry {
     private readonly sql: Sql,
     /** The Fool's did:key. They become a member the first time they are looked up. */
     private readonly founder?: string,
+    private readonly random: () => number = secureRandom,
   ) {
     for (const statement of schema) sql.exec(statement);
+    for (const [table, column, type, fill] of additions) {
+      const columns = this.rows<{ name: string }>(`PRAGMA table_info(${table})`);
+      if (columns.some((c) => c.name === column)) continue;
+      sql.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${type}`);
+      sql.exec(fill);
+    }
   }
 
   private rows<T>(query: string, ...bindings: SqlValue[]): T[] {
@@ -81,15 +105,12 @@ export class Registry {
     this.sql.exec('DELETE FROM cards WHERE expires_at <= ?', now);
   }
 
-  member(did: string, now: number): { sequence: number } | null {
-    const [row] = this.rows<{ sequence: number }>(
-      'SELECT sequence FROM members WHERE did = ?',
-      did,
-    );
-    if (row) return { sequence: row.sequence };
+  member(did: string, now: number): Member | null {
+    const [row] = this.rows<Member>('SELECT sequence, arcana FROM members WHERE did = ?', did);
+    if (row) return { sequence: row.sequence, arcana: row.arcana };
     if (this.founder && did === this.founder) {
-      this.sql.exec('INSERT INTO members (did, sequence, joined_at) VALUES (?, 0, ?)', did, now);
-      return { sequence: 0 };
+      this.addFool(did, now);
+      return { sequence: 0, arcana: foolArcana };
     }
     return null;
   }
@@ -110,8 +131,17 @@ export class Registry {
   claimFounder(did: string, now: number): Result<{ sequence: number }, 'founder_taken'> {
     if (!this.founderSeatOpen()) return { ok: false, error: 'founder_taken' };
     if (this.founder && did !== this.founder) return { ok: false, error: 'founder_taken' };
-    this.sql.exec('INSERT INTO members (did, sequence, joined_at) VALUES (?, 0, ?)', did, now);
+    this.addFool(did, now);
     return { ok: true, sequence: 0 };
+  }
+
+  private addFool(did: string, now: number) {
+    this.sql.exec(
+      'INSERT INTO members (did, sequence, arcana, joined_at) VALUES (?, 0, ?, ?)',
+      did,
+      foolArcana,
+      now,
+    );
   }
 
   listCards(inviter: string, now: number): CardSummary[] {
@@ -136,13 +166,14 @@ export class Registry {
     );
     if (count >= openCardLimit(member.sequence)) return { ok: false, error: 'card_limit' };
     const [row] = this.rows<CardRow>(
-      `INSERT INTO cards (id, nonce, inviter, type, expires_at) VALUES (?, ?, ?, ?, ?)
+      `INSERT INTO cards (id, nonce, inviter, type, expires_at, arcana) VALUES (?, ?, ?, ?, ?, ?)
        ON CONFLICT DO NOTHING RETURNING *`,
       card.id,
       card.nonce,
       inviter,
       card.type,
       now + cardTtlMs,
+      drawArcana(member.arcana, this.random),
     );
     return row ? { ok: true, card: summary(row) } : { ok: false, error: 'conflict' };
   }
@@ -179,7 +210,7 @@ export class Registry {
     id: string,
     claimer: string,
     now: number,
-  ): Result<{ sequence: number }, 'not_found' | 'conflict'> {
+  ): Result<{ sequence: number; arcana: number }, 'not_found' | 'conflict'> {
     this.prune(now);
     const [card] = this.rows<CardRow>(
       'SELECT * FROM cards WHERE id = ? AND inviter = ?',
@@ -191,12 +222,14 @@ export class Registry {
     if (card.claimer !== claimer) return { ok: false, error: 'conflict' };
     this.sql.exec('DELETE FROM cards WHERE id = ?', id);
     this.sql.exec(
-      'INSERT INTO members (did, sequence, joined_at) VALUES (?, ?, ?) ON CONFLICT DO NOTHING',
+      `INSERT INTO members (did, sequence, arcana, joined_at) VALUES (?, ?, ?, ?)
+       ON CONFLICT DO NOTHING`,
       claimer,
       newMemberSequence,
+      card.arcana,
       now,
     );
-    return { ok: true, sequence: newMemberSequence };
+    return { ok: true, sequence: newMemberSequence, arcana: card.arcana };
   }
 
   /** Destroys a card, claimed or not. */

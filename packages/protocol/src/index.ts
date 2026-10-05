@@ -32,6 +32,8 @@ export type MeResponse = {
   member: boolean;
   /** The trust level, 0 (the Fool) to 9 (new members). Null for non-members. */
   sequence: number | null;
+  /** The member's tarot card, 0 (the Fool) to 21 (the World). Null for non-members. */
+  arcana: number | null;
 };
 
 export type ApiErrorCode =
@@ -86,6 +88,8 @@ export type CardSummary = {
   expiresAt: number;
   /** The did:key that claimed the card, once claimed. */
   claimer: string | null;
+  /** The tarot card the newcomer will take, drawn when the card is made. */
+  arcana: number;
 };
 
 export type CreateCardRequest = { id: string; nonce: string; type: CardType };
@@ -108,6 +112,21 @@ export function openCardLimit(sequence: number): number {
   if (sequence <= 6) return 5;
   if (sequence <= 8) return 3;
   return 1;
+}
+
+// The 22 Major Arcana. Each member holds one; 0 is the Fool's alone.
+
+export const arcanaCount = 22;
+export const foolArcana = 0;
+
+/**
+ * Draws the tarot card a newcomer will take: never the Fool, and never the giver's own
+ * card. random returns a number in [0, 1).
+ */
+export function drawArcana(giver: number | null, random: () => number): number {
+  const choices: number[] = [];
+  for (let n = 1; n < arcanaCount; n++) if (n !== giver) choices.push(n);
+  return choices[Math.floor(random() * choices.length)]!;
 }
 
 /** The link in a card's QR code. */

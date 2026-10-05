@@ -84,9 +84,9 @@ export default function Home() {
   return (
     <Page>
       <AppHeader />
-      {member && session.sequence !== null && (
+      {member && session.arcana !== null && (
         <View style={styles.memberCard}>
-          <MemberCard sequence={session.sequence} />
+          <MemberCard arcana={session.arcana} />
         </View>
       )}
       <View style={styles.panel}>

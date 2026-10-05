@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   cardUrl,
+  drawArcana,
   isApproveCardRequest,
   isClaimCardRequest,
   isCreateCardRequest,
@@ -54,5 +55,16 @@ describe('card links', () => {
     expect(openCardLimit(9)).toBe(1);
     expect(openCardLimit(0)).toBeGreaterThan(openCardLimit(1));
     for (let s = 1; s <= 9; s++) expect(openCardLimit(s)).toBeLessThanOrEqual(openCardLimit(s - 1));
+  });
+});
+
+describe('drawArcana', () => {
+  it("can draw every card but the Fool and the giver's", () => {
+    const seen = new Set<number>();
+    for (let i = 0; i < 20; i++) seen.add(drawArcana(7, () => i / 20));
+    expect(seen.size).toBe(20);
+    expect(seen.has(0)).toBe(false);
+    expect(seen.has(7)).toBe(false);
+    expect(drawArcana(null, () => 0.999)).toBe(21);
   });
 });

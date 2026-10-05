@@ -35,7 +35,12 @@ describe('signing in', () => {
 
     const me = await call('/api/me', { headers: { authorization: `Bearer ${token}` } });
     expect(me.status).toBe(200);
-    expect(await me.json()).toEqual({ did: identity.did, member: false, sequence: null });
+    expect(await me.json()).toEqual({
+      did: identity.did,
+      member: false,
+      sequence: null,
+      arcana: null,
+    });
   });
 
   it('refuses a signature from another key', async () => {

@@ -143,7 +143,7 @@ export default function CardScreen() {
               <QrCode value={cardUrl(publicOrigin(), token)} size={196} label={t('card.qrLabel')} />
             </View>
           )}
-          {session.sequence !== null && <CardName sequence={session.sequence} />}
+          <CardName arcana={card.arcana} />
         </TeroCard>
       </View>
       <Text style={styles.expiry}>

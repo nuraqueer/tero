@@ -1,9 +1,11 @@
 import { StyleSheet, Text } from 'react-native';
 import { colors, fonts } from '@tero/ui';
+import type { MessageKey } from '@tero/i18n';
 import { useLocale } from '@/lib/locale';
 import { TeroCard } from './TeroCard';
 
 const romans: Array<[number, string]> = [
+  [20, 'XX'],
   [10, 'X'],
   [9, 'IX'],
   [5, 'V'],
@@ -11,7 +13,7 @@ const romans: Array<[number, string]> = [
   [1, 'I'],
 ];
 
-/** Sequences as tarot numbers. Sequence 0 is the Fool's card, numbered 0 as in the deck. */
+/** Tarot numbers. The Fool's card is numbered 0, as in the deck. */
 export function toRoman(n: number): string {
   if (n === 0) return '0';
   let rest = n;
@@ -25,18 +27,18 @@ export function toRoman(n: number): string {
   return out;
 }
 
-/** The card's name: "The Fool" for Sequence 0, otherwise the Sequence in tarot numbers. */
-export function useCardTitle(sequence: number): string {
+/** A Major Arcana card's name, such as "The Fool" or "Justice". */
+export function useCardTitle(arcana: number): string {
   const { t } = useLocale();
-  return sequence === 0 ? t('card.fool') : t('home.sequence', { sequence: toRoman(sequence) });
+  return t(`arcana.${arcana}` as MessageKey);
 }
 
-/** The member's own tarot card: the Fool for Sequence 0, otherwise their Sequence. */
-export function MemberCard({ sequence }: { sequence: number }) {
-  const title = useCardTitle(sequence);
+/** The member's own tarot card, numbered as in the deck. */
+export function MemberCard({ arcana }: { arcana: number }) {
+  const title = useCardTitle(arcana);
   return (
     <TeroCard width={200}>
-      <Text style={styles.numeral}>{toRoman(sequence)}</Text>
+      <Text style={styles.numeral}>{toRoman(arcana)}</Text>
       <Text style={styles.title} accessibilityRole="header">
         {title.toUpperCase()}
       </Text>
