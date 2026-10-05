@@ -179,6 +179,10 @@ my-card|roles` (re-exports of the shared screens). Phones keep `/lock` and the t
   never inside the console sidebar (`_layout.tsx`: index guard is always on for web, placed
   after the admin screens; `publicPage` skips `WebShell`). The admin side is only at
   `/admin` (lock, then console); there is no link to it on the public site.
+- Face ID / fingerprint unlock (D48): `lib/biometric.ts` (`.web.ts` stub), settings screen
+  `app/biometric.tsx` (You → "Face ID or fingerprint", asks the passcode), lock screen asks
+  automatically when on (`unlockWithBiometric`). Seed in SecureStore with
+  `requireAuthentication`; turned off by `finishSetup` (new or restored vault).
 - Testing member screens in a browser: the web sends the Fool to `/admin`, and a full page
   load locks. To reach `/part/...` locally, add a temporary `router.push` link on the admin
   page, export, test with Playwright (see founder setup steps), then revert before committing.

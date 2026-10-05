@@ -19,6 +19,7 @@ import {
 } from '@tero/crypto';
 import type { Role } from '@tero/protocol';
 import { ApiError, authed, signIn, type Api } from './api';
+import * as biometric from './biometric';
 import * as vault from './vault';
 
 /** How long Tero stays open while you're in another app or tab. */
@@ -60,6 +61,12 @@ export type SessionState =
 export type RevealResult =
   { ok: true; phrase: string } | { ok: false; waitMs: number } | { ok: false; decoy: true };
 
+export type BiometricResult =
+  | { ok: true }
+  | { ok: false; waitMs: number }
+  | { ok: false; decoy: true }
+  | { ok: false; failed: true };
+
 export type JoinResult = { ok: true } | { ok: false; error: ApiError['code'] };
 
 type SessionValue = {
@@ -74,6 +81,10 @@ type SessionValue = {
     founder?: boolean,
   ) => Promise<void>;
   unlock: (passcode: string) => Promise<vault.UnlockResult>;
+  /** Face ID or fingerprint, when the member has turned it on. */
+  unlockWithBiometric: (prompt: string) => Promise<'opened' | 'cancelled' | 'gone'>;
+  /** Turns on Face ID or fingerprint unlock after checking the passcode. */
+  enableBiometric: (passcode: string, prompt: string) => Promise<BiometricResult>;
   /**
    * Asks for the passcode again before showing the 12 words. The decoy passcode switches
    * to the plain view, exactly as it does on the lock screen.
@@ -203,6 +214,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     async (phrase: string, passcode: string, decoyPasscode: string, founder = false) => {
       const join = state.status === 'new' ? state.join : null;
       const seed = await phraseToSeed(phrase);
+      // A new or restored vault: a seed kept for Face ID or fingerprint is now stale.
+      await biometric.disableBiometric();
       await vault.saveNewVault(phrase, seed, passcode, decoyPasscode);
       await openFull(seed, join, founder && !join);
     },
@@ -226,6 +239,34 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       return result;
     },
     [openFull, openBasic],
+  );
+
+  /** Face ID or fingerprint: opens straight away, skipping the passcode stretching. */
+  const unlockWithBiometric = useCallback(
+    async (prompt: string): Promise<'opened' | 'cancelled' | 'gone'> => {
+      const seed = await biometric.readBiometricSeed(prompt);
+      if (seed === 'gone') return 'gone';
+      if (!seed) return 'cancelled';
+      await openFull(seed);
+      return 'opened';
+    },
+    [openFull],
+  );
+
+  /** Turns biometric unlock on after checking the passcode. The decoy switches to basic. */
+  const enableBiometric = useCallback(
+    async (passcode: string, prompt: string): Promise<BiometricResult> => {
+      const result = await vault.unlock(passcode);
+      if (!result.ok) return result;
+      if (result.value.mode !== 'full') {
+        openBasic();
+        return { ok: false, decoy: true };
+      }
+      return (await biometric.enableBiometric(result.value.seed, prompt))
+        ? { ok: true }
+        : { ok: false, failed: true };
+    },
+    [openBasic],
   );
 
   const revealPhrase = useCallback(
@@ -260,8 +301,30 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, [api]);
 
   const value = useMemo(
-    () => ({ state, startJoin, finishSetup, unlock, revealPhrase, lock, api, refreshMember }),
-    [state, startJoin, finishSetup, unlock, revealPhrase, lock, api, refreshMember],
+    () => ({
+      state,
+      startJoin,
+      finishSetup,
+      unlock,
+      unlockWithBiometric,
+      enableBiometric,
+      revealPhrase,
+      lock,
+      api,
+      refreshMember,
+    }),
+    [
+      state,
+      startJoin,
+      finishSetup,
+      unlock,
+      unlockWithBiometric,
+      enableBiometric,
+      revealPhrase,
+      lock,
+      api,
+      refreshMember,
+    ],
   );
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View, Platform } from 'react-native';
 import { router, useFocusEffect, type Href } from 'expo-router';
 import { localeNames } from '@tero/i18n';
 import { colors, fonts, radii, space } from '@tero/ui';
@@ -60,6 +60,7 @@ export default function You() {
       show: member === true,
     },
     { label: t('words.open'), href: '/words', show: true },
+    { label: t('bio.row'), href: '/biometric', show: Platform.OS !== 'web' },
     // Moderators work on phones; the Fool and council see it too until moderators exist.
     {
       label: t('mod.title'),

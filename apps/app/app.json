@@ -55,6 +55,18 @@
           "isAccessMediaLocationEnabled": false,
           "granularPermissions": ["photo"]
         }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Tero uses Face ID to open the app, only if you turn it on."
+        }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": "Tero uses Face ID to open the app, only if you turn it on."
+        }
       ]
     ],
     "experiments": {

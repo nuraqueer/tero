@@ -32,6 +32,28 @@ export const en = {
   'restore.label': 'Your 12 words',
   'restore.wrong': 'The words marked in red are not right. Check the spelling.',
   'lock.forgot': 'Forgot it? Use your 12 words',
+  'bio.row': 'Face ID or fingerprint',
+  'bio.face': 'Face ID',
+  'bio.fingerprint': 'Fingerprint',
+  'bio.other': 'Biometrics',
+  'bio.title': 'Unlock with {name}',
+  'bio.body':
+    'Open Tero with {name} instead of typing your passcode. It’s quicker: the phone keeps your key in its secure hardware and only hands it over after {name}.',
+  'bio.warningTitle': 'Think about where you live',
+  'bio.warning':
+    'Someone can hold your phone up to your face or press your finger on it. {name} always opens your full Tero, never the basic view your decoy passcode shows. Where that’s a risk, keep using your passcode.',
+  'bio.isOn': 'On for this phone.',
+  'bio.isOff': 'Off.',
+  'bio.turnOn': 'Turn on {name}',
+  'bio.turnOff': 'Turn off',
+  'bio.ask': 'Enter your passcode to turn it on.',
+  'bio.failed': 'That didn’t work. Try again, or check that your phone has a passcode set.',
+  'bio.unavailable':
+    'This phone has no Face ID or fingerprint set up. Add one in the phone’s settings first.',
+  'bio.prompt': 'Open Tero',
+  'bio.use': 'Use {name}',
+  'bio.gone':
+    'Your phone’s Face ID or fingerprints changed, so use your passcode. You can turn it on again afterwards.',
   'welcome.restore': 'I have my 12 words',
   'restore.missing': '{count} boxes are still empty.',
   'restore.order':

@@ -34,6 +34,28 @@ export const sw: Messages = {
   'restore.label': 'Maneno yako 12',
   'restore.wrong': 'Maneno yaliyowekwa alama nyekundu si sahihi. Angalia tahajia.',
   'lock.forgot': 'Umesahau? Tumia maneno yako 12',
+  'bio.row': 'Face ID au alama ya kidole',
+  'bio.face': 'Face ID',
+  'bio.fingerprint': 'Alama ya kidole',
+  'bio.other': 'Bayometriki',
+  'bio.title': 'Fungua kwa {name}',
+  'bio.body':
+    'Fungua Tero kwa {name} badala ya kuandika nambari yako ya siri. Ni haraka zaidi: simu huhifadhi ufunguo wako kwenye kifaa salama na huutoa tu baada ya {name}.',
+  'bio.warningTitle': 'Fikiria unapoishi',
+  'bio.warning':
+    'Mtu anaweza kushikilia simu yako mbele ya uso wako au kubonyeza kidole chako. {name} hufungua Tero yako kamili kila mara, si mwonekano wa kawaida wa nambari ya udanganyifu. Pale hilo ni hatari, endelea kutumia nambari yako ya siri.',
+  'bio.isOn': 'Imewashwa kwa simu hii.',
+  'bio.isOff': 'Imezimwa.',
+  'bio.turnOn': 'Washa {name}',
+  'bio.turnOff': 'Zima',
+  'bio.ask': 'Weka nambari yako ya siri kuiwasha.',
+  'bio.failed': 'Haikufanya kazi. Jaribu tena, au hakikisha simu yako ina nambari ya siri.',
+  'bio.unavailable':
+    'Simu hii haina Face ID wala alama ya kidole. Ongeza kwanza kwenye mipangilio ya simu.',
+  'bio.prompt': 'Fungua Tero',
+  'bio.use': 'Tumia {name}',
+  'bio.gone':
+    'Face ID au alama za vidole za simu zimebadilika, kwa hiyo tumia nambari yako ya siri. Unaweza kuiwasha tena baadaye.',
   'welcome.restore': 'Nina maneno yangu 12',
   'restore.missing': 'Visanduku {count} bado viko tupu.',
   'restore.order':
