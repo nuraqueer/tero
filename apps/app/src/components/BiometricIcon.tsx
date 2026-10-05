@@ -21,7 +21,7 @@ export function BiometricIcon({
   } as const;
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityElementsHidden>
-      {kind === 'face' ? (
+      {kind === 'faceId' || kind === 'face' ? (
         <>
           <Path d="M3 8V5.5A2.5 2.5 0 0 1 5.5 3H8M16 3h2.5A2.5 2.5 0 0 1 21 5.5V8" {...line} />
           <Path

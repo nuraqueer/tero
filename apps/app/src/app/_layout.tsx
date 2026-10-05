@@ -102,7 +102,6 @@ function Screens() {
       <Stack.Protected guard={full}>
         <Stack.Screen name="card/[id]" />
         <Stack.Screen name="words" />
-        <Stack.Screen name="biometric" />
         <Stack.Screen name="cards" />
         <Stack.Screen name="my-card" options={{ animation: 'fade' }} />
         <Stack.Screen name="part/[part]" />

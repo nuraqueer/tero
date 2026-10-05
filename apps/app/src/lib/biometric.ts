@@ -1,34 +1,49 @@
+import { Platform } from 'react-native';
+import Constants, { ExecutionEnvironment } from 'expo-constants';
 import * as LocalAuthentication from 'expo-local-authentication';
 import * as SecureStore from 'expo-secure-store';
 import { base64UrlToBytes, bytesToBase64Url } from '@tero/crypto';
 
 /*
- * Opt-in Face ID / fingerprint unlock (D48). The seed is kept in the Keychain or
- * Keystore on this device only, and only while the phone has its own passcode set; Tero
- * hands it over after the phone confirms the owner (Face ID, fingerprint, or the phone's
- * own passcode as the usual fallback). Unlocking this way skips the slow passcode
- * stretching.
+ * Opt-in Face ID / Touch ID / fingerprint / face unlock (D48). The seed is kept in the
+ * Keychain or Keystore on this device only, while the phone has a passcode. Tero hands
+ * it over after the phone's biometric check; if that fails, the member types Tero's
+ * own passcode (not the phone's). Unlocking this way skips the slow passcode stretching.
  */
 
 const seedKey = 'tero.biometric.seed';
 const onKey = 'tero.biometric.on';
+const askedKey = 'tero.biometric.asked';
 const storeOptions: SecureStore.SecureStoreOptions = {
   keychainAccessible: SecureStore.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY,
 };
 
-export type BiometricKind = 'face' | 'fingerprint' | 'other';
+/** What to call it on this phone. */
+export type BiometricKind = 'faceId' | 'touchId' | 'fingerprint' | 'face' | 'biometric';
 
-/** What this phone can do, or null when it has no enrolled biometrics. */
-export async function biometricKind(): Promise<BiometricKind | null> {
+export type BiometricSupport =
+  | { ok: true; kind: BiometricKind }
+  /** Expo Go on iPhone can't use Face ID; the Tero app build can. */
+  | { ok: false; reason: 'expoGo'; kind: BiometricKind }
+  | { ok: false; reason: 'none' };
+
+const inExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+
+export async function biometricSupport(): Promise<BiometricSupport> {
   try {
-    if (!(await LocalAuthentication.hasHardwareAsync())) return null;
-    if (!(await LocalAuthentication.isEnrolledAsync())) return null;
+    if (!(await LocalAuthentication.hasHardwareAsync())) return { ok: false, reason: 'none' };
+    if (!(await LocalAuthentication.isEnrolledAsync())) return { ok: false, reason: 'none' };
     const types = await LocalAuthentication.supportedAuthenticationTypesAsync();
-    if (types.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION)) return 'face';
-    if (types.includes(LocalAuthentication.AuthenticationType.FINGERPRINT)) return 'fingerprint';
-    return 'other';
+    const face = types.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION);
+    const finger = types.includes(LocalAuthentication.AuthenticationType.FINGERPRINT);
+    let kind: BiometricKind;
+    if (Platform.OS === 'ios') kind = face ? 'faceId' : 'touchId';
+    else kind = face && finger ? 'biometric' : face ? 'face' : finger ? 'fingerprint' : 'biometric';
+    if (Platform.OS === 'ios' && kind === 'faceId' && inExpoGo)
+      return { ok: false, reason: 'expoGo', kind };
+    return { ok: true, kind };
   } catch {
-    return null;
+    return { ok: false, reason: 'none' };
   }
 }
 
@@ -40,18 +55,30 @@ export async function biometricOn(): Promise<boolean> {
   }
 }
 
-/** The phone's own check: Face ID or fingerprint, with its passcode as the fallback. */
-async function confirmOwner(prompt: string): Promise<'ok' | 'cancelled' | 'failed'> {
+/** Whether Tero has already offered it once on this phone. */
+export async function biometricAsked(): Promise<boolean> {
+  try {
+    return (await SecureStore.getItemAsync(askedKey, storeOptions)) === '1';
+  } catch {
+    return true;
+  }
+}
+
+export async function setBiometricAsked(): Promise<void> {
+  await SecureStore.setItemAsync(askedKey, '1', storeOptions).catch(() => undefined);
+}
+
+/** The phone's biometric check only; on failure Tero's own passcode is the way in. */
+async function check(prompt: string, cancel: string): Promise<'ok' | 'cancelled' | 'failed'> {
   try {
     const result = await LocalAuthentication.authenticateAsync({
       promptMessage: prompt,
-      cancelLabel: undefined,
-      disableDeviceFallback: false,
+      cancelLabel: cancel,
+      disableDeviceFallback: true,
+      fallbackLabel: '',
     });
     if (result.success) return 'ok';
-    return result.error === 'user_cancel' ||
-      result.error === 'system_cancel' ||
-      result.error === 'app_cancel'
+    return ['user_cancel', 'system_cancel', 'app_cancel', 'user_fallback'].includes(result.error)
       ? 'cancelled'
       : 'failed';
   } catch {
@@ -59,16 +86,18 @@ async function confirmOwner(prompt: string): Promise<'ok' | 'cancelled' | 'faile
   }
 }
 
-/** Turns it on: the phone confirms the owner, then the seed is kept on this device. */
+/** Turns it on: one biometric check, then the seed is kept on this device. */
 export async function enableBiometric(
   seed: Uint8Array,
   prompt: string,
+  cancel: string,
 ): Promise<'on' | 'cancelled' | 'failed'> {
-  const check = await confirmOwner(prompt);
-  if (check !== 'ok') return check;
+  const result = await check(prompt, cancel);
+  if (result !== 'ok') return result;
   try {
     await SecureStore.setItemAsync(seedKey, bytesToBase64Url(seed), storeOptions);
     await SecureStore.setItemAsync(onKey, '1', storeOptions);
+    await setBiometricAsked();
     return 'on';
   } catch {
     await disableBiometric();
@@ -82,17 +111,19 @@ export async function disableBiometric(): Promise<void> {
 }
 
 /**
- * Asks the phone to confirm the owner and returns the seed. Null if they cancel or it
- * fails; 'gone' if the seed is no longer there (for example the phone's passcode was
- * removed), which turns the option off.
+ * The biometric check, then the seed. Null if cancelled or not recognised (the passcode
+ * is the way in then); 'gone' if the seed is no longer there, which turns the option off.
  */
-export async function readBiometricSeed(prompt: string): Promise<Uint8Array | null | 'gone'> {
-  if ((await confirmOwner(prompt)) !== 'ok') return null;
+export async function readBiometricSeed(
+  prompt: string,
+  cancel: string,
+): Promise<Uint8Array | null | 'gone'> {
+  if ((await check(prompt, cancel)) !== 'ok') return null;
   try {
     const value = await SecureStore.getItemAsync(seedKey, storeOptions);
     if (value) return base64UrlToBytes(value);
   } catch {
-    // Fall through: treat as gone.
+    // Treat as gone.
   }
   await disableBiometric();
   return 'gone';

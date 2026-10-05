@@ -35,22 +35,30 @@ export const fr: Messages = {
   'restore.label': 'Tes 12 mots',
   'restore.wrong': "Les mots en rouge ne sont pas bons. Vérifie l'orthographe.",
   'lock.forgot': 'Oublié ? Utilise tes 12 mots',
-  'bio.row': 'Face ID ou empreinte',
-  'bio.face': 'Face ID',
-  'bio.fingerprint': 'Empreinte digitale',
-  'bio.other': 'Biométrie',
-  'bio.title': 'Déverrouiller avec {name}',
-  'bio.body':
-    'Ouvre Tero tout de suite, sans code. Si {name} ne marche pas, le téléphone demande son propre code.',
-  'bio.warningTitle': 'Bon à savoir',
-  'bio.warning':
-    'Quelqu’un pourrait tenir ton téléphone devant ton visage ou utiliser ton doigt. {name} ouvre toujours ton Tero complet, jamais la vue leurre. Si c’est un risque, laisse ceci désactivé et utilise ton code.',
   'bio.failed':
     'Impossible de l’activer. Vérifie que ton téléphone a un code et Face ID ou une empreinte.',
-  'bio.unavailable':
-    'Ce téléphone n’a ni Face ID ni empreinte configurés. Ajoute-en dans les réglages du téléphone.',
   'bio.prompt': 'Ouvrir Tero',
-  'bio.use': 'Utiliser {name}',
+  'bio.statusOn': 'Activé : Tero s’ouvre avec {name}',
+  'bio.statusOff': 'Désactivé : Tero demande ton code',
+  'bio.statusUnavailable': 'Indisponible dans cet aperçu',
+  'bio.nowOn': '{name} est activé',
+  'bio.nowOnBody': 'La prochaine fois, Tero s’ouvrira avec {name}. Tu peux le désactiver dans Toi.',
+  'bio.expoGo': '{name} nécessite l’app Tero. L’aperçu Expo Go ne peut pas l’utiliser sur iPhone.',
+  'bio.footnote':
+    'Ouvre Tero sans ton code. Il ouvre toujours ton Tero complet, jamais la vue leurre : laisse-le désactivé si quelqu’un pourrait forcer ton visage ou ton doigt.',
+  'bio.turnOn': 'Activer',
+  'bio.notNow': 'Pas maintenant',
+  'bio.offerBody':
+    'Plus rapide que de taper ton code. Tu peux le désactiver à tout moment dans Toi.',
+  'bio.offerTitle': 'Utiliser {name} pour ouvrir Tero ?',
+  'bio.locked': 'Tero est verrouillé',
+  'bio.usePasscode': 'Utiliser le code',
+  'bio.kind.biometric': 'Empreinte ou visage',
+  'bio.kind.face': 'Déverrouillage par le visage',
+  'bio.kind.fingerprint': 'Empreinte digitale',
+  'bio.kind.touchId': 'Touch ID',
+  'bio.kind.faceId': 'Face ID',
+  'bio.use': 'Ouvrir avec {name}',
   'bio.gone':
     'Utilise ton code cette fois. Le déverrouillage biométrique a été désactivé car la sécurité du téléphone a changé.',
   'welcome.restore': "J'ai mes 12 mots",

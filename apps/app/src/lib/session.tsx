@@ -76,9 +76,9 @@ type SessionValue = {
   ) => Promise<void>;
   unlock: (passcode: string) => Promise<vault.UnlockResult>;
   /** Face ID or fingerprint, when the member has turned it on. */
-  unlockWithBiometric: (prompt: string) => Promise<'opened' | 'cancelled' | 'gone'>;
+  unlockWithBiometric: (prompt: string, cancel: string) => Promise<'opened' | 'cancelled' | 'gone'>;
   /** Turns on Face ID or fingerprint unlock; the phone confirms the owner. */
-  enableBiometric: (prompt: string) => Promise<'on' | 'cancelled' | 'failed'>;
+  enableBiometric: (prompt: string, cancel: string) => Promise<'on' | 'cancelled' | 'failed'>;
   /**
    * Asks for the passcode again before showing the 12 words. The decoy passcode switches
    * to the plain view, exactly as it does on the lock screen.
@@ -243,8 +243,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   /** Face ID or fingerprint: opens straight away, skipping the passcode stretching. */
   const unlockWithBiometric = useCallback(
-    async (prompt: string): Promise<'opened' | 'cancelled' | 'gone'> => {
-      const seed = await biometric.readBiometricSeed(prompt);
+    async (prompt: string, cancel: string): Promise<'opened' | 'cancelled' | 'gone'> => {
+      const seed = await biometric.readBiometricSeed(prompt, cancel);
       if (seed === 'gone') return 'gone';
       if (!seed) return 'cancelled';
       await openFull(seed);
@@ -254,9 +254,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   );
 
   /** Turns Face ID or fingerprint unlock on for this phone; the phone confirms the owner. */
-  const enableBiometric = useCallback(async (prompt: string) => {
+  const enableBiometric = useCallback(async (prompt: string, cancel: string) => {
     const seed = openSeed.current;
-    return seed ? biometric.enableBiometric(seed, prompt) : ('failed' as const);
+    return seed ? biometric.enableBiometric(seed, prompt, cancel) : ('failed' as const);
   }, []);
 
   const revealPhrase = useCallback(

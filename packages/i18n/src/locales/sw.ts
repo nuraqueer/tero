@@ -34,22 +34,31 @@ export const sw: Messages = {
   'restore.label': 'Maneno yako 12',
   'restore.wrong': 'Maneno yaliyowekwa alama nyekundu si sahihi. Angalia tahajia.',
   'lock.forgot': 'Umesahau? Tumia maneno yako 12',
-  'bio.row': 'Face ID au alama ya kidole',
-  'bio.face': 'Face ID',
-  'bio.fingerprint': 'Alama ya kidole',
-  'bio.other': 'Bayometriki',
-  'bio.title': 'Fungua kwa {name}',
-  'bio.body':
-    'Hufungua Tero mara moja, bila nambari ya siri. {name} isipofanya kazi, simu itaomba nambari yake ya siri.',
-  'bio.warningTitle': 'Vizuri kujua',
-  'bio.warning':
-    'Mtu anaweza kushikilia simu mbele ya uso wako au kutumia kidole chako. {name} hufungua Tero yako kamili kila mara, si mwonekano wa udanganyifu. Pale hilo ni hatari, iache imezimwa na tumia nambari yako ya siri.',
   'bio.failed':
     'Imeshindwa kuiwasha. Hakikisha simu yako ina nambari ya siri na Face ID au alama ya kidole.',
-  'bio.unavailable':
-    'Simu hii haina Face ID wala alama ya kidole. Ongeza kwanza kwenye mipangilio ya simu.',
   'bio.prompt': 'Fungua Tero',
-  'bio.use': 'Tumia {name}',
+  'bio.statusOn': 'Imewashwa: Tero hufunguka kwa {name}',
+  'bio.statusOff': 'Imezimwa: Tero huomba nambari ya siri',
+  'bio.statusUnavailable': 'Haipatikani katika onyesho hili',
+  'bio.nowOn': '{name} imewashwa',
+  'bio.nowOnBody': 'Wakati ujao, Tero itafunguka kwa {name}. Unaweza kuizima kwenye Wewe.',
+  'bio.expoGo':
+    '{name} inahitaji programu ya Tero. Onyesho la Expo Go haliwezi kuitumia kwenye iPhone.',
+  'bio.footnote':
+    'Hufungua Tero bila nambari ya siri. Hufungua Tero yako kamili kila mara, si mwonekano wa udanganyifu, kwa hiyo iache imezimwa pale mtu anaweza kulazimisha uso au kidole chako.',
+  'bio.turnOn': 'Washa',
+  'bio.notNow': 'Si sasa',
+  'bio.offerBody':
+    'Ni haraka kuliko kuandika nambari ya siri. Unaweza kuizima wakati wowote kwenye Wewe.',
+  'bio.offerTitle': 'Tumia {name} kufungua Tero?',
+  'bio.locked': 'Tero imefungwa',
+  'bio.usePasscode': 'Tumia nambari ya siri',
+  'bio.kind.biometric': 'Alama ya kidole au uso',
+  'bio.kind.face': 'Kufungua kwa uso',
+  'bio.kind.fingerprint': 'Alama ya kidole',
+  'bio.kind.touchId': 'Touch ID',
+  'bio.kind.faceId': 'Face ID',
+  'bio.use': 'Fungua kwa {name}',
   'bio.gone':
     'Tumia nambari yako ya siri safari hii. Kufungua kwa bayometriki kumezimwa kwa sababu usalama wa simu ulibadilika.',
   'welcome.restore': 'Nina maneno yangu 12',

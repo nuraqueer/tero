@@ -182,13 +182,13 @@ my-card|roles` (re-exports of the shared screens). Phones keep `/lock` and the t
 - Help tab (D49): `(tabs)/help.tsx` has one "Share or ask" button (opens `/part/<part>?create=1`,
   aid takes `create=request|offer`; each part component takes `create` and opens its form),
   a grid of cards for the parts, and chips for the seven place directories.
-- Face ID / fingerprint unlock (D48): `lib/biometric.ts` (`.web.ts` stub), settings screen
-  `app/biometric.tsx` (You → "Face ID or fingerprint": one switch), lock screen asks
-  automatically when on (`unlockWithBiometric`, round icon button). `LocalAuthentication`
-  confirms the owner (device passcode fallback allowed); seed in SecureStore
-  `WHEN_PASSCODE_SET_THIS_DEVICE_ONLY` (`requireAuthentication` failed in Expo Go). The open
-  session keeps the seed in memory (`openSeed`, cleared on lock) so turning it on needs no
-  passcode. Turned off by `finishSetup` (new or restored vault).
+- Face ID / Touch ID / fingerprint / face unlock (D48): `lib/biometric.ts` (`.web.ts` stub;
+  `biometricSupport()` names it per OS and reports `expoGo` on iPhones in Expo Go, where
+  Face ID can't work), `components/BiometricRow.tsx` (switch + on/off status in You;
+  `offerBiometric` asks once after a passcode unlock), lock screen leads with the
+  biometric (`disableDeviceFallback`, so failure goes to Tero's passcode). Seed in
+  SecureStore `WHEN_PASSCODE_SET_THIS_DEVICE_ONLY`; session keeps `openSeed` while open.
+  **iPhone Face ID needs a dev build / TestFlight** (Apple Developer access needed).
 - Not a game (D50): public site rebuilt plain and light (`PublicHome.tsx`), hero line
   "Queer knowledge, resources, community, & support" (`app.tagline`, `public.title`), no
   Fool card anywhere on the web (console avatar, `/admin/my-card` and greeting name removed).

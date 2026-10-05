@@ -4,6 +4,7 @@ import { router, useFocusEffect, type Href } from 'expo-router';
 import { localeNames } from '@tero/i18n';
 import { colors, fonts, radii, space } from '@tero/ui';
 import { Button } from '@/components/Button';
+import { BiometricRow } from '@/components/BiometricRow';
 import { Code } from '@/components/Code';
 import { CardAvatar } from '@/components/CardAvatar';
 import { useCardTitle } from '@/components/MemberCard';
@@ -60,7 +61,6 @@ export default function You() {
       show: member === true,
     },
     { label: t('words.open'), href: '/words', show: true },
-    { label: t('bio.row'), href: '/biometric', show: Platform.OS !== 'web' },
     // Moderators work on phones; the Fool and council see it too until moderators exist.
     {
       label: t('mod.title'),
@@ -131,6 +131,8 @@ export default function You() {
             </Pressable>
           ))}
       </View>
+
+      {Platform.OS !== 'web' && <BiometricRow />}
 
       <View style={styles.foot}>
         <View style={styles.status}>

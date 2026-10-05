@@ -8,23 +8,29 @@ import { CardMark } from '@/components/CardMark';
 import { Page } from '@/components/Page';
 import { PasscodePad } from '@/components/PasscodePad';
 import { Wordmark } from '@/components/Wordmark';
-import { biometricKind, biometricOn, type BiometricKind } from '@/lib/biometric';
+import { biometricName, offerBiometric } from '@/components/BiometricRow';
+import { biometricOn, biometricSupport, type BiometricKind } from '@/lib/biometric';
 import { useLocale } from '@/lib/locale';
 import { useSession } from '@/lib/session';
 
 export default function Lock() {
   const { t } = useLocale();
-  const { unlock, unlockWithBiometric } = useSession();
-  // Face ID or fingerprint, if the member turned it on (phones only).
+  const { unlock, unlockWithBiometric, enableBiometric } = useSession();
+  // Face ID, Touch ID, fingerprint or face unlock, if the member turned it on (phones only).
   const [bio, setBio] = useState<BiometricKind | null>(null);
+  // With biometrics on, the passcode pad waits behind "Use passcode".
+  const [showPad, setShowPad] = useState(Platform.OS === 'web');
+  const [checking, setChecking] = useState(Platform.OS !== 'web');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string>();
   const [tries, setTries] = useState(0);
 
   const tryBiometric = useCallback(async () => {
-    const result = await unlockWithBiometric(t('bio.prompt'));
+    setMessage(undefined);
+    const result = await unlockWithBiometric(t('bio.prompt'), t('bio.usePasscode'));
     if (result === 'gone') {
       setBio(null);
+      setShowPad(true);
       setMessage(t('bio.gone'));
     }
   }, [t, unlockWithBiometric]);
@@ -32,10 +38,14 @@ export default function Lock() {
   useEffect(() => {
     if (Platform.OS === 'web') return;
     void (async () => {
-      if (!(await biometricOn())) return;
-      const kind = await biometricKind();
-      if (!kind) return;
-      setBio(kind);
+      const support = await biometricSupport();
+      const on = support.ok && (await biometricOn());
+      setChecking(false);
+      if (!on) {
+        setShowPad(true);
+        return;
+      }
+      setBio(support.kind);
       void tryBiometric();
     })();
     // Ask once when the lock screen appears.
@@ -53,33 +63,53 @@ export default function Lock() {
         const seconds = Math.ceil(result.waitMs / 1000);
         setMessage(seconds > 0 ? t('lock.wait', { seconds }) : t('lock.wrong'));
         setTries((n) => n + 1);
+      } else if (Platform.OS !== 'web' && result.value.mode === 'full') {
+        // Once only: offer Face ID or fingerprint for next time.
+        void offerBiometric(t, enableBiometric);
       }
     } finally {
       setBusy(false);
     }
   };
 
+  const name = bio ? t(biometricName(bio)) : '';
+
   const form = (
     <View style={styles.form}>
       <CardMark height={56} />
       <Wordmark height={26} />
-      <Text style={styles.prompt}>
-        {Platform.OS === 'web' ? t('lock.webPrompt') : t('lock.enterPasscode')}
-      </Text>
-      <PasscodePad onSubmit={submit} busy={busy} message={message} resetKey={tries} />
-      {bio && (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={t('bio.use', {
-            name: t(
-              bio === 'face' ? 'bio.face' : bio === 'fingerprint' ? 'bio.fingerprint' : 'bio.other',
-            ),
-          })}
-          onPress={() => void tryBiometric()}
-          style={({ pressed }) => [styles.bio, pressed && styles.bioPressed]}
-        >
-          <BiometricIcon kind={bio} size={30} />
-        </Pressable>
+      {checking ? null : showPad ? (
+        <>
+          <Text style={styles.prompt}>
+            {Platform.OS === 'web' ? t('lock.webPrompt') : t('lock.enterPasscode')}
+          </Text>
+          <PasscodePad onSubmit={submit} busy={busy} message={message} resetKey={tries} />
+          {bio && (
+            <Button
+              label={t('bio.use', { name })}
+              kind="quiet"
+              onPress={() => {
+                setShowPad(false);
+                void tryBiometric();
+              }}
+            />
+          )}
+        </>
+      ) : (
+        <>
+          <Text style={styles.prompt}>{t('bio.locked')}</Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('bio.use', { name })}
+            onPress={() => void tryBiometric()}
+            style={({ pressed }) => [styles.bio, pressed && styles.bioPressed]}
+          >
+            {bio && <BiometricIcon kind={bio} size={44} />}
+          </Pressable>
+          <Text style={styles.bioLabel}>{t('bio.use', { name })}</Text>
+          {message && <Text style={styles.bioMessage}>{message}</Text>}
+          <Button label={t('bio.usePasscode')} kind="quiet" onPress={() => setShowPad(true)} />
+        </>
       )}
       <View style={styles.forgot}>
         <Button label={t('lock.forgot')} kind="quiet" onPress={() => router.push('/restore')} />
@@ -114,13 +144,28 @@ export default function Lock() {
 const styles = StyleSheet.create({
   bio: {
     alignSelf: 'center',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 88,
+    height: 88,
+    borderRadius: 44,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: space.md,
+    marginTop: space.lg,
     backgroundColor: 'rgba(31,30,29,0.06)',
+  },
+  bioLabel: {
+    fontFamily: fonts.bodySemibold,
+    fontSize: 16,
+    color: colors.slate,
+    textAlign: 'center',
+    marginTop: space.sm,
+  },
+  bioMessage: {
+    fontFamily: fonts.body,
+    fontSize: 14,
+    lineHeight: 20,
+    color: colors.clayText,
+    textAlign: 'center',
+    marginTop: space.sm,
   },
   bioPressed: { opacity: 0.6 },
   form: { alignItems: 'center', gap: space.sm + 2, width: '100%', marginTop: space.md },
