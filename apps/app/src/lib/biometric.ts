@@ -4,13 +4,17 @@ import { base64UrlToBytes, bytesToBase64Url } from '@tero/crypto';
 
 /*
  * Opt-in Face ID / fingerprint unlock (D48). The seed is kept in the Keychain or
- * Keystore behind the phone's biometrics, so unlocking skips the slow passcode
- * stretching. The phone's own security decides who may read it; if the enrolled faces
- * or fingers change, the item stops opening and Tero falls back to the passcode.
+ * Keystore on this device only, and only while the phone has its own passcode set; Tero
+ * hands it over after the phone confirms the owner (Face ID, fingerprint, or the phone's
+ * own passcode as the usual fallback). Unlocking this way skips the slow passcode
+ * stretching.
  */
 
 const seedKey = 'tero.biometric.seed';
 const onKey = 'tero.biometric.on';
+const storeOptions: SecureStore.SecureStoreOptions = {
+  keychainAccessible: SecureStore.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY,
+};
 
 export type BiometricKind = 'face' | 'fingerprint' | 'other';
 
@@ -30,56 +34,66 @@ export async function biometricKind(): Promise<BiometricKind | null> {
 
 export async function biometricOn(): Promise<boolean> {
   try {
-    return (await SecureStore.getItemAsync(onKey)) === '1';
+    return (await SecureStore.getItemAsync(onKey, storeOptions)) === '1';
   } catch {
     return false;
   }
 }
 
-/** Keeps the seed behind biometrics. The phone asks for a face or finger to confirm. */
-export async function enableBiometric(seed: Uint8Array, prompt: string): Promise<boolean> {
+/** The phone's own check: Face ID or fingerprint, with its passcode as the fallback. */
+async function confirmOwner(prompt: string): Promise<'ok' | 'cancelled' | 'failed'> {
   try {
-    await SecureStore.setItemAsync(seedKey, bytesToBase64Url(seed), {
-      requireAuthentication: true,
-      authenticationPrompt: prompt,
-      keychainAccessible: SecureStore.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY,
+    const result = await LocalAuthentication.authenticateAsync({
+      promptMessage: prompt,
+      cancelLabel: undefined,
+      disableDeviceFallback: false,
     });
-    await SecureStore.setItemAsync(onKey, '1', {
-      keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-    });
-    return true;
+    if (result.success) return 'ok';
+    return result.error === 'user_cancel' ||
+      result.error === 'system_cancel' ||
+      result.error === 'app_cancel'
+      ? 'cancelled'
+      : 'failed';
+  } catch {
+    return 'failed';
+  }
+}
+
+/** Turns it on: the phone confirms the owner, then the seed is kept on this device. */
+export async function enableBiometric(
+  seed: Uint8Array,
+  prompt: string,
+): Promise<'on' | 'cancelled' | 'failed'> {
+  const check = await confirmOwner(prompt);
+  if (check !== 'ok') return check;
+  try {
+    await SecureStore.setItemAsync(seedKey, bytesToBase64Url(seed), storeOptions);
+    await SecureStore.setItemAsync(onKey, '1', storeOptions);
+    return 'on';
   } catch {
     await disableBiometric();
-    return false;
+    return 'failed';
   }
 }
 
 export async function disableBiometric(): Promise<void> {
-  await SecureStore.deleteItemAsync(seedKey).catch(() => undefined);
-  await SecureStore.deleteItemAsync(onKey).catch(() => undefined);
+  await SecureStore.deleteItemAsync(seedKey, storeOptions).catch(() => undefined);
+  await SecureStore.deleteItemAsync(onKey, storeOptions).catch(() => undefined);
 }
 
 /**
- * Asks for a face or finger and returns the seed. Null if the person cancels; 'gone'
- * if the item can no longer be read (biometrics changed), which turns the option off.
+ * Asks the phone to confirm the owner and returns the seed. Null if they cancel or it
+ * fails; 'gone' if the seed is no longer there (for example the phone's passcode was
+ * removed), which turns the option off.
  */
 export async function readBiometricSeed(prompt: string): Promise<Uint8Array | null | 'gone'> {
+  if ((await confirmOwner(prompt)) !== 'ok') return null;
   try {
-    const value = await SecureStore.getItemAsync(seedKey, {
-      requireAuthentication: true,
-      authenticationPrompt: prompt,
-    });
+    const value = await SecureStore.getItemAsync(seedKey, storeOptions);
     if (value) return base64UrlToBytes(value);
-    await disableBiometric();
-    return 'gone';
-  } catch (e) {
-    const text = String(e);
-    // Cancelling is not a failure; a changed or removed key is.
-    if (/cancel/i.test(text)) return null;
-    if (/invalidat|not found|could not be found|key permanently/i.test(text)) {
-      await disableBiometric();
-      return 'gone';
-    }
-    return null;
+  } catch {
+    // Fall through: treat as gone.
   }
+  await disableBiometric();
+  return 'gone';
 }

@@ -183,9 +183,12 @@ my-card|roles` (re-exports of the shared screens). Phones keep `/lock` and the t
   aid takes `create=request|offer`; each part component takes `create` and opens its form),
   a grid of cards for the parts, and chips for the seven place directories.
 - Face ID / fingerprint unlock (D48): `lib/biometric.ts` (`.web.ts` stub), settings screen
-  `app/biometric.tsx` (You → "Face ID or fingerprint", asks the passcode), lock screen asks
-  automatically when on (`unlockWithBiometric`). Seed in SecureStore with
-  `requireAuthentication`; turned off by `finishSetup` (new or restored vault).
+  `app/biometric.tsx` (You → "Face ID or fingerprint": one switch), lock screen asks
+  automatically when on (`unlockWithBiometric`, round icon button). `LocalAuthentication`
+  confirms the owner (device passcode fallback allowed); seed in SecureStore
+  `WHEN_PASSCODE_SET_THIS_DEVICE_ONLY` (`requireAuthentication` failed in Expo Go). The open
+  session keeps the seed in memory (`openSeed`, cleared on lock) so turning it on needs no
+  passcode. Turned off by `finishSetup` (new or restored vault).
 - Testing member screens in a browser: the web sends the Fool to `/admin`, and a full page
   load locks. To reach `/part/...` locally, add a temporary `router.push` link on the admin
   page, export, test with Playwright (see founder setup steps), then revert before committing.

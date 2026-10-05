@@ -61,12 +61,6 @@ export type SessionState =
 export type RevealResult =
   { ok: true; phrase: string } | { ok: false; waitMs: number } | { ok: false; decoy: true };
 
-export type BiometricResult =
-  | { ok: true }
-  | { ok: false; waitMs: number }
-  | { ok: false; decoy: true }
-  | { ok: false; failed: true };
-
 export type JoinResult = { ok: true } | { ok: false; error: ApiError['code'] };
 
 type SessionValue = {
@@ -83,8 +77,8 @@ type SessionValue = {
   unlock: (passcode: string) => Promise<vault.UnlockResult>;
   /** Face ID or fingerprint, when the member has turned it on. */
   unlockWithBiometric: (prompt: string) => Promise<'opened' | 'cancelled' | 'gone'>;
-  /** Turns on Face ID or fingerprint unlock after checking the passcode. */
-  enableBiometric: (passcode: string, prompt: string) => Promise<BiometricResult>;
+  /** Turns on Face ID or fingerprint unlock; the phone confirms the owner. */
+  enableBiometric: (prompt: string) => Promise<'on' | 'cancelled' | 'failed'>;
   /**
    * Asks for the passcode again before showing the 12 words. The decoy passcode switches
    * to the plain view, exactly as it does on the lock screen.
@@ -103,6 +97,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<SessionState>({ status: 'loading' });
   // Each open gets a number, so an answer that arrives after the app locked is ignored.
   const openCount = useRef(0);
+  // The seed of the open full session, so Face ID or fingerprint can be turned on
+  // without typing the passcode again. Cleared on lock and in the basic view.
+  const openSeed = useRef<Uint8Array | null>(null);
   // The session token lives only in memory and is dropped on lock.
   const token = useRef<string | null>(null);
 
@@ -115,6 +112,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   const lock = useCallback(() => {
     openCount.current++;
+    openSeed.current = null;
     token.current = null;
     setState((s) => (s.status === 'open' ? { status: 'locked' } : s));
   }, []);
@@ -173,6 +171,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   const openFull = useCallback(
     async (seed: Uint8Array, join: Join | null = null, founder = false) => {
+      openSeed.current = seed;
       const identity = identityFromSeed(seed);
       const current = ++openCount.current;
       token.current = null;
@@ -225,6 +224,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   /** The decoy passcode was entered. The silent duress alert (milestone M6) will be sent from here. */
   const openBasic = useCallback(() => {
     openCount.current++;
+    openSeed.current = null;
     token.current = null;
     setState({ status: 'open', mode: 'basic' });
   }, []);
@@ -253,21 +253,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     [openFull],
   );
 
-  /** Turns biometric unlock on after checking the passcode. The decoy switches to basic. */
-  const enableBiometric = useCallback(
-    async (passcode: string, prompt: string): Promise<BiometricResult> => {
-      const result = await vault.unlock(passcode);
-      if (!result.ok) return result;
-      if (result.value.mode !== 'full') {
-        openBasic();
-        return { ok: false, decoy: true };
-      }
-      return (await biometric.enableBiometric(result.value.seed, prompt))
-        ? { ok: true }
-        : { ok: false, failed: true };
-    },
-    [openBasic],
-  );
+  /** Turns Face ID or fingerprint unlock on for this phone; the phone confirms the owner. */
+  const enableBiometric = useCallback(async (prompt: string) => {
+    const seed = openSeed.current;
+    return seed ? biometric.enableBiometric(seed, prompt) : ('failed' as const);
+  }, []);
 
   const revealPhrase = useCallback(
     async (passcode: string): Promise<RevealResult> => {

@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { colors, fonts, space } from '@tero/ui';
 import { Button } from '@/components/Button';
+import { BiometricIcon } from '@/components/BiometricIcon';
 import { CardMark } from '@/components/CardMark';
 import { Page } from '@/components/Page';
 import { PasscodePad } from '@/components/PasscodePad';
@@ -67,15 +68,18 @@ export default function Lock() {
       </Text>
       <PasscodePad onSubmit={submit} busy={busy} message={message} resetKey={tries} />
       {bio && (
-        <Button
-          label={t('bio.use', {
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('bio.use', {
             name: t(
               bio === 'face' ? 'bio.face' : bio === 'fingerprint' ? 'bio.fingerprint' : 'bio.other',
             ),
           })}
-          kind="secondary"
           onPress={() => void tryBiometric()}
-        />
+          style={({ pressed }) => [styles.bio, pressed && styles.bioPressed]}
+        >
+          <BiometricIcon kind={bio} size={30} />
+        </Pressable>
       )}
       <View style={styles.forgot}>
         <Button label={t('lock.forgot')} kind="quiet" onPress={() => router.push('/restore')} />
@@ -108,6 +112,17 @@ export default function Lock() {
 }
 
 const styles = StyleSheet.create({
+  bio: {
+    alignSelf: 'center',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: space.md,
+    backgroundColor: 'rgba(31,30,29,0.06)',
+  },
+  bioPressed: { opacity: 0.6 },
   form: { alignItems: 'center', gap: space.sm + 2, width: '100%', marginTop: space.md },
   prompt: {
     fontFamily: fonts.body,

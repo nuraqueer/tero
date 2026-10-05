@@ -41,22 +41,18 @@ export const fr: Messages = {
   'bio.other': 'Biométrie',
   'bio.title': 'Déverrouiller avec {name}',
   'bio.body':
-    'Ouvre Tero avec {name} au lieu de taper ton code. C’est plus rapide : le téléphone garde ta clé dans sa puce sécurisée et ne la donne qu’après {name}.',
-  'bio.warningTitle': 'Pense à l’endroit où tu vis',
+    'Ouvre Tero tout de suite, sans code. Si {name} ne marche pas, le téléphone demande son propre code.',
+  'bio.warningTitle': 'Bon à savoir',
   'bio.warning':
-    'Quelqu’un peut tenir ton téléphone devant ton visage ou y poser ton doigt. {name} ouvre toujours ton Tero complet, jamais la vue simple de ton code leurre. Si c’est un risque pour toi, garde ton code.',
-  'bio.isOn': 'Activé sur ce téléphone.',
-  'bio.isOff': 'Désactivé.',
-  'bio.turnOn': 'Activer {name}',
-  'bio.turnOff': 'Désactiver',
-  'bio.ask': 'Entre ton code pour l’activer.',
-  'bio.failed': 'Ça n’a pas marché. Réessaie, ou vérifie que ton téléphone a un code.',
+    'Quelqu’un pourrait tenir ton téléphone devant ton visage ou utiliser ton doigt. {name} ouvre toujours ton Tero complet, jamais la vue leurre. Si c’est un risque, laisse ceci désactivé et utilise ton code.',
+  'bio.failed':
+    'Impossible de l’activer. Vérifie que ton téléphone a un code et Face ID ou une empreinte.',
   'bio.unavailable':
     'Ce téléphone n’a ni Face ID ni empreinte configurés. Ajoute-en dans les réglages du téléphone.',
   'bio.prompt': 'Ouvrir Tero',
   'bio.use': 'Utiliser {name}',
   'bio.gone':
-    'Le Face ID ou les empreintes du téléphone ont changé : utilise ton code. Tu pourras le réactiver ensuite.',
+    'Utilise ton code cette fois. Le déverrouillage biométrique a été désactivé car la sécurité du téléphone a changé.',
   'welcome.restore': "J'ai mes 12 mots",
   'restore.missing': 'Il reste {count} cases vides.',
   'restore.order':

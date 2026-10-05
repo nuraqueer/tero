@@ -40,22 +40,18 @@ export const sw: Messages = {
   'bio.other': 'Bayometriki',
   'bio.title': 'Fungua kwa {name}',
   'bio.body':
-    'Fungua Tero kwa {name} badala ya kuandika nambari yako ya siri. Ni haraka zaidi: simu huhifadhi ufunguo wako kwenye kifaa salama na huutoa tu baada ya {name}.',
-  'bio.warningTitle': 'Fikiria unapoishi',
+    'Hufungua Tero mara moja, bila nambari ya siri. {name} isipofanya kazi, simu itaomba nambari yake ya siri.',
+  'bio.warningTitle': 'Vizuri kujua',
   'bio.warning':
-    'Mtu anaweza kushikilia simu yako mbele ya uso wako au kubonyeza kidole chako. {name} hufungua Tero yako kamili kila mara, si mwonekano wa kawaida wa nambari ya udanganyifu. Pale hilo ni hatari, endelea kutumia nambari yako ya siri.',
-  'bio.isOn': 'Imewashwa kwa simu hii.',
-  'bio.isOff': 'Imezimwa.',
-  'bio.turnOn': 'Washa {name}',
-  'bio.turnOff': 'Zima',
-  'bio.ask': 'Weka nambari yako ya siri kuiwasha.',
-  'bio.failed': 'Haikufanya kazi. Jaribu tena, au hakikisha simu yako ina nambari ya siri.',
+    'Mtu anaweza kushikilia simu mbele ya uso wako au kutumia kidole chako. {name} hufungua Tero yako kamili kila mara, si mwonekano wa udanganyifu. Pale hilo ni hatari, iache imezimwa na tumia nambari yako ya siri.',
+  'bio.failed':
+    'Imeshindwa kuiwasha. Hakikisha simu yako ina nambari ya siri na Face ID au alama ya kidole.',
   'bio.unavailable':
     'Simu hii haina Face ID wala alama ya kidole. Ongeza kwanza kwenye mipangilio ya simu.',
   'bio.prompt': 'Fungua Tero',
   'bio.use': 'Tumia {name}',
   'bio.gone':
-    'Face ID au alama za vidole za simu zimebadilika, kwa hiyo tumia nambari yako ya siri. Unaweza kuiwasha tena baadaye.',
+    'Tumia nambari yako ya siri safari hii. Kufungua kwa bayometriki kumezimwa kwa sababu usalama wa simu ulibadilika.',
   'welcome.restore': 'Nina maneno yangu 12',
   'restore.missing': 'Visanduku {count} bado viko tupu.',
   'restore.order':

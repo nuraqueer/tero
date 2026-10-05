@@ -1,24 +1,21 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Switch, Text, View } from 'react-native';
 import { colors, fonts, radii, space } from '@tero/ui';
 import { AppHeader } from '@/components/AppHeader';
-import { Button } from '@/components/Button';
+import { BiometricIcon } from '@/components/BiometricIcon';
 import { Page } from '@/components/Page';
-import { PasscodePad } from '@/components/PasscodePad';
 import { biometricKind, biometricOn, disableBiometric, type BiometricKind } from '@/lib/biometric';
 import { useLocale } from '@/lib/locale';
 import { useSession } from '@/lib/session';
 
-/** Opt-in Face ID or fingerprint unlock (D48). Phones only. */
+/** Face ID or fingerprint unlock (D48): one switch, like the phone's own settings. */
 export default function BiometricSettings() {
   const { t } = useLocale();
   const { enableBiometric } = useSession();
   const [kind, setKind] = useState<BiometricKind | null | undefined>(undefined);
   const [on, setOn] = useState(false);
-  const [asking, setAsking] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string>();
-  const [tries, setTries] = useState(0);
 
   useEffect(() => {
     void biometricKind().then(setKind);
@@ -29,87 +26,122 @@ export default function BiometricSettings() {
     kind === 'face' ? 'bio.face' : kind === 'fingerprint' ? 'bio.fingerprint' : 'bio.other',
   );
 
-  const submit = async (code: string) => {
-    setBusy(true);
+  const toggle = async (next: boolean) => {
     setMessage(undefined);
-    try {
-      const result = await enableBiometric(code, t('bio.prompt'));
-      // The decoy passcode switches to the plain view and this screen goes away.
-      if (result.ok) {
-        setOn(true);
-        setAsking(false);
-      } else if ('waitMs' in result) {
-        const seconds = Math.ceil(result.waitMs / 1000);
-        setMessage(seconds > 0 ? t('lock.wait', { seconds }) : t('lock.wrong'));
-        setTries((n) => n + 1);
-      } else if ('failed' in result) {
-        setMessage(t('bio.failed'));
-        setTries((n) => n + 1);
-      }
-    } finally {
-      setBusy(false);
+    if (!next) {
+      await disableBiometric();
+      setOn(false);
+      return;
     }
+    setBusy(true);
+    const result = await enableBiometric(t('bio.prompt'));
+    setBusy(false);
+    if (result === 'on') setOn(true);
+    else if (result === 'failed') setMessage(t('bio.failed'));
   };
 
   return (
     <Page>
       <AppHeader />
-      <Text style={styles.title} accessibilityRole="header">
-        {t('bio.title', { name })}
-      </Text>
-      {kind === null && <Text style={styles.body}>{t('bio.unavailable')}</Text>}
-      {kind && (
-        <>
-          <Text style={styles.body}>{t('bio.body', { name })}</Text>
-          <View style={styles.warning}>
-            <Text style={styles.warningTitle}>{t('bio.warningTitle')}</Text>
-            <Text style={styles.warningText}>{t('bio.warning', { name })}</Text>
-          </View>
-          <Text style={styles.state}>{on ? t('bio.isOn') : t('bio.isOff')}</Text>
-          {on ? (
-            <Button
-              label={t('bio.turnOff')}
-              kind="secondary"
-              onPress={() => void disableBiometric().then(() => setOn(false))}
-            />
-          ) : asking ? (
-            <>
-              <Text style={styles.body}>{t('bio.ask')}</Text>
-              <PasscodePad onSubmit={submit} busy={busy} message={message} resetKey={tries} />
-              <Button label={t('dir.form.cancel')} kind="quiet" onPress={() => setAsking(false)} />
-            </>
-          ) : (
-            <Button label={t('bio.turnOn', { name })} onPress={() => setAsking(true)} />
-          )}
-        </>
+      <View style={styles.hero}>
+        <View style={styles.icon}>
+          <BiometricIcon kind={kind ?? 'face'} size={34} />
+        </View>
+        <Text style={styles.title} accessibilityRole="header">
+          {kind === undefined ? '' : name}
+        </Text>
+      </View>
+
+      {kind === null ? (
+        <Text style={styles.footnote}>{t('bio.unavailable')}</Text>
+      ) : (
+        kind && (
+          <>
+            <View style={styles.group}>
+              <View style={styles.row}>
+                <Text style={styles.rowLabel}>{t('bio.title', { name })}</Text>
+                <Switch
+                  value={on}
+                  disabled={busy}
+                  onValueChange={(v) => void toggle(v)}
+                  trackColor={{ true: colors.clay, false: 'rgba(31,30,29,0.16)' }}
+                  accessibilityLabel={t('bio.title', { name })}
+                />
+              </View>
+            </View>
+            <Text style={styles.footnote}>{t('bio.body', { name })}</Text>
+            {message && <Text style={styles.problem}>{message}</Text>}
+
+            <Text style={styles.groupLabel}>{t('bio.warningTitle')}</Text>
+            <View style={styles.group}>
+              <Text style={styles.groupText}>{t('bio.warning', { name })}</Text>
+            </View>
+          </>
+        )
       )}
     </Page>
   );
 }
 
 const styles = StyleSheet.create({
-  title: { fontFamily: fonts.display, fontSize: 30, color: colors.slate, marginTop: space.md },
-  body: {
-    fontFamily: fonts.body,
-    fontSize: 16,
-    lineHeight: 24,
-    color: colors.textSecondary,
-    marginVertical: space.md,
+  hero: { alignItems: 'center', gap: space.sm, marginTop: space.lg, marginBottom: space.lg },
+  icon: {
+    width: 72,
+    height: 72,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.paper,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.hairline,
   },
-  warning: {
-    padding: space.md,
-    gap: 4,
+  title: { fontFamily: fonts.display, fontSize: 28, color: colors.slate },
+  group: {
     borderRadius: radii.md,
-    backgroundColor: colors.oatLight,
-    borderLeftWidth: 3,
-    borderLeftColor: colors.clay,
+    backgroundColor: colors.paper,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.hairline,
+    overflow: 'hidden',
   },
-  warningTitle: { fontFamily: fonts.bodySemibold, fontSize: 15, color: colors.slate },
-  warningText: { fontFamily: fonts.body, fontSize: 14, lineHeight: 21, color: colors.slate },
-  state: {
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: space.md,
+    minHeight: 54,
+    paddingHorizontal: space.md,
+  },
+  rowLabel: { flex: 1, fontFamily: fonts.bodyMedium, fontSize: 16, color: colors.slate },
+  footnote: {
+    fontFamily: fonts.body,
+    fontSize: 13,
+    lineHeight: 19,
+    color: colors.textSecondary,
+    marginTop: space.sm,
+    paddingHorizontal: space.md,
+  },
+  problem: {
+    fontFamily: fonts.bodyMedium,
+    fontSize: 14,
+    color: colors.clayText,
+    marginTop: space.sm,
+    paddingHorizontal: space.md,
+  },
+  groupLabel: {
     fontFamily: fonts.bodySemibold,
-    fontSize: 15,
+    fontSize: 12,
+    letterSpacing: 0.6,
+    color: colors.textSecondary,
+    textTransform: 'uppercase',
+    marginTop: space.xl,
+    marginBottom: space.sm,
+    paddingHorizontal: space.md,
+  },
+  groupText: {
+    fontFamily: fonts.body,
+    fontSize: 14,
+    lineHeight: 21,
     color: colors.slate,
-    marginVertical: space.lg,
+    padding: space.md,
   },
 });
