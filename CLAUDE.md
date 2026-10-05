@@ -61,8 +61,8 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   Unlocking accepts any length so older web vaults still open. Phones keep 6 digits.
 - The founder has claimed the Fool's seat (Sequence 0) on the web. Home shows a tarot
   card "0 · The Fool"; Tero cards show the inviter's card name under the QR code.
-- Phone app on Expo Go (2026-10-06, branch `preview`, built from `32c786f`): iOS
-  `01a10be4-368e-79c2-b9c9-ad3b1df44d81`, Android `01a10be4-368e-714f-9a6f-fa2d02866db1`.
+- Phone app on Expo Go (2026-10-06, branch `preview`, built from `852e21a`): iOS
+  `01a10beb-42c0-70c1-b448-366aa1aeb535`, Android `01a10beb-42c0-71e9-84bf-71f0c98e0076`.
 - Restore with the 12 words (`src/app/restore.tsx`): from the welcome screen (new
   device) or the lock screen ("Forgot it?"). Same words give the same address.
   12 numbered boxes; paste in any layout (`arrangePhraseWords`: "1 onion 2 tomato",
