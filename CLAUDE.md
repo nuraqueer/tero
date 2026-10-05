@@ -45,7 +45,8 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
 - Worker secrets/vars: `AUTH_SECRET` (signs challenges and sessions); optional
   `FOUNDER_DID` (restricts who may take the Fool's seat).
 - Members and cards live in the `RegistryObject` SQLite Durable Object.
-- Expo project id `f339bd48-af04-41e7-b1c6-5706f9f0680c`; EAS profiles in `apps/app/eas.json`.
+- Expo project `@pherus/tero`, id `56e478f4-7f95-45e3-9fae-e8321fcea451`; EAS profiles in
+  `apps/app/eas.json`. Expo Go previews are published to the `preview` branch.
   Phones talk to `EXPO_PUBLIC_API_URL`, defaulting to tero.pherus.org.
 - Mockups canvas: https://claude.ai/artifact/TpPoDJbAyYFAFGKgxdzqYd
 
@@ -58,6 +59,8 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   Unlocking accepts any length so older web vaults still open. Phones keep 6 digits.
 - The founder has claimed the Fool's seat (Sequence 0) on the web. Home shows a tarot
   card "0 · The Fool"; Tero cards show the inviter's card name under the QR code.
+- Phone app published to Expo Go (2026-10-05, branch `preview`): iOS update
+  `01a109b0-7c08-73d0-a853-c11bbbf33e0d`, Android `01a109b0-7c08-7ec0-8691-f5737507fac8`.
 - Restore with the 12 words (`src/app/restore.tsx`): from the welcome screen (new
   device) or the lock screen ("Forgot it?"). Same words give the same address.
 - The Fool's seat: the hidden founder setup (long press on the welcome mark) opens only
@@ -67,13 +70,7 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
 
 ## Next
 
-1. **Publish the phone app to Expo Go** (the founder is waiting on this). `EXPO_TOKEN` is
-   now in the environment. The old Expo Go preview predates restore and still points at
-   the switched-off workers.dev address. Follow "Trying the app on a phone" in
-   `DEVELOPING.md` (temporary `runtimeVersion: exposdk:57.0.0`, don't commit it), publish
-   for iOS and Android, and give the founder the `exp://u.expo.dev/update/<id>` links. The
-   founder then restores the Fool's account with "I have my 12 words".
-2. M3: private chats. Start by comparing libsignal, vodozemac and OpenMLS
+1. M3: private chats. Start by comparing libsignal, vodozemac and OpenMLS
    ([docs/build-plan.md](docs/build-plan.md)).
-3. Open design items: pick a logo concept; match the You-screen tarot card to the
+2. Open design items: pick a logo concept; match the You-screen tarot card to the
    founder's reference image (Pinterest is blocked here; ask for it as an attachment).

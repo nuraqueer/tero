@@ -7,14 +7,14 @@ bun install          # install everything
 bun run check        # formatting, types and tests, the same as CI
 ```
 
-| Folder | What it is | Run it |
-|---|---|---|
-| `apps/app` | The Expo app: iOS, Android and the web | `cd apps/app && bunx expo start` |
-| `apps/edge` | The Cloudflare Worker at tero.pherus.org | `cd apps/edge && bun run dev` |
-| `packages/crypto` | Recovery phrase, keys, signing and the passcode vault | |
-| `packages/protocol` | Messages and API shapes shared by the app and the Worker | |
-| `packages/ui` | Colours, fonts and sizes from the design | |
-| `packages/i18n` | English, Kiswahili, 中文 and Français | |
+| Folder              | What it is                                               | Run it                           |
+| ------------------- | -------------------------------------------------------- | -------------------------------- |
+| `apps/app`          | The Expo app: iOS, Android and the web                   | `cd apps/app && bunx expo start` |
+| `apps/edge`         | The Cloudflare Worker at tero.pherus.org                 | `cd apps/edge && bun run dev`    |
+| `packages/crypto`   | Recovery phrase, keys, signing and the passcode vault    |                                  |
+| `packages/protocol` | Messages and API shapes shared by the app and the Worker |                                  |
+| `packages/ui`       | Colours, fonts and sizes from the design                 |                                  |
+| `packages/i18n`     | English, Kiswahili, 中文 and Français                    |                                  |
 
 To try the web version as it will be served: `cd apps/app && bunx expo export --platform web`,
 then `cd apps/edge && cp .dev.vars.example .dev.vars && bun run dev`. The Worker needs
@@ -33,7 +33,7 @@ Add app packages with `bunx expo install <name>` so the versions match the Expo 
 
 ## Trying the app on a phone (Expo Go)
 
-The app is linked to the Expo project `@phe-rus/tero`. To publish a preview that opens in
+The app is linked to the Expo project `@pherus/tero` (owner `pherus`). To publish a preview that opens in
 Expo Go, run this in `apps/app` (or in an EAS sandbox):
 
 ```sh
