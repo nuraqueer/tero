@@ -56,6 +56,8 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
 - Web vault hardened: in a browser, new passcodes must be passphrases of 10+
   characters (`PasscodePad.web.tsx`), because the device secret sits in local storage.
   Unlocking accepts any length so older web vaults still open. Phones keep 6 digits.
+- The founder has claimed the Fool's seat (Sequence 0) on the web. Home shows a tarot
+  card "0 · The Fool"; Tero cards show the inviter's card name under the QR code.
 - Restore with the 12 words (`src/app/restore.tsx`): from the welcome screen (new
   device) or the lock screen ("Forgot it?"). Same words give the same address.
 - The Fool's seat: the hidden founder setup (long press on the welcome mark) opens only
@@ -65,7 +67,13 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
 
 ## Next
 
-1. M3: private chats. Start by comparing libsignal, vodozemac and OpenMLS
+1. **Publish the phone app to Expo Go** (the founder is waiting on this). `EXPO_TOKEN` is
+   now in the environment. The old Expo Go preview predates restore and still points at
+   the switched-off workers.dev address. Follow "Trying the app on a phone" in
+   `DEVELOPING.md` (temporary `runtimeVersion: exposdk:57.0.0`, don't commit it), publish
+   for iOS and Android, and give the founder the `exp://u.expo.dev/update/<id>` links. The
+   founder then restores the Fool's account with "I have my 12 words".
+2. M3: private chats. Start by comparing libsignal, vodozemac and OpenMLS
    ([docs/build-plan.md](docs/build-plan.md)).
-2. Open design items: pick a logo concept; match the You-screen tarot card to the
+3. Open design items: pick a logo concept; match the You-screen tarot card to the
    founder's reference image (Pinterest is blocked here; ask for it as an attachment).
