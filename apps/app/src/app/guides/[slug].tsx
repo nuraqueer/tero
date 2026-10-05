@@ -6,6 +6,11 @@ import { PublicPage } from '@/components/PublicPage';
 import { guides } from '@/guides';
 import { useLocale } from '@/lib/locale';
 
+/** Each guide is built as its own page, so links to it open directly. */
+export function generateStaticParams() {
+  return guides.map((guide) => ({ slug: guide.slug }));
+}
+
 export default function GuidePage() {
   const { t, locale } = useLocale();
   const { slug } = useLocalSearchParams<{ slug: string }>();

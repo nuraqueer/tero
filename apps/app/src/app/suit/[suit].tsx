@@ -15,6 +15,10 @@ const parts: Record<Suit, string[]> = {
   wands: ['journeys', 'courses'],
 };
 
+export function generateStaticParams() {
+  return suits.map((suit) => ({ suit }));
+}
+
 export default function SuitScreen() {
   const { t } = useLocale();
   const { suit: param } = useLocalSearchParams<{ suit: string }>();
