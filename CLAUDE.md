@@ -175,6 +175,10 @@ my-card|roles` (re-exports of the shared screens). Phones keep `/lock` and the t
   templates), sealed with `sealText`/`openText` (`packages/crypto/src/box.ts`) and
   `session.journeySecret` (`deriveSecret(seed, 'journeys')`). API: `GET|PUT /api/journeys`
   (one sealed box per member, version check, `apps/edge/src/journeys.ts`).
+- Web front door (founder, 2026-10-06): `/` is always the public site, in every state, and
+  never inside the console sidebar (`_layout.tsx`: index guard is always on for web, placed
+  after the admin screens; `publicPage` skips `WebShell`). The admin side is only at
+  `/admin` (lock, then console); there is no link to it on the public site.
 - Testing member screens in a browser: the web sends the Fool to `/admin`, and a full page
   load locks. To reach `/part/...` locally, add a temporary `router.push` link on the admin
   page, export, test with Playwright (see founder setup steps), then revert before committing.

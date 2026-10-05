@@ -1,6 +1,6 @@
 import '@/lib/polyfills';
 import { useEffect } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
@@ -51,6 +51,7 @@ export default function RootLayout() {
 /** Each screen exists only in its state, so nothing behind the lock can be reached by URL or back gesture. */
 function Screens() {
   const { state } = useSession();
+  const pathname = usePathname();
   // Until the phone's storage has been read, show nothing rather than a wrong screen.
   if (state.status === 'loading') return null;
   const full = state.status === 'open' && state.mode === 'full';
@@ -60,8 +61,12 @@ function Screens() {
   const web = Platform.OS === 'web';
   const stack = (
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.ivory } }}>
+      {!web && (
+        <Stack.Protected guard={state.status === 'new'}>
+          <Stack.Screen name="index" />
+        </Stack.Protected>
+      )}
       <Stack.Protected guard={state.status === 'new'}>
-        <Stack.Screen name="index" />
         <Stack.Screen name="scan" />
         <Stack.Screen name="c/[token]" />
         <Stack.Screen name="setup" />
@@ -84,6 +89,14 @@ function Screens() {
         <Stack.Screen name="admin/my-card" options={{ animation: 'fade' }} />
         <Stack.Screen name="admin/roles" />
       </Stack.Protected>
+      {/* On the web, / is always the public site; the admin side is only at /admin, which
+          the Fool and council are told about. It comes after the admin screens so a
+          locked or unlocked browser that opens /admin lands on the lock or the console. */}
+      {web && (
+        <Stack.Protected guard>
+          <Stack.Screen name="index" />
+        </Stack.Protected>
+      )}
       <Stack.Protected guard={full && !web}>
         <Stack.Screen name="(tabs)" />
       </Stack.Protected>
@@ -110,5 +123,7 @@ function Screens() {
       </Stack.Protected>
     </Stack>
   );
-  return full && web ? <WebShell>{stack}</WebShell> : stack;
+  // The public pages never sit inside the console's sidebar.
+  const publicPage = pathname === '/' || pathname.startsWith('/guides');
+  return full && web && !publicPage ? <WebShell>{stack}</WebShell> : stack;
 }
