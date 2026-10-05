@@ -68,6 +68,26 @@ export function arrangePhraseWords(text: string, count = 12): string[] {
   return slots;
 }
 
+/**
+ * The text of a saved recovery file: one numbered word per line ("1. onion"), so the
+ * whole file pastes straight into restore. The note has no digits, which
+ * arrangePhraseWords would read as word numbers.
+ */
+export function phraseFileText(phrase: string): string {
+  const lines = normalizePhrase(phrase)
+    .split(' ')
+    .map((word, i) => `${i + 1}. ${word}`);
+  return [
+    'Tero recovery words',
+    '',
+    ...lines,
+    '',
+    'Anyone with these words can take your Tero account.',
+    'Keep this file off shared or cloud-synced storage, or print it and delete it.',
+    '',
+  ].join('\n');
+}
+
 export function isValidPhrase(phrase: string): boolean {
   return validateMnemonic(normalizePhrase(phrase), wordlist);
 }

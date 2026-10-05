@@ -10,6 +10,7 @@ import {
   isPhraseWord,
   isValidPhrase,
   normalizePhrase,
+  phraseFileText,
   phraseToSeed,
   publicKeyFromDid,
   sign,
@@ -154,5 +155,21 @@ describe('arrangePhraseWords', () => {
 
   it('leaves gaps where words are missing', () => {
     expect(arrangePhraseWords('1 onion 3 river').slice(0, 3)).toEqual(['onion', '', 'river']);
+  });
+});
+
+describe('phraseFileText', () => {
+  it('numbers each word on its own line and reads back with arrangePhraseWords', () => {
+    const phrase = createPhrase();
+    const text = phraseFileText(phrase);
+    expect(text).toContain(`1. ${phrase.split(' ')[0]}\n`);
+    expect(arrangePhraseWords(text).join(' ')).toBe(phrase);
+  });
+
+  it('keeps digits out of the note', () => {
+    const notes = phraseFileText(testPhrase)
+      .split('\n')
+      .filter((line) => !/^\d+\. [a-z]+$/.test(line));
+    expect(notes.join(' ')).not.toMatch(/\d/);
   });
 });

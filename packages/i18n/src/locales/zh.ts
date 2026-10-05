@@ -101,4 +101,14 @@ export const zh: Messages = {
   'card.gone': '这张卡已不存在。',
   'card.done': '完成',
   'card.failed': '出了问题。请重试。',
+  'phraseFile.save': '保存为文件',
+  'phraseFile.warningTitle': '这个文件就是你的账户',
+  'phraseFile.warning':
+    '任何拿到这个文件的人都能夺走你的账户。不要把它放在共用电脑或云同步文件夹里，或者打印出来后删除文件。',
+  'phraseFile.failed': '文件无法保存。请改为把这些词写在纸上。',
+  'words.open': '恢复词',
+  'words.title': '你的 12 个词',
+  'words.ask': '输入你的密码以查看你的 12 个词。',
+  'words.askWeb': '输入你的密码短语以查看你的 12 个词。',
+  'words.body': '这些词就是你的账户。有了它们，你可以在新设备上打开 Tero。',
 };

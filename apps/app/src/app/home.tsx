@@ -148,6 +148,10 @@ export default function Home() {
           </Text>
         </View>
       )}
+
+      <View style={styles.section}>
+        <Button label={t('words.open')} onPress={() => router.push('/words')} kind="secondary" />
+      </View>
     </Page>
   );
 }

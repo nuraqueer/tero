@@ -107,4 +107,14 @@ export const fr: Messages = {
   'card.gone': "Cette carte n'existe plus.",
   'card.done': 'Terminé',
   'card.failed': 'Un problème est survenu. Réessaie.',
+  'phraseFile.save': 'Enregistrer dans un fichier',
+  'phraseFile.warningTitle': 'Ce fichier, c’est ton compte',
+  'phraseFile.warning':
+    'Quiconque trouve ce fichier peut prendre ton compte. Ne le garde ni sur un ordinateur partagé ni dans un dossier synchronisé avec le cloud, ou imprime-le puis supprime le fichier.',
+  'phraseFile.failed': 'Le fichier n’a pas pu être enregistré. Note plutôt les mots sur papier.',
+  'words.open': 'Mots de récupération',
+  'words.title': 'Tes 12 mots',
+  'words.ask': 'Saisis ton code pour voir tes 12 mots.',
+  'words.askWeb': 'Saisis ta phrase secrète pour voir tes 12 mots.',
+  'words.body': 'Ces mots sont ton compte. Avec eux, tu peux ouvrir Tero sur un nouvel appareil.',
 };

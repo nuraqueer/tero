@@ -47,6 +47,9 @@ export type SessionState =
   /** Opened with the decoy passcode. Holds nothing personal. */
   | { status: 'open'; mode: 'basic' };
 
+export type RevealResult =
+  { ok: true; phrase: string } | { ok: false; waitMs: number } | { ok: false; decoy: true };
+
 export type JoinResult = { ok: true } | { ok: false; error: ApiError['code'] };
 
 type SessionValue = {
@@ -61,6 +64,11 @@ type SessionValue = {
     founder?: boolean,
   ) => Promise<void>;
   unlock: (passcode: string) => Promise<vault.UnlockResult>;
+  /**
+   * Asks for the passcode again before showing the 12 words. The decoy passcode switches
+   * to the plain view, exactly as it does on the lock screen.
+   */
+  revealPhrase: (passcode: string) => Promise<RevealResult>;
   lock: () => void;
   /** The signed-in API, or null while offline or locked. */
   api: () => Api | null;
@@ -167,21 +175,34 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     [openFull, state],
   );
 
+  /** The decoy passcode was entered. The silent duress alert (milestone M6) will be sent from here. */
+  const openBasic = useCallback(() => {
+    openCount.current++;
+    token.current = null;
+    setState({ status: 'open', mode: 'basic' });
+  }, []);
+
   const unlock = useCallback(
     async (passcode: string) => {
       const result = await vault.unlock(passcode);
       if (result.ok) {
         if (result.value.mode === 'full') await openFull(result.value.phrase);
-        else {
-          // The silent duress alert (milestone M6) will be sent from here.
-          openCount.current++;
-          token.current = null;
-          setState({ status: 'open', mode: 'basic' });
-        }
+        else openBasic();
       }
       return result;
     },
-    [openFull],
+    [openFull, openBasic],
+  );
+
+  const revealPhrase = useCallback(
+    async (passcode: string): Promise<RevealResult> => {
+      const result = await vault.unlock(passcode);
+      if (!result.ok) return result;
+      if (result.value.mode === 'full') return { ok: true, phrase: result.value.phrase };
+      openBasic();
+      return { ok: false, decoy: true };
+    },
+    [openBasic],
   );
 
   const api = useCallback(() => (token.current ? authed(token.current) : null), []);
@@ -199,8 +220,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, [api]);
 
   const value = useMemo(
-    () => ({ state, startJoin, finishSetup, unlock, lock, api, refreshMember }),
-    [state, startJoin, finishSetup, unlock, lock, api, refreshMember],
+    () => ({ state, startJoin, finishSetup, unlock, revealPhrase, lock, api, refreshMember }),
+    [state, startJoin, finishSetup, unlock, revealPhrase, lock, api, refreshMember],
   );
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }

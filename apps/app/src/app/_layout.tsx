@@ -71,6 +71,7 @@ function Screens() {
       <Stack.Protected guard={full}>
         <Stack.Screen name="home" />
         <Stack.Screen name="card/[id]" />
+        <Stack.Screen name="words" />
       </Stack.Protected>
       <Stack.Protected guard={basic}>
         <Stack.Screen name="basic" />

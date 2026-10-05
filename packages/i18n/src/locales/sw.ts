@@ -105,4 +105,15 @@ export const sw: Messages = {
   'card.gone': 'Kadi hii haipo tena.',
   'card.done': 'Imekamilika',
   'card.failed': 'Kuna tatizo. Jaribu tena.',
+  'phraseFile.save': 'Hifadhi kama faili',
+  'phraseFile.warningTitle': 'Faili hili ndilo akaunti yako',
+  'phraseFile.warning':
+    'Yeyote atakayepata faili hili anaweza kuchukua akaunti yako. Usiliweke kwenye kompyuta za pamoja wala folda zinazosawazishwa na wingu; au lichapishe kisha ufute faili.',
+  'phraseFile.failed': 'Faili halikuweza kuhifadhiwa. Andika maneno kwenye karatasi badala yake.',
+  'words.open': 'Maneno ya kurejesha',
+  'words.title': 'Maneno yako 12',
+  'words.ask': 'Weka nambari yako ya siri ili kuona maneno yako 12.',
+  'words.askWeb': 'Weka kaulisiri yako ili kuona maneno yako 12.',
+  'words.body':
+    'Maneno haya ndiyo akaunti yako. Kwa maneno haya unaweza kufungua Tero kwenye kifaa kipya.',
 };

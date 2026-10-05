@@ -102,6 +102,16 @@ export const en = {
   'card.gone': 'This card no longer exists.',
   'card.done': 'Done',
   'card.failed': 'Something went wrong. Try again.',
+  'phraseFile.save': 'Save as a file',
+  'phraseFile.warningTitle': 'The file is your account',
+  'phraseFile.warning':
+    'Anyone who finds the file can take your account. Keep it off shared computers and cloud-synced folders, or print it and delete the file.',
+  'phraseFile.failed': "The file couldn't be saved. Write the words on paper instead.",
+  'words.open': 'Recovery words',
+  'words.title': 'Your 12 words',
+  'words.ask': 'Enter your passcode to see your 12 words.',
+  'words.askWeb': 'Enter your passphrase to see your 12 words.',
+  'words.body': 'These words are your account. With them you can open Tero on a new device.',
 } as const;
 
 export type MessageKey = keyof typeof en;
