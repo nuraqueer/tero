@@ -12,9 +12,11 @@ import {
 } from '@expo-google-fonts/instrument-sans';
 import { JetBrainsMono_600SemiBold } from '@expo-google-fonts/jetbrains-mono';
 import { Cinzel_500Medium } from '@expo-google-fonts/cinzel';
+import { Platform } from 'react-native';
 import { colors } from '@tero/ui';
 import { LocaleProvider } from '@/lib/locale';
 import { SessionProvider, useSession } from '@/lib/session';
+import { WebShell } from '@/components/WebShell';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -54,7 +56,9 @@ function Screens() {
   const full = state.status === 'open' && state.mode === 'full';
   const basic = state.status === 'open' && state.mode === 'basic';
 
-  return (
+  // On the web, members get the council console in a sidebar shell; phones get the tabs.
+  const web = Platform.OS === 'web';
+  const stack = (
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.ivory } }}>
       <Stack.Protected guard={state.status === 'new'}>
         <Stack.Screen name="index" />
@@ -68,8 +72,13 @@ function Screens() {
       <Stack.Protected guard={state.status === 'new' || state.status === 'locked'}>
         <Stack.Screen name="restore" />
       </Stack.Protected>
-      <Stack.Protected guard={full}>
+      <Stack.Protected guard={full && web}>
+        <Stack.Screen name="console" />
+      </Stack.Protected>
+      <Stack.Protected guard={full && !web}>
         <Stack.Screen name="(tabs)" />
+      </Stack.Protected>
+      <Stack.Protected guard={full}>
         <Stack.Screen name="card/[id]" />
         <Stack.Screen name="words" />
         <Stack.Screen name="cards" />
@@ -85,4 +94,5 @@ function Screens() {
       </Stack.Protected>
     </Stack>
   );
+  return full && web ? <WebShell>{stack}</WebShell> : stack;
 }

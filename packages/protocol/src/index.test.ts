@@ -44,7 +44,8 @@ describe('card links', () => {
   it('checks card requests', () => {
     const id = 'a'.repeat(43);
     expect(isCreateCardRequest({ id, nonce: token, type: 'member' })).toBe(true);
-    expect(isCreateCardRequest({ id, nonce: token, type: 'council' })).toBe(false);
+    expect(isCreateCardRequest({ id, nonce: token, type: 'council' })).toBe(true);
+    expect(isCreateCardRequest({ id, nonce: token, type: 'admin' })).toBe(false);
     expect(isClaimCardRequest({ token, adult: true })).toBe(true);
     expect(isClaimCardRequest({ token, adult: false })).toBe(false);
     expect(isApproveCardRequest({ claimer: 'did:key:z6Mk', adult: true })).toBe(true);

@@ -23,7 +23,7 @@ export default function SuitScreen() {
     <Page>
       <View style={styles.head}>
         <View style={styles.badge}>
-          <SuitIcon suit={suit} size={40} />
+          <SuitIcon suit={suit} size={36} color={colors.clayText} />
         </View>
         <Text style={styles.title} accessibilityRole="header">
           {t(`suit.${suit}` as MessageKey)}
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: colors.slate,
+    backgroundColor: colors.oatLight,
     alignItems: 'center',
     justifyContent: 'center',
   },

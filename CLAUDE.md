@@ -8,7 +8,7 @@ Read this first in every session. Keep it current: update "Where we are" and
 A global, invite-only platform where queer people help each other, built for
 places where being seen is dangerous. Inspired by the Tarot Club in _Lord of the
 Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
-[docs/README.md](docs/README.md) (decisions log D1–D39) and [docs/vision.md](docs/vision.md).
+[docs/README.md](docs/README.md) (decisions log D1–D40) and [docs/vision.md](docs/vision.md).
 
 ## Working rules
 
@@ -108,6 +108,13 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   (`lib/card-image.ts`: react-native-view-shot + share sheet / expo-media-library add-only;
   web: Web Share with files, else download), with a warning that anyone with the image can
   try to claim the card.
+- Web = Fool and council only (D40). Members have a `role` (fool, council, member;
+  `members.role`, `MeResponse.role`). The Fool makes council cards (`type: 'council'`,
+  Fool only, `not_allowed` otherwise): Sequence 1, card drawn from seats nobody on the
+  council holds. On the web a full session renders `WebShell` (sidebar: Overview
+  `console.tsx`, Tero cards, Votes/Verifications/Countries/Moderators/Log "Soon", Recovery
+  words, Language, card avatar, Lock); role `member` sees "Tero lives on your phone".
+  Phones keep the tabs. Suits are plain light cards (no tarot frames).
 - M5 public site in progress: guide content in `src/guides/` (online safety, HRT basics, in
   four languages); landing page and guide screens not built yet. Other guides stay
   "being written" until experts can write them.

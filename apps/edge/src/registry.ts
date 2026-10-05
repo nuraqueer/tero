@@ -1,11 +1,13 @@
 import {
   claimedCardTtlMs,
   cardTtlMs,
+  councilSequence,
   drawArcana,
   foolArcana,
   openCardLimit,
   type CardSummary,
   type CreateCardRequest,
+  type Role,
 } from '@tero/protocol';
 
 /*
@@ -50,6 +52,12 @@ const schema = [
 const additions: Array<[string, string, string, string]> = [
   ['members', 'arcana', 'INTEGER', `UPDATE members SET arcana = ${foolArcana} WHERE sequence = 0`],
   ['cards', 'arcana', 'INTEGER', 'UPDATE cards SET arcana = 1 + abs(random()) % 21'],
+  [
+    'members',
+    'role',
+    'TEXT',
+    "UPDATE members SET role = CASE WHEN sequence = 0 THEN 'fool' ELSE 'member' END",
+  ],
 ];
 
 /** A random number in [0, 1) from the system's secure source. */
@@ -57,13 +65,13 @@ function secureRandom(): number {
   return crypto.getRandomValues(new Uint32Array(1))[0]! / 2 ** 32;
 }
 
-export type Member = { sequence: number; arcana: number | null };
+export type Member = { sequence: number; arcana: number | null; role: Role };
 
 type CardRow = {
   id: string;
   nonce: string;
   inviter: string;
-  type: 'member';
+  type: 'member' | 'council';
   expires_at: number;
   claimer: string | null;
   arcana: number;
@@ -106,11 +114,14 @@ export class Registry {
   }
 
   member(did: string, now: number): Member | null {
-    const [row] = this.rows<Member>('SELECT sequence, arcana FROM members WHERE did = ?', did);
-    if (row) return { sequence: row.sequence, arcana: row.arcana };
+    const [row] = this.rows<Member>(
+      'SELECT sequence, arcana, role FROM members WHERE did = ?',
+      did,
+    );
+    if (row) return { sequence: row.sequence, arcana: row.arcana, role: row.role };
     if (this.founder && did === this.founder) {
       this.addFool(did, now);
-      return { sequence: 0, arcana: foolArcana };
+      return { sequence: 0, arcana: foolArcana, role: 'fool' };
     }
     return null;
   }
@@ -137,7 +148,7 @@ export class Registry {
 
   private addFool(did: string, now: number) {
     this.sql.exec(
-      'INSERT INTO members (did, sequence, arcana, joined_at) VALUES (?, 0, ?, ?)',
+      "INSERT INTO members (did, sequence, arcana, role, joined_at) VALUES (?, 0, ?, 'fool', ?)",
       did,
       foolArcana,
       now,
@@ -156,9 +167,12 @@ export class Registry {
     inviter: string,
     card: CreateCardRequest,
     now: number,
-  ): Result<{ card: CardSummary }, 'not_member' | 'card_limit' | 'conflict'> {
+  ): Result<{ card: CardSummary }, 'not_member' | 'not_allowed' | 'card_limit' | 'conflict'> {
     const member = this.member(inviter, now);
     if (!member) return { ok: false, error: 'not_member' };
+    // Only the Fool seats council members alone; seats by council vote come later.
+    if (card.type === 'council' && member.role !== 'fool')
+      return { ok: false, error: 'not_allowed' };
     this.prune(now);
     const [{ count } = { count: 0 }] = this.rows<{ count: number }>(
       'SELECT COUNT(*) AS count FROM cards WHERE inviter = ?',
@@ -173,9 +187,17 @@ export class Registry {
       inviter,
       card.type,
       now + cardTtlMs,
-      drawArcana(member.arcana, this.random),
+      drawArcana(member.arcana, this.random, card.type === 'council' ? this.councilSeats() : []),
     );
     return row ? { ok: true, card: summary(row) } : { ok: false, error: 'conflict' };
+  }
+
+  /** Cards held by the council or waiting on a council card: each seat has one holder. */
+  private councilSeats(): number[] {
+    return this.rows<{ arcana: number }>(
+      `SELECT arcana FROM members WHERE role IN ('fool', 'council') AND arcana IS NOT NULL
+       UNION SELECT arcana FROM cards WHERE type = 'council'`,
+    ).map((r) => r.arcana);
   }
 
   /** The first claim wins. Unknown, used, expired and own cards all give the same answer. */
@@ -221,15 +243,18 @@ export class Registry {
     // Approve only the person the inviter checked the code with.
     if (card.claimer !== claimer) return { ok: false, error: 'conflict' };
     this.sql.exec('DELETE FROM cards WHERE id = ?', id);
+    const council = card.type === 'council';
+    const sequence = council ? councilSequence : newMemberSequence;
     this.sql.exec(
-      `INSERT INTO members (did, sequence, arcana, joined_at) VALUES (?, ?, ?, ?)
+      `INSERT INTO members (did, sequence, arcana, role, joined_at) VALUES (?, ?, ?, ?, ?)
        ON CONFLICT DO NOTHING`,
       claimer,
-      newMemberSequence,
+      sequence,
       card.arcana,
+      council ? 'council' : 'member',
       now,
     );
-    return { ok: true, sequence: newMemberSequence, arcana: card.arcana };
+    return { ok: true, sequence, arcana: card.arcana };
   }
 
   /** Destroys a card, claimed or not. */

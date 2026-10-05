@@ -197,4 +197,35 @@ export const fr: Messages = {
   'card.tapToClose': 'Touche n’importe où pour fermer',
   'card.shareWarning':
     'Toute personne qui reçoit cette image peut essayer de prendre la carte, alors partage-la seulement avec la personne à qui elle est destinée. Tu vérifieras quand même son code avant de la laisser entrer.',
+  'console.overview': 'Vue d’ensemble',
+  'console.votes': 'Votes',
+  'console.verifications': 'Vérifications',
+  'console.countries': 'Pays',
+  'console.moderators': 'Modérateurs',
+  'console.log': 'Journal',
+  'console.council': 'Le conseil',
+  'console.owner': 'Propriétaire',
+  'console.seat': 'Siège au conseil',
+  'console.phoneOnly.title': 'Tero vit sur ton téléphone',
+  'console.phoneOnly.body':
+    'Sur le web, Tero est réservé au conseil. Ouvre l’appli Tero sur ton téléphone pour utiliser ton compte.',
+  'console.morning': 'Bonjour, {name}',
+  'console.afternoon': 'Bon après-midi, {name}',
+  'console.evening': 'Bonsoir, {name}',
+  'console.sub': 'Voici où en est Tero aujourd’hui.',
+  'console.stat.cards': 'Tes cartes Tero ouvertes',
+  'console.stat.sequence': 'Ta Séquence',
+  'console.stat.connection': 'Connexion',
+  'console.online': 'En ligne',
+  'console.offlineShort': 'Hors ligne',
+  'console.votes.body': 'Les votes du conseil, avec quorum et veto du Mat, auront lieu ici.',
+  'console.verifications.body':
+    'Vérifier les avocats, médecins et autres professionnels avant qu’ils reçoivent un badge.',
+  'console.countries.body':
+    'Les niveaux de risque de chaque pays, qui fixent les réglages de sécurité par défaut.',
+  'console.seatCard.title': 'Nommer un membre du conseil',
+  'console.seatCard.body':
+    'Seul le Mat peut nommer quelqu’un seul. Remets-lui une carte du conseil en personne ; la personne rejoint en Séquence 1 avec une carte qu’aucun autre membre du conseil ne détient.',
+  'console.seatCard.make': 'Créer une carte du conseil',
+  'console.councilCard': 'Carte du conseil',
 };

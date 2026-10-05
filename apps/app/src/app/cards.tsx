@@ -45,7 +45,7 @@ export default function Cards() {
   const atLimit =
     cards !== null && session.sequence !== null && cards.length >= openCardLimit(session.sequence);
 
-  const makeCard = async () => {
+  const makeCard = async (type: 'member' | 'council' = 'member') => {
     const client = session.api();
     if (!client) return;
     setBusy(true);
@@ -53,7 +53,7 @@ export default function Cards() {
     try {
       const nonce = randomBytes(16);
       const id = cardIdFromToken(cardToken(session.cardSecret, nonce));
-      await client.createCard({ id, nonce: bytesToBase64Url(nonce), type: 'member' });
+      await client.createCard({ id, nonce: bytesToBase64Url(nonce), type });
       router.push({ pathname: '/card/[id]', params: { id } });
     } catch {
       setProblem(t('card.failed'));
@@ -82,6 +82,7 @@ export default function Cards() {
               ]}
             >
               <Text style={styles.rowText}>
+                {card.type === 'council' && `${t('console.councilCard')} · `}
                 {card.state === 'claimed'
                   ? t('home.cards.claimed')
                   : t('home.cards.open', { time: timeLeft(t, card.expiresAt) })}
@@ -95,7 +96,19 @@ export default function Cards() {
         {atLimit ? (
           <Text style={styles.body}>{t('home.cards.limit')}</Text>
         ) : (
-          <Button label={t('home.cards.make')} onPress={makeCard} disabled={busy || !connected} />
+          <Button
+            label={t('home.cards.make')}
+            onPress={() => makeCard()}
+            disabled={busy || !connected}
+          />
+        )}
+        {session.role === 'fool' && (
+          <Button
+            label={t('console.seatCard.make')}
+            onPress={() => makeCard('council')}
+            kind="secondary"
+            disabled={busy || !connected}
+          />
         )}
         <Text style={styles.error} accessibilityLiveRegion="polite">
           {problem ?? ''}

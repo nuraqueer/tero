@@ -17,6 +17,7 @@ import {
   phraseToSeed,
   type Identity,
 } from '@tero/crypto';
+import type { Role } from '@tero/protocol';
 import { ApiError, authed, signIn, type Api } from './api';
 import * as vault from './vault';
 
@@ -40,6 +41,8 @@ export type FullSession = {
   sequence: number | null;
   /** The member's tarot card (0 is the Fool). Null until known. */
   arcana: number | null;
+  /** What the member may do; null until the server has answered. */
+  role: Role | null;
   join: Join | null;
 };
 
@@ -148,6 +151,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         member: me.member,
         sequence: me.sequence,
         arcana: me.arcana,
+        role: me.role,
       });
     } catch {
       updateFull(current, { connection: 'offline' });
@@ -168,6 +172,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         member: null,
         sequence: null,
         arcana: null,
+        role: null,
         join,
       });
       void connect(identity, current, founder);
@@ -244,6 +249,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         member: me.member,
         sequence: me.sequence,
         arcana: me.arcana,
+        role: me.role,
       });
     } catch {
       updateFull(current, { connection: 'offline' });

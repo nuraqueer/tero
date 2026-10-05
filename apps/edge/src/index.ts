@@ -81,6 +81,7 @@ const statusFor: Partial<Record<ApiErrorCode, number>> = {
   already_member: 409,
   card_unavailable: 410,
   card_limit: 429,
+  not_allowed: 403,
   conflict: 409,
   not_found: 404,
 };
@@ -128,6 +129,7 @@ async function handleSignedIn(
       member: member !== null,
       sequence: member?.sequence ?? null,
       arcana: member?.arcana ?? null,
+      role: member?.role ?? null,
     };
     return json(me);
   }

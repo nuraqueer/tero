@@ -61,6 +61,7 @@ These documents record what has been decided **before any code is written**.
 | D37 | Posting has types: Post, Ask for help, Offer help, Event, Fundraiser and Poll, each with its own fields. Photos are blurred and stripped of location before upload. |
 | D38 | The "Tero" word is set in JetBrains Mono beside a small tarot-card mark. Final logo to be picked from the logo concepts. |
 | D39 | **Chats use OpenMLS** (the MLS standard) for 1-to-1, groups, Circles and Spaces: the official crate with our own thin binding, no third-party wrappers. See [messaging-choice.md](messaging-choice.md). Built after the other work. |
+| D40 | **The web is for the Fool and the council**, plus the public site. Members and moderators use the phone app. The Fool sets up on the web and seats council members with council cards (they join at Sequence 1, each with a card no other council member holds). |
 
 ## Open questions
 

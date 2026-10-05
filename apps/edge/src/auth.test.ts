@@ -40,6 +40,7 @@ describe('signing in', () => {
       member: false,
       sequence: null,
       arcana: null,
+      role: null,
     });
   });
 

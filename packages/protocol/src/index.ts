@@ -34,7 +34,20 @@ export type MeResponse = {
   sequence: number | null;
   /** The member's tarot card, 0 (the Fool) to 21 (the World). Null for non-members. */
   arcana: number | null;
+  /** What the member may do. Null for non-members. */
+  role: Role | null;
 };
+
+/**
+ * Permissions, kept apart from the card people see. Only the Fool and the council use
+ * Tero on the web; everyone else, moderators included, uses the phone app (D40).
+ */
+export type Role = 'fool' | 'council' | 'member';
+
+export const webRoles: readonly Role[] = ['fool', 'council'];
+
+/** Council members join at Sequence 1. */
+export const councilSequence = 1;
 
 export type ApiErrorCode =
   | 'founder_taken'
@@ -49,6 +62,7 @@ export type ApiErrorCode =
   | 'already_member'
   | 'card_unavailable'
   | 'card_limit'
+  | 'not_allowed'
   | 'conflict';
 
 /** Whether the Fool's seat is still open: true only until the first member exists. */
@@ -75,8 +89,8 @@ export const cardTtlMs = 7 * 24 * 60 * 60 * 1000;
 /** Once claimed, the inviter has this long to approve. */
 export const claimedCardTtlMs = 24 * 60 * 60 * 1000;
 
-/** Professional and council cards come later. */
-export type CardType = 'member';
+/** Member cards land as Sequence 9; council cards (the Fool's only) seat a council member. */
+export type CardType = 'member' | 'council';
 
 export type CardSummary = {
   /** base64url of the hash of the card's token. */
@@ -121,11 +135,16 @@ export const foolArcana = 0;
 
 /**
  * Draws the tarot card a newcomer will take: never the Fool, and never the giver's own
- * card. random returns a number in [0, 1).
+ * card, nor any in taken (council seats have one holder each). random returns [0, 1).
  */
-export function drawArcana(giver: number | null, random: () => number): number {
+export function drawArcana(
+  giver: number | null,
+  random: () => number,
+  taken: readonly number[] = [],
+): number {
   const choices: number[] = [];
-  for (let n = 1; n < arcanaCount; n++) if (n !== giver) choices.push(n);
+  for (let n = 1; n < arcanaCount; n++) if (n !== giver && !taken.includes(n)) choices.push(n);
+  if (choices.length === 0) throw new Error('no arcana left to draw');
   return choices[Math.floor(random() * choices.length)]!;
 }
 
@@ -156,7 +175,9 @@ const asObject = (value: unknown) =>
 
 export function isCreateCardRequest(value: unknown): value is CreateCardRequest {
   const v = asObject(value);
-  return !!v && isCardId(v.id) && isCardToken(v.nonce) && v.type === 'member';
+  return (
+    !!v && isCardId(v.id) && isCardToken(v.nonce) && (v.type === 'member' || v.type === 'council')
+  );
 }
 
 export function isClaimCardRequest(value: unknown): value is ClaimCardRequest {

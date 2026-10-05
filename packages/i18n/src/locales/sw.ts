@@ -197,4 +197,35 @@ export const sw: Messages = {
   'card.tapToClose': 'Gusa popote kufunga',
   'card.shareWarning':
     'Yeyote atakayepata picha hii anaweza kujaribu kuichukua kadi, kwa hivyo ishiriki tu na mtu aliyekusudiwa. Bado utakagua msimbo wake kabla ya kumruhusu kuingia.',
+  'console.overview': 'Muhtasari',
+  'console.votes': 'Kura',
+  'console.verifications': 'Uthibitisho',
+  'console.countries': 'Nchi',
+  'console.moderators': 'Wasimamizi',
+  'console.log': 'Kumbukumbu',
+  'console.council': 'Baraza',
+  'console.owner': 'Mmiliki',
+  'console.seat': 'Kiti cha baraza',
+  'console.phoneOnly.title': 'Tero iko kwenye simu yako',
+  'console.phoneOnly.body':
+    'Kwenye wavuti, Tero ni kwa ajili ya baraza pekee. Fungua programu ya Tero kwenye simu yako kutumia akaunti yako.',
+  'console.morning': 'Habari za asubuhi, {name}',
+  'console.afternoon': 'Habari za mchana, {name}',
+  'console.evening': 'Habari za jioni, {name}',
+  'console.sub': 'Hivi ndivyo Tero ilivyo leo.',
+  'console.stat.cards': 'Kadi zako za Tero zilizo wazi',
+  'console.stat.sequence': 'Daraja lako',
+  'console.stat.connection': 'Muunganisho',
+  'console.online': 'Mtandaoni',
+  'console.offlineShort': 'Nje ya mtandao',
+  'console.votes.body': 'Kura za baraza, zenye akidi na kura ya turufu ya Fool, zitafanyika hapa.',
+  'console.verifications.body':
+    'Kuwakagua mawakili, madaktari na wataalamu wengine kabla ya kupata beji.',
+  'console.countries.body':
+    'Viwango vya hatari kwa kila nchi, vinavyoweka mipangilio ya usalama huko.',
+  'console.seatCard.title': 'Mketishe mjumbe wa baraza',
+  'console.seatCard.body':
+    'Ni Fool pekee anayeweza kumketisha mtu peke yake. Mpe kadi ya baraza ana kwa ana; atajiunga katika Daraja 1 akiwa na kadi ambayo hakuna mjumbe mwingine wa baraza anayo.',
+  'console.seatCard.make': 'Tengeneza kadi ya baraza',
+  'console.councilCard': 'Kadi ya baraza',
 };

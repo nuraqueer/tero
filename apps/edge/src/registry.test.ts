@@ -17,7 +17,7 @@ function setup() {
 describe('registry', () => {
   it('makes the founder a member at Sequence 0, and nobody else', () => {
     const reg = setup();
-    expect(reg.member(fool, t0)).toEqual({ sequence: 0, arcana: 0 });
+    expect(reg.member(fool, t0)).toEqual({ sequence: 0, arcana: 0, role: 'fool' });
     expect(reg.member(newcomer, t0)).toBeNull();
     expect(new Registry(memorySql()).member(fool, t0)).toBeNull();
   });
@@ -45,7 +45,7 @@ describe('registry', () => {
       sequence: 9,
       arcana,
     });
-    expect(reg.member(newcomer, t0)).toEqual({ sequence: 9, arcana });
+    expect(reg.member(newcomer, t0)).toEqual({ sequence: 9, arcana, role: 'member' });
     // The card is gone for good.
     expect(reg.listCards(fool, t0 + 4000)).toEqual([]);
     expect(reg.claimCard('did:key:z6MkOther', id(1), t0)).toEqual({
@@ -137,7 +137,7 @@ describe('the Fool seat', () => {
     const registry = new Registry(memorySql());
     expect(registry.founderSeatOpen()).toBe(true);
     expect(registry.claimFounder('did:key:first', 1)).toEqual({ ok: true, sequence: 0 });
-    expect(registry.member('did:key:first', 2)).toEqual({ sequence: 0, arcana: 0 });
+    expect(registry.member('did:key:first', 2)).toEqual({ sequence: 0, arcana: 0, role: 'fool' });
     expect(registry.founderSeatOpen()).toBe(false);
     expect(registry.claimFounder('did:key:second', 3)).toEqual({
       ok: false,
@@ -180,6 +180,35 @@ describe('card names', () => {
       'CREATE TABLE members (did TEXT PRIMARY KEY, sequence INTEGER NOT NULL, joined_at INTEGER NOT NULL)',
     );
     sql.exec("INSERT INTO members VALUES ('did:key:old', 0, 1)");
-    expect(new Registry(sql).member('did:key:old', 2)).toEqual({ sequence: 0, arcana: 0 });
+    expect(new Registry(sql).member('did:key:old', 2)).toEqual({
+      sequence: 0,
+      arcana: 0,
+      role: 'fool',
+    });
+  });
+});
+
+describe('council cards', () => {
+  const council = (n: number) => ({ ...card(n), type: 'council' as const });
+
+  it('only the Fool can make them, and they seat a council member at Sequence 1', () => {
+    const reg = setup();
+    expect(reg.createCard(fool, council(1), t0).ok).toBe(true);
+    reg.claimCard(newcomer, id(1), t0);
+    expect(reg.approveCard(fool, id(1), newcomer, t0)).toMatchObject({ ok: true, sequence: 1 });
+    expect(reg.member(newcomer, t0)).toMatchObject({ sequence: 1, role: 'council' });
+    expect(reg.createCard(newcomer, council(2), t0)).toEqual({ ok: false, error: 'not_allowed' });
+  });
+
+  it('never gives two council members the same card', () => {
+    const reg = setup();
+    const seats = new Set<number>();
+    for (let n = 1; n <= 20; n++) {
+      const made = reg.createCard(fool, council(n), t0);
+      expect(made.ok).toBe(true);
+      if (made.ok) seats.add(made.card.arcana);
+    }
+    expect(seats.size).toBe(20);
+    // All 21 seats but the Fool's are held or promised once the 21st is drawn.
   });
 });

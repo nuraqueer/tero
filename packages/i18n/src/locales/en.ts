@@ -190,6 +190,36 @@ export const en = {
   'card.tapToClose': 'Tap anywhere to close',
   'card.shareWarning':
     "Anyone who gets this image can try to claim the card, so share it only with the person it's for. You'll still check their code before letting them in.",
+  'console.overview': 'Overview',
+  'console.votes': 'Votes',
+  'console.verifications': 'Verifications',
+  'console.countries': 'Countries',
+  'console.moderators': 'Moderators',
+  'console.log': 'Log',
+  'console.council': 'The council',
+  'console.owner': 'Owner',
+  'console.seat': 'Council seat',
+  'console.phoneOnly.title': 'Tero lives on your phone',
+  'console.phoneOnly.body':
+    'On the web, Tero is only for the council. Open the Tero app on your phone to use your account.',
+  'console.morning': 'Good morning, {name}',
+  'console.afternoon': 'Good afternoon, {name}',
+  'console.evening': 'Good evening, {name}',
+  'console.sub': 'Here is where Tero stands today.',
+  'console.stat.cards': 'Your open Tero cards',
+  'console.stat.sequence': 'Your Sequence',
+  'console.stat.connection': 'Connection',
+  'console.online': 'Online',
+  'console.offlineShort': 'Offline',
+  'console.votes.body': 'Council votes, with quorum and the Fool’s veto, will be held here.',
+  'console.verifications.body':
+    'Checking lawyers, doctors and other professionals before they get a badge.',
+  'console.countries.body': 'Risk levels for each country, which set the safety defaults there.',
+  'console.seatCard.title': 'Seat a council member',
+  'console.seatCard.body':
+    'Only the Fool can seat someone alone. Give them a council card in person; they join at Sequence 1 with a card nobody else on the council holds.',
+  'console.seatCard.make': 'Make a council card',
+  'console.councilCard': 'Council card',
 } as const;
 
 export type MessageKey = keyof typeof en;

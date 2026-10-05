@@ -4,12 +4,20 @@ import { colors } from '@tero/ui';
 export type Suit = 'cups' | 'pentacles' | 'swords' | 'wands';
 export const suits: Suit[] = ['cups', 'pentacles', 'swords', 'wands'];
 
-/** The four suit drawings from the mockups, in thin gold lines. */
-export function SuitIcon({ suit, size = 56 }: { suit: Suit; size?: number }) {
+/** The four suit drawings from the mockups, in thin lines. */
+export function SuitIcon({
+  suit,
+  size = 56,
+  color = colors.gold,
+}: {
+  suit: Suit;
+  size?: number;
+  color?: string;
+}) {
   const line = {
     fill: 'none',
-    stroke: colors.gold,
-    strokeWidth: 0.9,
+    stroke: color,
+    strokeWidth: 1.4,
     strokeLinecap: 'round',
     strokeLinejoin: 'round',
   } as const;
