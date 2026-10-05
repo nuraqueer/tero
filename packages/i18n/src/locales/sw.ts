@@ -428,4 +428,6 @@ export const sw: Messages = {
   'map.search': 'Tafuta maeneo, miji au nchi',
   'map.note': 'Maeneo kwa jumla, kamwe si mahali halisi. Anwani hushirikiwa na wanachama pekee.',
   'map.soon': 'Ramani itajaa kadiri wanachama wanavyoongeza na kukagua maeneo.',
+  'lock.webTitle': 'Karibu tena',
+  'lock.webFoot': 'Tero hujifunga baada ya dakika 30 ukiwa mbali, au unapofunga kichupo.',
 };

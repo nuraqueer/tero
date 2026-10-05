@@ -417,6 +417,8 @@ export const en = {
   'map.search': 'Search places, cities or countries',
   'map.note': 'Areas, never exact locations. Addresses are shared only with members.',
   'map.soon': 'The map fills in as members add and check places.',
+  'lock.webTitle': 'Welcome back',
+  'lock.webFoot': 'Tero locks after 30 minutes away, or when you close the tab.',
 } as const;
 
 export type MessageKey = keyof typeof en;

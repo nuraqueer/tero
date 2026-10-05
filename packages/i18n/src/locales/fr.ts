@@ -433,4 +433,6 @@ export const fr: Messages = {
   'map.search': 'Chercher des lieux, villes ou pays',
   'map.note': 'Des zones, jamais des emplacements exacts. Les adresses sont réservées aux membres.',
   'map.soon': 'La carte se remplit à mesure que les membres ajoutent et vérifient des lieux.',
+  'lock.webTitle': 'Bon retour',
+  'lock.webFoot': 'Tero se verrouille après 30 minutes d’absence, ou quand tu fermes l’onglet.',
 };

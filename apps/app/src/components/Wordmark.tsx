@@ -2,8 +2,8 @@ import { StyleSheet, Text } from 'react-native';
 import { colors, fonts } from '@tero/ui';
 
 /**
- * The word "Tero", set in Cinzel like the names on the cards. (The founder turned down
- * both the monospace and the hand-drawn letters.)
+ * The word "Tero", in the Newsreader serif of the headings: calm, not a game. (The founder
+ * turned down the monospace, the hand-drawn letters and the tarot capitals.)
  */
 export function Wordmark({
   height = 22,
@@ -15,16 +15,13 @@ export function Wordmark({
   return (
     <Text
       accessibilityRole="text"
-      style={[
-        styles.word,
-        { fontSize: height * 1.2, lineHeight: height * 1.5, color, letterSpacing: height * 0.22 },
-      ]}
+      style={[styles.word, { fontSize: height * 1.35, lineHeight: height * 1.6, color }]}
     >
-      TERO
+      Tero
     </Text>
   );
 }
 
 const styles = StyleSheet.create({
-  word: { fontFamily: fonts.card },
+  word: { fontFamily: fonts.displayMedium, letterSpacing: 0.2 },
 });

@@ -401,4 +401,6 @@ export const zh: Messages = {
   'map.search': '搜索地点、城市或国家',
   'map.note': '只显示大致区域，绝不显示准确位置。地址只与成员分享。',
   'map.soon': '随着成员添加和核实地点，地图会逐渐充实。',
+  'lock.webTitle': '欢迎回来',
+  'lock.webFoot': '离开 30 分钟后，或关闭标签页时，Tero 会自动锁定。',
 };

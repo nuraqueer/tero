@@ -112,7 +112,7 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   `members.role`, `MeResponse.role`). The Fool makes council cards (`type: 'council'`,
   Fool only, `not_allowed` otherwise): Sequence 1, card drawn from seats nobody on the
   council holds. On the web a full session renders `WebShell` (sidebar: Overview
-  `console.tsx`, Tero cards, Votes/Verifications/Countries/Moderators/Log "Soon", Recovery
+  `admin/index.tsx`, Tero cards, Votes/Verifications/Countries/Moderators/Log "Soon", Recovery
   words, Language, card avatar, Lock); role `member` sees "Tero lives on your phone".
   Phones keep the tabs. Suits are plain light cards (no tarot frames).
 - M5 public site live: `PublicHome` at `/` on the web (hero, suits, guides, partners, joining,
@@ -140,6 +140,12 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   `part/[part]` renders by kind (directory with trust filters, mutual aid, jobs, stories,
   skills, show card, journeys). Crisis support (`crisis.tsx`) and Map (`map.tsx`, areas
   only) sit at the top of Suits.
+
+- Web addresses (founder, 2026-10-06): `/` public site, `/admin` the console overview
+  (`app/admin/index.tsx`), `/admin/lock` the web lock, `/admin/cards|words|language|
+my-card|roles` (re-exports of the shared screens). Phones keep `/lock` and the tabs.
+  Web lock is plain (no tarot art: "too gamey"); the word "Tero" is now Newsreader 500,
+  title case. Keep the admin side calm and professional, not game-like.
 
 ## Next
 

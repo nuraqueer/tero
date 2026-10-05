@@ -146,7 +146,10 @@ export default function Console() {
             <Text style={styles.panelTitle}>{t('console.seatCard.title')}</Text>
             <Text style={styles.panelBody}>{t('console.seatCard.body')}</Text>
           </View>
-          <Button label={t('console.seatCard.make')} onPress={() => router.navigate('/cards')} />
+          <Button
+            label={t('console.seatCard.make')}
+            onPress={() => router.navigate('/admin/cards')}
+          />
         </View>
       )}
 

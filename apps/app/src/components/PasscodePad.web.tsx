@@ -77,10 +77,9 @@ export function PasscodePad({
 }
 
 const styles = StyleSheet.create({
-  wrap: { alignItems: 'center', width: '100%', marginTop: space.lg },
+  wrap: { alignItems: 'stretch', width: '100%', marginTop: space.lg },
   input: {
     width: '100%',
-    maxWidth: 360,
     minHeight: touchTarget + 4,
     borderRadius: radii.md,
     borderWidth: StyleSheet.hairlineWidth,
@@ -103,12 +102,10 @@ const styles = StyleSheet.create({
     fontFamily: fonts.body,
     fontSize: 15,
     color: colors.clayText,
-    textAlign: 'center',
   },
   enter: {
-    marginTop: space.md,
+    marginTop: space.sm,
     width: '100%',
-    maxWidth: 360,
     alignItems: 'center',
     backgroundColor: colors.slate,
     borderRadius: radii.pill,

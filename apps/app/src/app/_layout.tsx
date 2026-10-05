@@ -66,14 +66,23 @@ function Screens() {
         <Stack.Screen name="c/[token]" />
         <Stack.Screen name="setup" />
       </Stack.Protected>
-      <Stack.Protected guard={state.status === 'locked'}>
+      {/* The web's private side lives under /admin (D40); phones keep /lock and the tabs. */}
+      <Stack.Protected guard={state.status === 'locked' && web}>
+        <Stack.Screen name="admin/lock" />
+      </Stack.Protected>
+      <Stack.Protected guard={state.status === 'locked' && !web}>
         <Stack.Screen name="lock" />
       </Stack.Protected>
       <Stack.Protected guard={state.status === 'new' || state.status === 'locked'}>
         <Stack.Screen name="restore" />
       </Stack.Protected>
       <Stack.Protected guard={full && web}>
-        <Stack.Screen name="console" />
+        <Stack.Screen name="admin/index" />
+        <Stack.Screen name="admin/cards" />
+        <Stack.Screen name="admin/words" />
+        <Stack.Screen name="admin/language" />
+        <Stack.Screen name="admin/my-card" options={{ animation: 'fade' }} />
+        <Stack.Screen name="admin/roles" />
       </Stack.Protected>
       <Stack.Protected guard={full && !web}>
         <Stack.Screen name="(tabs)" />
@@ -84,7 +93,6 @@ function Screens() {
         <Stack.Screen name="cards" />
         <Stack.Screen name="language" />
         <Stack.Screen name="my-card" options={{ animation: 'fade' }} />
-        <Stack.Screen name="roles" />
         <Stack.Screen name="part/[part]" />
         <Stack.Screen name="compose" options={{ presentation: 'modal' }} />
         <Stack.Screen name="circle" />

@@ -41,18 +41,18 @@ export function WebShell({ children }: { children: ReactNode }) {
   if (session.role === 'member') return <PhoneOnly />;
 
   const items: Item[] = [
-    { label: t('console.overview'), href: '/console' },
-    { label: t('home.cards.title'), href: '/cards' },
+    { label: t('console.overview'), href: '/admin' },
+    { label: t('home.cards.title'), href: '/admin/cards' },
     { label: t('console.votes') },
     { label: t('console.verifications') },
     { label: t('console.countries') },
     { label: t('console.moderators') },
     { label: t('console.log') },
-    { label: t('roles.title'), href: '/roles' },
+    { label: t('roles.title'), href: '/admin/roles' },
   ];
   const settings: Item[] = [
-    { label: t('words.open'), href: '/words' },
-    { label: t('welcome.language'), href: '/language' },
+    { label: t('words.open'), href: '/admin/words' },
+    { label: t('welcome.language'), href: '/admin/language' },
   ];
   const council = session.role !== null && webRoles.includes(session.role);
 
@@ -118,7 +118,7 @@ export function WebShell({ children }: { children: ReactNode }) {
         {council && session.arcana !== null && (
           <Pressable
             accessibilityRole="button"
-            onPress={() => router.navigate('/my-card')}
+            onPress={() => router.navigate('/admin/my-card')}
             style={(state) => [styles.me, hoveredIn(state) && styles.itemHover]}
           >
             <CardAvatar size={40} />

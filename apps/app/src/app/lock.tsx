@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Platform, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
-import { colors, fonts, radii, space } from '@tero/ui';
+import { colors, fonts, space } from '@tero/ui';
 import { Button } from '@/components/Button';
-import { CardBack } from '@/components/CardBack';
 import { CardMark } from '@/components/CardMark';
 import { Page } from '@/components/Page';
 import { PasscodePad } from '@/components/PasscodePad';
@@ -14,7 +13,6 @@ import { useSession } from '@/lib/session';
 export default function Lock() {
   const { t } = useLocale();
   const { unlock } = useSession();
-  const { width } = useWindowDimensions();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string>();
   const [tries, setTries] = useState(0);
@@ -52,18 +50,24 @@ export default function Lock() {
 
   if (Platform.OS !== 'web') return <Page>{form}</Page>;
 
-  // The web: a quiet split screen. Nothing on it says whose Tero this is.
+  // The web: a plain, calm sign-in. Nothing on it says whose Tero this is.
   return (
-    <View style={styles.split}>
-      {width >= 900 && (
-        <View style={styles.art}>
-          <CardBack width={220} />
-          <Text style={styles.tagline}>{t('app.tagline')}</Text>
+    <View style={styles.web}>
+      <View style={styles.webColumn}>
+        <View style={styles.webBrand}>
+          <CardMark height={30} />
+          <Wordmark height={20} />
         </View>
-      )}
-      <View style={styles.side}>
-        <View style={styles.panel}>{form}</View>
+        <Text style={styles.webTitle} accessibilityRole="header">
+          {t('lock.webTitle')}
+        </Text>
+        <Text style={styles.webSub}>{t('lock.webPrompt')}</Text>
+        <PasscodePad onSubmit={submit} busy={busy} message={message} resetKey={tries} />
+        <Text style={styles.webLink} onPress={() => router.push('/restore')}>
+          {t('lock.forgot')}
+        </Text>
       </View>
+      <Text style={styles.webFoot}>{t('lock.webFoot')}</Text>
     </View>
   );
 }
@@ -77,36 +81,29 @@ const styles = StyleSheet.create({
     marginTop: space.sm,
   },
   forgot: { marginTop: space.md, alignItems: 'center' },
-  split: { flex: 1, flexDirection: 'row', backgroundColor: colors.ivory },
-  art: {
+  web: {
     flex: 1,
-    backgroundColor: colors.slate,
+    backgroundColor: colors.ivory,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: space.xl,
-    padding: space.xl,
+    padding: space.lg,
   },
-  tagline: {
-    fontFamily: fonts.display,
-    fontSize: 26,
-    lineHeight: 34,
-    color: colors.oatLight,
-    textAlign: 'center',
-    maxWidth: 360,
+  webColumn: { width: '100%', maxWidth: 380, gap: space.xs },
+  webBrand: { flexDirection: 'row', alignItems: 'center', gap: space.sm, marginBottom: space.xl },
+  webTitle: { fontFamily: fonts.display, fontSize: 30, lineHeight: 36, color: colors.slate },
+  webSub: { fontFamily: fonts.body, fontSize: 15, lineHeight: 22, color: colors.textSecondary },
+  webLink: {
+    alignSelf: 'center',
+    marginTop: space.md,
+    fontFamily: fonts.bodyMedium,
+    fontSize: 14,
+    color: colors.textSecondary,
   },
-  side: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: space.lg },
-  panel: {
-    width: '100%',
-    maxWidth: 420,
-    paddingVertical: space.xl,
-    paddingHorizontal: space.lg,
-    borderRadius: radii.lg,
-    backgroundColor: colors.paper,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.hairline,
-    shadowColor: colors.slate,
-    shadowOpacity: 0.06,
-    shadowRadius: 30,
-    shadowOffset: { width: 0, height: 12 },
+  webFoot: {
+    position: 'absolute',
+    bottom: space.lg,
+    fontFamily: fonts.body,
+    fontSize: 12,
+    color: colors.textMuted,
   },
 });
