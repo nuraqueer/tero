@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import type { MessageKey } from '@tero/i18n';
+import { isDirectoryPart } from '@tero/protocol';
 import { colors, fonts, radii, space } from '@tero/ui';
 import { Button } from '@/components/Button';
 import { Page } from '@/components/Page';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { Bone, BoneRow } from '@/components/Skeleton';
+import { Directory } from '@/components/Directory';
 import { SoonNote } from '@/components/SoonNote';
 import { useLocale } from '@/lib/locale';
 import { allParts, partKind } from '@/lib/areas';
@@ -15,7 +17,7 @@ export function generateStaticParams() {
   return allParts.map((part) => ({ part }));
 }
 
-/** One part of an area of help, laid out for what it holds, with placeholders until it's built. */
+/** One part of an area of help, laid out for what it holds. Parts not built yet show placeholders. */
 export default function PartScreen() {
   const { t } = useLocale();
   const { part: param } = useLocalSearchParams<{ part: string }>();
@@ -25,7 +27,7 @@ export default function PartScreen() {
     <Page>
       <ScreenHeader title={t(`part.${part}` as MessageKey)} />
       <Text style={styles.lead}>{t(`part.${part}.body` as MessageKey)}</Text>
-      {kind === 'directory' && <Directory part={part} />}
+      {isDirectoryPart(part) && <Directory part={part} />}
       {kind === 'aid' && <MutualAid />}
       {kind === 'jobs' && <Jobs />}
       {kind === 'stories' && <Stories />}
@@ -33,7 +35,7 @@ export default function PartScreen() {
       {kind === 'showCard' && <ShowCard />}
       {kind === 'journeys' && <Journey />}
       {kind === 'list' && <BoneList />}
-      <SoonNote text={t('part.soon')} />
+      {!isDirectoryPart(part) && <SoonNote text={t('part.soon')} />}
     </Page>
   );
 }
@@ -96,26 +98,6 @@ function BoneList({ rows = 4 }: { rows?: number }) {
         <BoneRow key={i} />
       ))}
     </View>
-  );
-}
-
-/** A directory of places, as in a resource map: search, trust signals, community review. */
-function Directory({ part }: { part: string }) {
-  const { t } = useLocale();
-  return (
-    <>
-      <Search placeholder={t('dir.search')} />
-      <Text style={styles.label}>{t('dir.trust')}</Text>
-      <Toggles keys={['dir.verified', 'dir.free', 'dir.international']} />
-      <Text style={styles.count}>{t('dir.count', { count: 0 })}</Text>
-      <View style={styles.empty}>
-        <Text style={styles.emptyText}>{t(`dir.empty.${part}` as MessageKey)}</Text>
-      </View>
-      <Text style={styles.note}>{t('dir.addressNote')}</Text>
-      <View style={styles.actions}>
-        <Button label={t('dir.submit')} onPress={() => undefined} kind="secondary" disabled />
-      </View>
-    </>
   );
 }
 

@@ -1,3 +1,4 @@
+import { bytesToBase64Url, pseudonym, randomBytes } from '@tero/crypto';
 import {
   claimedCardTtlMs,
   cardTtlMs,
@@ -7,7 +8,11 @@ import {
   openCardLimit,
   type CardSummary,
   type CreateCardRequest,
+  type DirectoryPart,
+  type NewPlace,
+  type Place,
   type Role,
+  placesPerDay,
 } from '@tero/protocol';
 
 /*
@@ -46,7 +51,51 @@ const schema = [
     claimed_at INTEGER
   )`,
   `CREATE INDEX IF NOT EXISTS cards_by_inviter ON cards (inviter)`,
+  // Places in the directory. author is a pseudonym, not the member's key.
+  `CREATE TABLE IF NOT EXISTS places (
+    id TEXT PRIMARY KEY,
+    part TEXT NOT NULL,
+    name TEXT NOT NULL,
+    country TEXT NOT NULL,
+    city TEXT NOT NULL,
+    offers TEXT NOT NULL,
+    contact TEXT NOT NULL,
+    cost TEXT NOT NULL,
+    international INTEGER NOT NULL,
+    unaware INTEGER NOT NULL,
+    verified INTEGER NOT NULL DEFAULT 0,
+    author TEXT NOT NULL,
+    added_at INTEGER NOT NULL
+  )`,
+  `CREATE INDEX IF NOT EXISTS places_by_part ON places (part, country)`,
+  `CREATE INDEX IF NOT EXISTS places_by_author ON places (author, added_at)`,
+  // "I've been, it went well": one per member per place, again under a pseudonym.
+  `CREATE TABLE IF NOT EXISTS place_vouches (
+    place TEXT NOT NULL,
+    voucher TEXT NOT NULL,
+    PRIMARY KEY (place, voucher)
+  )`,
 ];
+
+const dayMs = 24 * 60 * 60 * 1000;
+
+type PlaceRow = {
+  id: string;
+  part: DirectoryPart;
+  name: string;
+  country: string;
+  city: string;
+  offers: string;
+  contact: string;
+  cost: Place['cost'];
+  international: number;
+  unaware: number;
+  verified: number;
+  author: string;
+  added_at: number;
+  vouches: number;
+  vouched: number;
+};
 
 /** Columns added after launch: [table, column, definition, fill for existing rows]. */
 const additions: Array<[string, string, string, string]> = [
@@ -95,6 +144,8 @@ export class Registry {
     /** The Fool's did:key. They become a member the first time they are looked up. */
     private readonly founder?: string,
     private readonly random: () => number = secureRandom,
+    /** Keys the pseudonyms that stand in for members in stored rows. */
+    private readonly secret = 'tero-local',
   ) {
     for (const statement of schema) sql.exec(statement);
     for (const [table, column, type, fill] of additions) {
@@ -276,5 +327,133 @@ export class Registry {
       inviter,
     );
     return deleted.length ? { ok: true } : { ok: false, error: 'not_found' };
+  }
+  /** Members only; also says whether they may remove other people's places. */
+  private canModerate(member: Member): boolean {
+    return member.role === 'fool' || member.role === 'council';
+  }
+
+  private author(did: string) {
+    return pseudonym(this.secret, 'place-author', did);
+  }
+
+  private voucher(did: string) {
+    return pseudonym(this.secret, 'place-voucher', did);
+  }
+
+  listPlaces(
+    did: string,
+    part: DirectoryPart,
+    now: number,
+  ): Result<{ places: Place[] }, 'not_member'> {
+    if (!this.member(did, now)) return { ok: false, error: 'not_member' };
+    const rows = this.rows<PlaceRow>(
+      `SELECT p.*,
+         (SELECT COUNT(*) FROM place_vouches v WHERE v.place = p.id) AS vouches,
+         EXISTS (SELECT 1 FROM place_vouches v WHERE v.place = p.id AND v.voucher = ?) AS vouched
+       FROM places p WHERE p.part = ? ORDER BY p.verified DESC, vouches DESC, p.added_at DESC
+       LIMIT 500`,
+      this.voucher(did),
+      part,
+    );
+    const author = this.author(did);
+    return {
+      ok: true,
+      places: rows.map((row) => ({
+        id: row.id,
+        part: row.part,
+        name: row.name,
+        country: row.country,
+        city: row.city,
+        offers: row.offers,
+        contact: row.contact,
+        cost: row.cost,
+        international: row.international === 1,
+        unaware: row.unaware === 1,
+        verified: row.verified === 1,
+        vouches: row.vouches,
+        vouched: row.vouched === 1,
+        addedOn: Math.floor(row.added_at / dayMs) * dayMs,
+        mine: row.author === author,
+      })),
+    };
+  }
+
+  addPlace(
+    did: string,
+    place: NewPlace,
+    now: number,
+  ): Result<{ id: string }, 'not_member' | 'rate_limited'> {
+    if (!this.member(did, now)) return { ok: false, error: 'not_member' };
+    const author = this.author(did);
+    const [{ n } = { n: 0 }] = this.rows<{ n: number }>(
+      'SELECT COUNT(*) AS n FROM places WHERE author = ? AND added_at > ?',
+      author,
+      now - dayMs,
+    );
+    if (n >= placesPerDay) return { ok: false, error: 'rate_limited' };
+    const id = bytesToBase64Url(randomBytes(12));
+    this.sql.exec(
+      `INSERT INTO places (id, part, name, country, city, offers, contact, cost, international,
+         unaware, author, added_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      id,
+      place.part,
+      place.name.trim(),
+      place.country,
+      place.city.trim(),
+      place.offers.trim(),
+      place.contact.trim(),
+      place.cost,
+      place.international ? 1 : 0,
+      place.unaware ? 1 : 0,
+      author,
+      now,
+    );
+    return { ok: true, id };
+  }
+
+  /** "I've been, it went well", or taking it back. */
+  vouchPlace(
+    did: string,
+    id: string,
+    vouch: boolean,
+    now: number,
+  ): Result<object, 'not_member' | 'not_found' | 'not_allowed'> {
+    if (!this.member(did, now)) return { ok: false, error: 'not_member' };
+    const [place] = this.rows<{ author: string }>('SELECT author FROM places WHERE id = ?', id);
+    if (!place) return { ok: false, error: 'not_found' };
+    // Nobody vouches for a place they added themselves.
+    if (place.author === this.author(did)) return { ok: false, error: 'not_allowed' };
+    if (vouch) {
+      this.sql.exec(
+        'INSERT INTO place_vouches (place, voucher) VALUES (?, ?) ON CONFLICT DO NOTHING',
+        id,
+        this.voucher(did),
+      );
+    } else {
+      this.sql.exec(
+        'DELETE FROM place_vouches WHERE place = ? AND voucher = ?',
+        id,
+        this.voucher(did),
+      );
+    }
+    return { ok: true };
+  }
+
+  /** The person who added it, the Fool or the council can take a place down. */
+  removePlace(
+    did: string,
+    id: string,
+    now: number,
+  ): Result<object, 'not_member' | 'not_found' | 'not_allowed'> {
+    const member = this.member(did, now);
+    if (!member) return { ok: false, error: 'not_member' };
+    const [place] = this.rows<{ author: string }>('SELECT author FROM places WHERE id = ?', id);
+    if (!place) return { ok: false, error: 'not_found' };
+    if (place.author !== this.author(did) && !this.canModerate(member))
+      return { ok: false, error: 'not_allowed' };
+    this.sql.exec('DELETE FROM place_vouches WHERE place = ?', id);
+    this.sql.exec('DELETE FROM places WHERE id = ?', id);
+    return { ok: true };
   }
 }

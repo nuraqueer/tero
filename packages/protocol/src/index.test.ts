@@ -3,6 +3,7 @@ import {
   cardUrl,
   drawArcana,
   isApproveCardRequest,
+  isNewPlace,
   isClaimCardRequest,
   isCreateCardRequest,
   isSignInRequest,
@@ -67,5 +68,27 @@ describe('drawArcana', () => {
     expect(seen.has(0)).toBe(false);
     expect(seen.has(7)).toBe(false);
     expect(drawArcana(null, () => 0.999)).toBe(21);
+  });
+});
+
+describe('isNewPlace', () => {
+  const place = {
+    part: 'legal',
+    name: 'Rights Desk',
+    country: 'UG',
+    city: 'Kampala',
+    offers: 'Free legal aid.',
+    contact: '',
+    cost: 'free',
+    international: false,
+    unaware: true,
+  };
+  it('accepts a well-formed place', () => expect(isNewPlace(place)).toBe(true));
+  it('refuses unknown parts, bad countries, blank names and long text', () => {
+    expect(isNewPlace({ ...place, part: 'jobs' })).toBe(false);
+    expect(isNewPlace({ ...place, country: 'uganda' })).toBe(false);
+    expect(isNewPlace({ ...place, name: '   ' })).toBe(false);
+    expect(isNewPlace({ ...place, offers: 'x'.repeat(401) })).toBe(false);
+    expect(isNewPlace({ ...place, cost: 'cheap' })).toBe(false);
   });
 });

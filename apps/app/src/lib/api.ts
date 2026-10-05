@@ -10,6 +10,9 @@ import {
   type ClaimCardRequest,
   type ClaimCardResponse,
   type CreateCardRequest,
+  type DirectoryPart,
+  type NewPlace,
+  type PlaceListResponse,
   type FounderSeatResponse,
   type MeResponse,
   type SignInRequest,
@@ -74,12 +77,12 @@ export async function signIn(identity: Identity): Promise<SignInResponse> {
   return request<SignInResponse>('/api/auth/session', 'POST', undefined, body);
 }
 
-/** Calls that need a session token. */
 /** Whether the Fool's seat is still open. True only until Tero has its first member. */
 export async function founderSeatOpen(): Promise<boolean> {
   return (await request<FounderSeatResponse>('/api/founder', 'GET')).open;
 }
 
+/** Calls that need a session token. */
 export function authed(token: string) {
   return {
     me: () => request<MeResponse>('/api/me', 'GET', token),
@@ -97,6 +100,12 @@ export function authed(token: string) {
       return request<{ sequence: number }>(`/api/cards/${id}/approve`, 'POST', token, body);
     },
     destroyCard: (id: string) => request<void>(`/api/cards/${id}`, 'DELETE', token),
+    listPlaces: async (part: DirectoryPart) =>
+      (await request<PlaceListResponse>(`/api/places?part=${part}`, 'GET', token)).places,
+    addPlace: (place: NewPlace) => request<{ id: string }>('/api/places', 'POST', token, place),
+    vouchPlace: (id: string, vouch: boolean) =>
+      request<void>(`/api/places/${id}/vouch`, vouch ? 'PUT' : 'DELETE', token),
+    removePlace: (id: string) => request<void>(`/api/places/${id}`, 'DELETE', token),
   };
 }
 

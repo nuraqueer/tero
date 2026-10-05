@@ -1,5 +1,5 @@
 import { DurableObject } from 'cloudflare:workers';
-import type { CreateCardRequest } from '@tero/protocol';
+import type { CreateCardRequest, DirectoryPart, NewPlace } from '@tero/protocol';
 import type { Env } from './index';
 import { Registry } from './registry';
 
@@ -9,7 +9,7 @@ export class RegistryObject extends DurableObject<Env> {
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
-    this.registry = new Registry(ctx.storage.sql, env.FOUNDER_DID);
+    this.registry = new Registry(ctx.storage.sql, env.FOUNDER_DID, undefined, env.AUTH_SECRET);
   }
 
   member(did: string) {
@@ -38,5 +38,17 @@ export class RegistryObject extends DurableObject<Env> {
   }
   destroyCard(inviter: string, id: string) {
     return this.registry.destroyCard(inviter, id);
+  }
+  listPlaces(did: string, part: DirectoryPart) {
+    return this.registry.listPlaces(did, part, Date.now());
+  }
+  addPlace(did: string, place: NewPlace) {
+    return this.registry.addPlace(did, place, Date.now());
+  }
+  vouchPlace(did: string, id: string, vouch: boolean) {
+    return this.registry.vouchPlace(did, id, vouch, Date.now());
+  }
+  removePlace(did: string, id: string) {
+    return this.registry.removePlace(did, id, Date.now());
   }
 }

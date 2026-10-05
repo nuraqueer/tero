@@ -4,6 +4,9 @@ import {
   isCardId,
   isClaimCardRequest,
   isCreateCardRequest,
+  isDirectoryPart,
+  isNewPlace,
+  isPlaceId,
   isSignInRequest,
   type ApiErrorCode,
   type FounderSeatResponse,
@@ -44,6 +47,10 @@ export type RegistryApi = Async<
     | 'claimCard'
     | 'approveCard'
     | 'destroyCard'
+    | 'listPlaces'
+    | 'addPlace'
+    | 'vouchPlace'
+    | 'removePlace'
   >
 >;
 
@@ -87,7 +94,10 @@ const statusFor: Partial<Record<ApiErrorCode, number>> = {
   not_allowed: 403,
   conflict: 409,
   not_found: 404,
+  rate_limited: 429,
 };
+
+const noContent = () => new Response(null, { status: 204, headers: securityHeaders });
 
 async function readJson(request: Request): Promise<unknown> {
   try {
@@ -188,9 +198,38 @@ async function handleSignedIn(
     }
     if (method !== 'DELETE') return error('method_not_allowed', 405);
     const result = await reg.destroyCard(did, id);
-    return result.ok
-      ? new Response(null, { status: 204, headers: securityHeaders })
-      : error(result.error, 404);
+    return result.ok ? noContent() : error(result.error, 404);
+  }
+
+  if (path === '/api/places') {
+    if (method === 'GET') {
+      const part = new URL(request.url).searchParams.get('part');
+      if (!isDirectoryPart(part)) return error('bad_request', 400);
+      const result = await reg.listPlaces(did, part);
+      return result.ok ? json({ places: result.places }) : error(result.error, 403);
+    }
+    if (method === 'POST') {
+      const body = await readJson(request);
+      if (!isNewPlace(body)) return error('bad_request', 400);
+      const result = await reg.addPlace(did, body);
+      return result.ok
+        ? json({ id: result.id }, 201)
+        : error(result.error, statusFor[result.error]!);
+    }
+    return error('method_not_allowed', 405);
+  }
+
+  const place = path.match(/^\/api\/places\/([^/]+)(\/vouch)?$/);
+  if (place && isPlaceId(place[1])) {
+    const id = place[1];
+    if (place[2]) {
+      if (method !== 'PUT' && method !== 'DELETE') return error('method_not_allowed', 405);
+      const result = await reg.vouchPlace(did, id, method === 'PUT');
+      return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
+    }
+    if (method !== 'DELETE') return error('method_not_allowed', 405);
+    const result = await reg.removePlace(did, id);
+    return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
   }
 
   return error('not_found', 404);
@@ -207,7 +246,8 @@ async function handleApi(request: Request, path: string, env: Env): Promise<Resp
     path === '/api/me' ||
     path === '/api/status' ||
     path === '/api/founder' ||
-    path.startsWith('/api/cards');
+    path.startsWith('/api/cards') ||
+    path.startsWith('/api/places');
   if (!known) return error('not_found', 404);
 
   // A short secret would make tokens guessable; refuse to run with one.

@@ -28,6 +28,10 @@ export function testRegistry(founder?: string, clock = { now: Date.now() }) {
     claimCard: (claimer, id) => registry.claimCard(claimer, id, clock.now),
     approveCard: (inviter, id, claimer) => registry.approveCard(inviter, id, claimer, clock.now),
     destroyCard: (inviter, id) => registry.destroyCard(inviter, id),
+    listPlaces: (did, part) => registry.listPlaces(did, part, clock.now),
+    addPlace: (did, place) => registry.addPlace(did, place, clock.now),
+    vouchPlace: (did, id, vouch) => registry.vouchPlace(did, id, vouch, clock.now),
+    removePlace: (did, id) => registry.removePlace(did, id, clock.now),
   };
   const namespace = { idFromName: () => 'registry', get: () => api };
   return { registry, clock, REGISTRY: namespace as unknown as Env['REGISTRY'] };

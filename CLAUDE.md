@@ -147,18 +147,32 @@ my-card|roles` (re-exports of the shared screens). Phones keep `/lock` and the t
   Web lock is plain (no tarot art: "too gamey"); the word "Tero" is now Newsreader 500,
   title case. Keep the admin side calm and professional, not game-like.
 
+- Help, not Suits (D41, founder 2026-10-06): the Cups/Pentacles/Swords/Wands names are gone.
+  Tab `(tabs)/help.tsx`, four plain areas in `lib/areas.ts` (`care`, `work`, `safety`,
+  `health`; icons `AreaIcon.tsx`), i18n keys `area.*`, `part.*`, `help.*`. Tarot stays for
+  member cards and Sequences only. The founder wants real features, built one by one, not
+  placeholders.
+- Directory is real (D42): `components/Directory.tsx` on the seven directory parts
+  (`directoryParts` in `@tero/protocol`). API: `GET /api/places?part=`, `POST /api/places`,
+  `PUT|DELETE /api/places/:id/vouch`, `DELETE /api/places/:id` (author, Fool or council).
+  Stored in `RegistryObject` (`places`, `place_vouches`); authors and vouchers are HMAC
+  pseudonyms (`pseudonym()` in `@tero/crypto`, keyed by `AUTH_SECRET`). 10 places/member/day.
+
 ## Next
 
-1. `EXPO_TOKEN` is in the environment (robot of the `pherus` Expo org). The founder pasted
+1. Real features, one by one (founder): directory done; next mutual aid (requests and offers),
+   then jobs, stories, skills, journeys. Each: protocol shape + registry table + routes +
+   tests + screen, no placeholders.
+2. `EXPO_TOKEN` is in the environment (robot of the `pherus` Expo org). The founder pasted
    one in chat earlier; it should be rotated. Build the Compose, Circle and chat screens as
    their milestones land.
-2. After app changes, republish Expo Go: temporary `runtimeVersion: exposdk:57.0.0` in
+3. After app changes, republish Expo Go: temporary `runtimeVersion: exposdk:57.0.0` in
    `apps/app/app.json`, `npx eas-cli@latest update --branch preview --platform all
 --environment preview --non-interactive` (newer eas-cli needs `--environment`), then remove the runtimeVersion. Needs `EXPO_TOKEN` (robot of the
    `pherus` Expo org) in the environment.
-3. M3: private chats use OpenMLS (D39, [docs/messaging-choice.md](docs/messaging-choice.md)).
+4. M3: private chats use OpenMLS (D39, [docs/messaging-choice.md](docs/messaging-choice.md)).
    On hold: the founder said to work on other things first. Needs an EAS test build.
-4. Open design items: pick a logo concept; match the You-screen tarot card to the
+5. Open design items: pick a logo concept; match the You-screen tarot card to the
    founder's reference image (Pinterest is blocked here; ask for it as an attachment).
 
 ## Testing tips
