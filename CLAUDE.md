@@ -83,6 +83,10 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   skips PBKDF2 (old vaults are upgraded on their next unlock). scrypt (2^14) still runs
   in JS on Hermes, a few seconds; lowering it on phones is a founder decision.
 
+- Phone passcode pad (`PasscodePad.tsx`): enters by itself on the sixth digit, round
+  glass keys with letters (iOS 26 style), dots shake on a wrong code. Not yet on Expo Go:
+  this session had no `EXPO_TOKEN`.
+
 ## Next
 
 1. **Design work** (founder: "start the actual designs", move fast).
