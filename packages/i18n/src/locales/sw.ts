@@ -1,7 +1,7 @@
 import type { Messages } from '../types';
 
 export const sw: Messages = {
-  'app.tagline': 'Watu wa LGBTQ+ wakisaidiana, kila mahali.',
+  'app.tagline': 'Maarifa, rasilimali, jumuiya na msaada wa LGBTQ+',
   'welcome.body': 'Tero ni kwa mwaliko tu. Ili kujiunga, mtu anayekuamini atakupa kadi ya Tero.',
   'welcome.haveCard': 'Nina kadi ya Tero',
   'welcome.readGuides': 'Soma miongozo iliyo wazi',
@@ -260,9 +260,9 @@ export const sw: Messages = {
   'console.phoneOnly.title': 'Tero iko kwenye simu yako',
   'console.phoneOnly.body':
     'Kwenye wavuti, Tero ni kwa ajili ya baraza pekee. Fungua programu ya Tero kwenye simu yako kutumia akaunti yako.',
-  'console.morning': 'Habari za asubuhi, {name}',
-  'console.afternoon': 'Habari za mchana, {name}',
-  'console.evening': 'Habari za jioni, {name}',
+  'console.morning': 'Habari za asubuhi',
+  'console.afternoon': 'Habari za mchana',
+  'console.evening': 'Habari za jioni',
   'console.sub': 'Hivi ndivyo Tero ilivyo leo.',
   'console.stat.cards': 'Kadi zako za Tero zilizo wazi',
   'console.stat.sequence': 'Daraja lako',
@@ -280,15 +280,16 @@ export const sw: Messages = {
   'console.seatCard.make': 'Tengeneza kadi ya baraza',
   'console.councilCard': 'Kadi ya baraza',
   'public.nav.guides': 'Miongozo',
-  'public.kicker': 'JUU YA UKUNGU WA KIJIVU',
+  'public.guides.read': 'Soma',
+  'public.fact.q2q': 'Kati ya watu wa LGBTQ+',
+  'public.title': 'Maarifa, rasilimali, jumuiya na msaada wa LGBTQ+',
   'public.lead':
-    'Nyumba ya faragha kwa huduma, kazi, usalama na ukuaji. Soma miongozo iliyo wazi hapa. Jiunge mtu anayekuamini atakapokupa kadi ya Tero.',
+    'Jukwaa la kimataifa la maarifa na rasilimali linaloendeshwa na jumuiya, kutoka Pherus kwa jumuiya ya LGBTQIA+. Pata huduma za afya, msaada wa kisheria, makazi, fursa na ujuzi wa maisha unaoaminika, unaoshirikiwa kati ya watu wa LGBTQ+ na kulindwa na michango na usimamizi wa jumuiya.',
   'public.readGuides': 'Soma miongozo',
-  'public.fact.languages': 'English · Kiswahili · 中文 · Français',
   'public.fact.noName': 'Hakuna jina, barua pepe wala nambari ya simu',
   'public.fact.e2e': 'Usimbaji fiche wa mwanzo hadi mwisho',
   'public.fact.open': 'Programu huria',
-  'public.areas.title': 'Aina nne za msaada',
+  'public.areas.title': 'Utakachopata',
   'public.area.care':
     'Duara, Spaces za moja kwa moja, mazungumzo ya faragha, mtu wa kuzungumza naye, na wataalamu wa tiba waliothibitishwa.',
   'public.area.work':
@@ -299,12 +300,9 @@ export const sw: Messages = {
     'Ujuzi mpya, taarifa za HRT, na mipango ya upasuaji na safari, hatua kwa hatua.',
   'public.guides.title': 'Miongozo iliyo wazi',
   'public.guides.note': 'Bure kusoma, hakuna akaunti inayohitajika',
-  'public.partners.kicker': 'WASHIRIKA WA TERO',
-  'public.partners.title': 'Kadi inayosema: uko salama hapa.',
+  'public.partners.title': 'Washirika wa Tero',
   'public.partners.body':
     'Kliniki, maduka ya dawa na mawakili wanaweza kuwa washirika wa Tero. Mwanachama anaonyesha kadi yake ya Tero, mshirika anaonyesha yake, na maneno matatu yaleyale yanaonekana kwenye zote mbili. Hakuna maelezo yanayohitajika.',
-  'public.partners.member': 'MWANACHAMA',
-  'public.partners.partner': 'MSHIRIKA',
   'public.join.title': 'Jinsi ya kujiunga',
   'public.join.1.title': 'Pata kadi ya Tero',
   'public.join.1.body': 'Mwanachama anayekuamini anakupa moja. Kila kadi inafanya kazi mara moja.',

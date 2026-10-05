@@ -6,7 +6,6 @@ import type { StatusResponse } from '@tero/protocol';
 import { colors, fonts, radii, space } from '@tero/ui';
 import { Button } from '@/components/Button';
 import { Code } from '@/components/Code';
-import { useCardTitle } from '@/components/MemberCard';
 import { useLocale } from '@/lib/locale';
 import { useFullSession } from '@/lib/session';
 
@@ -21,7 +20,6 @@ const greetings: Array<[number, MessageKey]> = [
 export default function Console() {
   const { t } = useLocale();
   const session = useFullSession();
-  const title = useCardTitle(session?.arcana ?? 0);
   const [openCards, setOpenCards] = useState<number | null>(null);
   const [status, setStatus] = useState<(StatusResponse & { ms: number }) | 'down' | null>(null);
   const member = session?.member;
@@ -87,7 +85,7 @@ export default function Console() {
   return (
     <ScrollView contentContainerStyle={styles.page} showsVerticalScrollIndicator={false}>
       <Text style={styles.title} accessibilityRole="header">
-        {t(greeting, { name: title })}
+        {t(greeting)}
       </Text>
       <Text style={styles.sub}>{t('console.sub')}</Text>
 

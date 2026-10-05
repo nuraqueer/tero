@@ -12,9 +12,7 @@ import { router, usePathname, type Href } from 'expo-router';
 import { webRoles } from '@tero/protocol';
 import { colors, fonts, radii, space } from '@tero/ui';
 import { Button } from '@/components/Button';
-import { CardAvatar } from '@/components/CardAvatar';
 import { CardMark } from '@/components/CardMark';
-import { useCardTitle } from '@/components/MemberCard';
 import { Wordmark } from '@/components/Wordmark';
 import { useLocale } from '@/lib/locale';
 import { useFullSession } from '@/lib/session';
@@ -33,7 +31,6 @@ export function WebShell({ children }: { children: ReactNode }) {
   const { t } = useLocale();
   const session = useFullSession();
   const path = usePathname();
-  const title = useCardTitle(session?.arcana ?? 0);
   const { width } = useWindowDimensions();
   if (!session) return null;
 
@@ -115,21 +112,6 @@ export function WebShell({ children }: { children: ReactNode }) {
         <Text style={styles.group}>{t('tabs.you')}</Text>
         {settings.map(link)}
         <View style={styles.spacer} />
-        {council && session.arcana !== null && (
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => router.navigate('/admin/my-card')}
-            style={(state) => [styles.me, hoveredIn(state) && styles.itemHover]}
-          >
-            <CardAvatar size={40} />
-            <View style={styles.meText}>
-              <Text style={styles.meName}>{title}</Text>
-              <Text style={styles.meSub}>
-                {session.role === 'fool' ? t('console.owner') : t('console.seat')}
-              </Text>
-            </View>
-          </Pressable>
-        )}
         <Button label={t('home.lock')} onPress={session.lock} kind="secondary" />
       </View>
       <View style={styles.main}>{children}</View>
@@ -194,17 +176,6 @@ const styles = StyleSheet.create({
   itemSoon: { color: colors.textMuted },
   soon: { fontFamily: fonts.body, fontSize: 11, color: colors.textMuted },
   spacer: { flex: 1, minHeight: space.lg },
-  me: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.sm + 4,
-    padding: space.sm,
-    borderRadius: radii.md,
-    marginBottom: space.sm,
-  },
-  meText: { flex: 1 },
-  meName: { fontFamily: fonts.display, fontSize: 18, color: colors.slate },
-  meSub: { fontFamily: fonts.body, fontSize: 12, color: colors.textSecondary },
   main: { flex: 1 },
   narrow: { flex: 1, backgroundColor: colors.ivory },
   topBar: {

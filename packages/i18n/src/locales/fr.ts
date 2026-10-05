@@ -1,7 +1,7 @@
 import type { Messages } from '../types';
 
 export const fr: Messages = {
-  'app.tagline': "Des personnes queer qui s'entraident, partout.",
+  'app.tagline': 'Savoirs, ressources, communauté et soutien queer',
   'welcome.body':
     'Tero fonctionne sur invitation. Pour rejoindre, une personne qui te fait confiance te remet une carte Tero.',
   'welcome.haveCard': "J'ai une carte Tero",
@@ -263,9 +263,9 @@ export const fr: Messages = {
   'console.phoneOnly.title': 'Tero vit sur ton téléphone',
   'console.phoneOnly.body':
     'Sur le web, Tero est réservé au conseil. Ouvre l’appli Tero sur ton téléphone pour utiliser ton compte.',
-  'console.morning': 'Bonjour, {name}',
-  'console.afternoon': 'Bon après-midi, {name}',
-  'console.evening': 'Bonsoir, {name}',
+  'console.morning': 'Bonjour',
+  'console.afternoon': 'Bon après-midi',
+  'console.evening': 'Bonsoir',
   'console.sub': 'Voici où en est Tero aujourd’hui.',
   'console.stat.cards': 'Tes cartes Tero ouvertes',
   'console.stat.sequence': 'Ta Séquence',
@@ -283,15 +283,16 @@ export const fr: Messages = {
   'console.seatCard.make': 'Créer une carte du conseil',
   'console.councilCard': 'Carte du conseil',
   'public.nav.guides': 'Guides',
-  'public.kicker': 'AU-DESSUS DU BROUILLARD GRIS',
+  'public.guides.read': 'Lire',
+  'public.fact.q2q': 'Entre personnes queer',
+  'public.title': 'Savoirs, ressources, communauté et soutien queer',
   'public.lead':
-    'Un lieu privé pour le soin, le travail, la sécurité et l’évolution. Lis les guides ouverts ici. Rejoins Tero quand quelqu’un qui te fait confiance te donne une carte Tero.',
+    'Une plateforme mondiale de savoirs et de ressources, portée par la communauté, créée par Pherus pour les personnes LGBTQIA+. Trouve des soins, une aide juridique, un logement, des opportunités et des compétences de confiance, partagés entre personnes queer et vérifiés par la communauté et la modération.',
   'public.readGuides': 'Lire les guides',
-  'public.fact.languages': 'English · Kiswahili · 中文 · Français',
   'public.fact.noName': 'Ni nom, ni e-mail, ni numéro de téléphone',
   'public.fact.e2e': 'Chiffré de bout en bout',
   'public.fact.open': 'Open source',
-  'public.areas.title': 'Quatre sortes d’aide',
+  'public.areas.title': 'Ce que tu trouveras',
   'public.area.care':
     'Cercles, Spaces en direct, discussions privées, quelqu’un à qui parler, et thérapeutes vérifiés.',
   'public.area.work':
@@ -302,12 +303,9 @@ export const fr: Messages = {
     'Nouvelles compétences, informations sur le THS, et préparation de chirurgies et de voyages, étape par étape.',
   'public.guides.title': 'Guides ouverts',
   'public.guides.note': 'Gratuits, sans compte',
-  'public.partners.kicker': 'PARTENAIRES TERO',
-  'public.partners.title': 'Une carte qui dit : tu es en sécurité ici.',
+  'public.partners.title': 'Partenaires Tero',
   'public.partners.body':
     'Cliniques, pharmacies et avocats peuvent devenir partenaires Tero. Un membre montre sa carte Tero, le partenaire montre la sienne, et les trois mêmes mots apparaissent sur les deux. Pas besoin d’explications.',
-  'public.partners.member': 'MEMBRE',
-  'public.partners.partner': 'PARTENAIRE',
   'public.join.title': 'Comment rejoindre Tero',
   'public.join.1.title': 'Recevoir une carte Tero',
   'public.join.1.body':

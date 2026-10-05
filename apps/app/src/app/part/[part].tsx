@@ -72,7 +72,6 @@ function ShowCard() {
   return (
     <View style={styles.cardWrap}>
       <View style={styles.wordCard}>
-        <Text style={styles.wordLabel}>{t('public.partners.member')}</Text>
         {[0, 1, 2].map((i) => (
           <Text key={i} style={styles.word}>
             · · ·

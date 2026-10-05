@@ -86,7 +86,6 @@ function Screens() {
         <Stack.Screen name="admin/cards" />
         <Stack.Screen name="admin/words" />
         <Stack.Screen name="admin/language" />
-        <Stack.Screen name="admin/my-card" options={{ animation: 'fade' }} />
         <Stack.Screen name="admin/roles" />
       </Stack.Protected>
       {/* On the web, / is always the public site; the admin side is only at /admin, which
@@ -105,7 +104,6 @@ function Screens() {
         <Stack.Screen name="words" />
         <Stack.Screen name="biometric" />
         <Stack.Screen name="cards" />
-        <Stack.Screen name="language" />
         <Stack.Screen name="my-card" options={{ animation: 'fade' }} />
         <Stack.Screen name="part/[part]" />
         <Stack.Screen name="compose" options={{ presentation: 'modal' }} />
@@ -116,7 +114,8 @@ function Screens() {
         <Stack.Screen name="crisis" />
         <Stack.Screen name="map" />
       </Stack.Protected>
-      {/* The open guides are public: readable in every state, decoy view included. */}
+      {/* Language and the open guides work in every state, decoy view included. */}
+      <Stack.Screen name="language" />
       <Stack.Screen name="guides/index" />
       <Stack.Screen name="guides/[slug]" />
       <Stack.Protected guard={basic}>

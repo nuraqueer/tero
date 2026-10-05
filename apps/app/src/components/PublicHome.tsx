@@ -1,31 +1,34 @@
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
-import { locales, localeNames, type MessageKey } from '@tero/i18n';
+import type { MessageKey } from '@tero/i18n';
 import { colors, fonts, radii, space } from '@tero/ui';
-import { CardMark } from '@/components/CardMark';
-import { MemberCard } from '@/components/MemberCard';
 import { AreaIcon, areas } from '@/components/AreaIcon';
+import { CardMark } from '@/components/CardMark';
+import { LanguageMenu } from '@/components/LanguageMenu';
 import { Wordmark } from '@/components/Wordmark';
 import { guides } from '@/guides';
 import { useLocale } from '@/lib/locale';
 
 const wide = 1080;
 
-/** tero.pherus.org: what Tero is, the open guides, partners and how joining works. */
+/**
+ * tero.pherus.org: a calm, plain page about a queer resource platform. One light ground,
+ * dark text, and the warm accent only for links. Nothing on it names a member or a card.
+ */
 export function PublicHome({ onFounder }: { onFounder: () => void }) {
-  const { t, locale, setLocale } = useLocale();
+  const { t } = useLocale();
 
-  const linkButton = (label: string, onPress: () => void, primary = false) => (
+  const button = (label: string, onPress: () => void, primary = false) => (
     <Pressable
       accessibilityRole="link"
       onPress={onPress}
       style={({ pressed }) => [
-        styles.cta,
-        primary ? styles.ctaPrimary : styles.ctaSecondary,
+        styles.button,
+        primary ? styles.primary : styles.secondary,
         pressed && styles.pressed,
       ]}
     >
-      <Text style={primary ? styles.ctaPrimaryText : styles.ctaSecondaryText}>{label}</Text>
+      <Text style={primary ? styles.primaryText : styles.secondaryText}>{label}</Text>
     </Pressable>
   );
 
@@ -33,87 +36,61 @@ export function PublicHome({ onFounder }: { onFounder: () => void }) {
     <ScrollView style={styles.page} showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
       {/* The header stays at the top while the page scrolls. */}
       <View style={styles.bar}>
-        <View style={styles.wrap}>
-          <View style={styles.header}>
-            {/* The founder's hidden setup: a long press on the mark (only while the seat is open). */}
-            <Pressable onLongPress={onFounder} delayLongPress={1500} style={styles.brand}>
-              <CardMark height={34} />
-              <Wordmark height={18} color={colors.oatLight} />
-            </Pressable>
-            <View style={styles.nav}>
-              <Text style={styles.navLink} onPress={() => router.push('/guides')}>
-                {t('public.nav.guides')}
-              </Text>
-              <View style={styles.langs} accessibilityRole="radiogroup">
-                {locales.map((code) => (
-                  <Text
-                    key={code}
-                    accessibilityRole="radio"
-                    accessibilityState={{ selected: code === locale }}
-                    onPress={() => setLocale(code)}
-                    style={[styles.lang, code === locale && styles.langOn]}
-                  >
-                    {localeNames[code]}
-                  </Text>
-                ))}
-              </View>
-            </View>
-          </View>
-        </View>
-      </View>
-      {/* Hero, on the dark ground of the cards. */}
-      <View style={styles.hero}>
-        <View style={styles.wrap}>
-          <View style={styles.heroBody}>
-            <View style={styles.heroText}>
-              <Text style={styles.kicker}>{t('public.kicker')}</Text>
-              <Text style={styles.h1} accessibilityRole="header">
-                {t('app.tagline')}
-              </Text>
-              <Text style={styles.lead}>{t('public.lead')}</Text>
-              <View style={styles.ctas}>
-                {linkButton(t('welcome.haveCard'), () => router.push('/scan'), true)}
-                {linkButton(t('public.readGuides'), () => router.push('/guides'))}
-              </View>
-              <Text style={styles.restore} onPress={() => router.push('/restore')}>
-                {t('welcome.restore')}
-              </Text>
-            </View>
-            <View style={styles.heroCard} accessibilityElementsHidden>
-              <MemberCard arcana={0} sequence={null} width={230} />
-            </View>
-          </View>
-        </View>
-        <View style={styles.facts}>
-          <View style={[styles.wrap, styles.factsRow]}>
-            {(
-              [
-                'public.fact.languages',
-                'public.fact.noName',
-                'public.fact.e2e',
-                'public.fact.open',
-              ] as MessageKey[]
-            ).map((key) => (
-              <Text key={key} style={styles.fact}>
-                {t(key)}
-              </Text>
-            ))}
+        <View style={[styles.wrap, styles.header]}>
+          {/* The founder's hidden setup: a long press on the mark (only while the seat is open). */}
+          <Pressable onLongPress={onFounder} delayLongPress={1500} style={styles.brand}>
+            <CardMark height={28} />
+            <Wordmark height={16} />
+          </Pressable>
+          <View style={styles.nav}>
+            <Text style={styles.navLink} onPress={() => router.push('/guides')}>
+              {t('public.nav.guides')}
+            </Text>
+            <LanguageMenu />
           </View>
         </View>
       </View>
 
-      {/* The four areas of help. */}
+      <View style={[styles.wrap, styles.hero]}>
+        <Text style={styles.h1} accessibilityRole="header">
+          {t('public.title')}
+        </Text>
+        <Text style={styles.lead}>{t('public.lead')}</Text>
+        <View style={styles.buttons}>
+          {button(t('welcome.haveCard'), () => router.push('/scan'), true)}
+          {button(t('public.readGuides'), () => router.push('/guides'))}
+        </View>
+        <Text style={styles.small} onPress={() => router.push('/restore')}>
+          {t('welcome.restore')}
+        </Text>
+        <View style={styles.facts}>
+          {(
+            [
+              'public.fact.q2q',
+              'public.fact.noName',
+              'public.fact.e2e',
+              'public.fact.open',
+            ] as MessageKey[]
+          ).map((key) => (
+            <Text key={key} style={styles.fact}>
+              {t(key)}
+            </Text>
+          ))}
+        </View>
+      </View>
+
+      <View style={styles.rule} />
+
+      {/* What members find. */}
       <View style={[styles.wrap, styles.section]}>
         <Text style={styles.h2} accessibilityRole="header">
           {t('public.areas.title')}
         </Text>
         <View style={styles.grid}>
           {areas.map((area) => (
-            <View key={area} style={styles.area}>
-              <View style={styles.areaIcon}>
-                <AreaIcon area={area} size={26} color={colors.clayText} />
-              </View>
-              <Text style={styles.areaName}>{t(`area.${area}` as MessageKey)}</Text>
+            <View key={area} style={styles.tile}>
+              <AreaIcon area={area} size={24} color={colors.slate} />
+              <Text style={styles.h3}>{t(`area.${area}` as MessageKey)}</Text>
               <Text style={styles.body}>{t(`public.area.${area}` as MessageKey)}</Text>
             </View>
           ))}
@@ -122,59 +99,37 @@ export function PublicHome({ onFounder }: { onFounder: () => void }) {
 
       {/* Open guides. */}
       <View style={[styles.wrap, styles.section]}>
-        <View style={styles.sectionHead}>
-          <Text style={styles.h2} accessibilityRole="header">
-            {t('public.guides.title')}
-          </Text>
-          <Text style={styles.note}>{t('public.guides.note')}</Text>
-        </View>
-        <View style={styles.grid}>
-          {guides.map((guide) => (
+        <Text style={styles.h2} accessibilityRole="header">
+          {t('public.guides.title')}
+        </Text>
+        <Text style={styles.sub}>{t('public.guides.note')}</Text>
+        <View style={styles.list}>
+          {guides.map((guide, i) => (
             <Pressable
               key={guide.slug}
               accessibilityRole="link"
               onPress={() =>
                 router.push({ pathname: '/guides/[slug]', params: { slug: guide.slug } })
               }
-              style={({ pressed }) => [styles.guide, pressed && styles.pressed]}
+              style={({ pressed }) => [
+                styles.row,
+                i > 0 && styles.divider,
+                pressed && styles.rowPressed,
+              ]}
             >
-              <Text style={styles.guideArea}>
-                {t(`area.${guide.area}` as MessageKey).toUpperCase()}
-                {guide.text ? '' : ` · ${t('guides.writing').toUpperCase()}`}
+              <View style={styles.rowText}>
+                <Text style={styles.h3}>{t(`guide.${guide.key}.title` as MessageKey)}</Text>
+                <Text style={styles.body}>{t(`guide.${guide.key}.summary` as MessageKey)}</Text>
+              </View>
+              <Text style={styles.rowMeta}>
+                {guide.text ? t('public.guides.read') : t('guides.writing')}
               </Text>
-              <Text style={styles.guideTitle}>{t(`guide.${guide.key}.title` as MessageKey)}</Text>
-              <Text style={styles.body}>{t(`guide.${guide.key}.summary` as MessageKey)}</Text>
             </Pressable>
           ))}
         </View>
       </View>
 
-      {/* Partners. */}
-      <View style={styles.partners}>
-        <View style={[styles.wrap, styles.partnersRow]}>
-          <View style={styles.partnersText}>
-            <Text style={styles.kicker}>{t('public.partners.kicker')}</Text>
-            <Text style={[styles.h2, styles.light]} accessibilityRole="header">
-              {t('public.partners.title')}
-            </Text>
-            <Text style={[styles.body, styles.lightBody]}>{t('public.partners.body')}</Text>
-          </View>
-          <View style={styles.words}>
-            {(['public.partners.member', 'public.partners.partner'] as MessageKey[]).map((key) => (
-              <View key={key} style={styles.wordCard}>
-                <Text style={styles.wordLabel}>{t(key)}</Text>
-                {['AMBER', 'RIVER', 'SEVEN'].map((word) => (
-                  <Text key={word} style={styles.word}>
-                    {word}
-                  </Text>
-                ))}
-              </View>
-            ))}
-          </View>
-        </View>
-      </View>
-
-      {/* Joining. */}
+      {/* How it stays trustworthy, and how joining works. */}
       <View style={[styles.wrap, styles.section]}>
         <Text style={styles.h2} accessibilityRole="header">
           {t('public.join.title')}
@@ -182,36 +137,41 @@ export function PublicHome({ onFounder }: { onFounder: () => void }) {
         <View style={styles.grid}>
           {[1, 2, 3].map((n) => (
             <View key={n} style={styles.step}>
-              <Text style={styles.stepNumber}>{['I', 'II', 'III'][n - 1]}</Text>
-              <Text style={styles.areaName}>{t(`public.join.${n}.title` as MessageKey)}</Text>
+              <Text style={styles.stepNumber}>{n}</Text>
+              <Text style={styles.h3}>{t(`public.join.${n}.title` as MessageKey)}</Text>
               <Text style={styles.body}>{t(`public.join.${n}.body` as MessageKey)}</Text>
             </View>
           ))}
         </View>
       </View>
 
-      {/* Safety and footer. */}
-      <View style={styles.safety}>
-        <View style={[styles.wrap, styles.safetyRow]}>
-          <View style={styles.partnersText}>
-            <Text style={[styles.h2, styles.light]} accessibilityRole="header">
-              {t('public.safety.title')}
-            </Text>
-            <Text style={[styles.body, styles.lightBody]}>{t('public.safety.body')}</Text>
+      <View style={[styles.wrap, styles.section]}>
+        <View style={styles.note}>
+          <View style={styles.noteText}>
+            <Text style={styles.h3}>{t('public.partners.title')}</Text>
+            <Text style={styles.body}>{t('public.partners.body')}</Text>
           </View>
-          {linkButton(t('public.safety.read'), () =>
+        </View>
+        <View style={styles.note}>
+          <View style={styles.noteText}>
+            <Text style={styles.h3}>{t('public.safety.title')}</Text>
+            <Text style={styles.body}>{t('public.safety.body')}</Text>
+          </View>
+          {button(t('public.safety.read'), () =>
             router.push({ pathname: '/guides/[slug]', params: { slug: 'staying-safe-online' } }),
           )}
         </View>
-        <View style={[styles.wrap, styles.footer]}>
-          <Text style={styles.footerText}>{t('public.footer.by')}</Text>
-          <Text
-            style={styles.footerText}
-            onPress={() => Linking.openURL('https://github.com/phe-rus/tero')}
-          >
-            {t('public.footer.source')}
-          </Text>
-        </View>
+      </View>
+
+      <View style={styles.rule} />
+      <View style={[styles.wrap, styles.footer]}>
+        <Text style={styles.footerText}>{t('public.footer.by')}</Text>
+        <Text
+          style={styles.footerText}
+          onPress={() => Linking.openURL('https://github.com/phe-rus/tero')}
+        >
+          {t('public.footer.source')}
+        </Text>
       </View>
     </ScrollView>
   );
@@ -220,152 +180,133 @@ export function PublicHome({ onFounder }: { onFounder: () => void }) {
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: colors.ivory },
   wrap: { width: '100%', maxWidth: wide, alignSelf: 'center', paddingHorizontal: space.lg },
-  hero: { backgroundColor: colors.slate },
+  pressed: { opacity: 0.8 },
   bar: {
-    backgroundColor: colors.slate,
+    backgroundColor: colors.ivory,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'rgba(250,249,245,0.12)',
+    borderBottomColor: colors.hairline,
     zIndex: 10,
   },
   header: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: space.md,
-    paddingVertical: space.md,
+    paddingVertical: space.sm + 4,
   },
   brand: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
-  nav: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space.lg },
-  navLink: { fontFamily: fonts.bodyMedium, fontSize: 15, color: colors.oatLight },
-  langs: { flexDirection: 'row', gap: space.sm },
-  lang: { fontFamily: fonts.body, fontSize: 13, color: '#B0AEA5', paddingHorizontal: 4 },
-  langOn: { color: colors.goldLight, textDecorationLine: 'underline' },
-  heroBody: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: space.xl,
-    paddingTop: space.xl,
-    paddingBottom: space.xl + space.lg,
+  nav: { flexDirection: 'row', alignItems: 'center', gap: space.lg },
+  navLink: { fontFamily: fonts.bodyMedium, fontSize: 15, color: colors.slate },
+  hero: { paddingTop: space.xl * 2, paddingBottom: space.xl, maxWidth: 820 },
+  h1: {
+    fontFamily: fonts.display,
+    fontSize: 46,
+    lineHeight: 54,
+    color: colors.slate,
+    alignSelf: 'flex-start',
   },
-  heroText: { flex: 1, minWidth: 300, gap: space.md },
-  kicker: { fontFamily: fonts.bodySemibold, fontSize: 12, letterSpacing: 1.6, color: colors.gold },
-  h1: { fontFamily: fonts.display, fontSize: 48, lineHeight: 54, color: colors.ivory },
-  lead: { fontFamily: fonts.body, fontSize: 18, lineHeight: 28, color: '#C9C6BD', maxWidth: 560 },
-  ctas: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm + 4, marginTop: space.sm },
-  cta: { paddingVertical: 14, paddingHorizontal: 24, borderRadius: radii.pill },
-  ctaPrimary: { backgroundColor: colors.ivory },
-  ctaSecondary: { borderWidth: 1, borderColor: 'rgba(240,238,230,0.35)' },
-  ctaPrimaryText: { fontFamily: fonts.bodySemibold, fontSize: 16, color: colors.slate },
-  ctaSecondaryText: { fontFamily: fonts.bodySemibold, fontSize: 16, color: colors.oatLight },
-  restore: {
+  lead: {
     fontFamily: fonts.body,
-    fontSize: 14,
-    color: '#B0AEA5',
-    textDecorationLine: 'underline',
+    fontSize: 18,
+    lineHeight: 28,
+    color: colors.textSecondary,
+    marginTop: space.md,
   },
-  heroCard: { alignItems: 'center', flexGrow: 1, minWidth: 260 },
-  facts: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: 'rgba(240,238,230,0.15)' },
-  factsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: space.lg, paddingVertical: space.md },
-  fact: { fontFamily: fonts.body, fontSize: 13, color: '#B0AEA5' },
-  section: { paddingVertical: space.xl + space.md, gap: space.lg },
-  sectionHead: {
+  buttons: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: space.lg },
+  button: {
+    minHeight: 48,
+    paddingHorizontal: space.lg,
+    borderRadius: radii.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  primary: { backgroundColor: colors.slate },
+  secondary: { borderWidth: 1, borderColor: 'rgba(31,30,29,0.2)' },
+  primaryText: { fontFamily: fonts.bodySemibold, fontSize: 15, color: colors.ivory },
+  secondaryText: { fontFamily: fonts.bodySemibold, fontSize: 15, color: colors.slate },
+  small: {
+    fontFamily: fonts.bodyMedium,
+    fontSize: 14,
+    color: colors.clayText,
+    marginTop: space.md,
+    alignSelf: 'flex-start',
+  },
+  facts: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
-    gap: space.sm,
+    columnGap: space.lg,
+    rowGap: space.sm,
+    marginTop: space.xl,
   },
-  h2: { fontFamily: fonts.display, fontSize: 32, lineHeight: 38, color: colors.slate },
-  note: { fontFamily: fonts.body, fontSize: 14, color: colors.textSecondary },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: space.md },
-  area: {
+  fact: { fontFamily: fonts.body, fontSize: 14, color: colors.textSecondary },
+  rule: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.hairline,
+    width: '100%',
+    maxWidth: wide,
+    alignSelf: 'center',
+  },
+  section: { paddingVertical: space.xl },
+  h2: { fontFamily: fonts.display, fontSize: 30, color: colors.slate },
+  sub: { fontFamily: fonts.body, fontSize: 15, color: colors.textSecondary, marginTop: 4 },
+  h3: { fontFamily: fonts.bodySemibold, fontSize: 17, color: colors.slate },
+  body: { fontFamily: fonts.body, fontSize: 15, lineHeight: 23, color: colors.textSecondary },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: space.md, marginTop: space.lg },
+  tile: {
     flexGrow: 1,
     flexBasis: 220,
     gap: space.sm,
     padding: space.lg,
-    borderRadius: radii.lg,
+    borderRadius: radii.md,
     backgroundColor: colors.paper,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.hairline,
   },
-  areaIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.oatLight,
-  },
-  areaName: { fontFamily: fonts.bodySemibold, fontSize: 18, color: colors.slate },
-  body: { fontFamily: fonts.body, fontSize: 15, lineHeight: 23, color: colors.textSecondary },
-  guide: {
-    flexGrow: 1,
-    flexBasis: 300,
-    gap: space.xs + 2,
-    padding: space.lg,
-    borderRadius: radii.lg,
+  list: {
+    marginTop: space.lg,
+    borderRadius: radii.md,
     backgroundColor: colors.paper,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.hairline,
+    overflow: 'hidden',
   },
-  guideArea: {
-    fontFamily: fonts.bodySemibold,
-    fontSize: 11,
-    letterSpacing: 1,
-    color: colors.clayText,
-  },
-  guideTitle: { fontFamily: fonts.display, fontSize: 22, lineHeight: 28, color: colors.slate },
-  pressed: { opacity: 0.8 },
-  partners: { backgroundColor: colors.slateSoft },
-  partnersRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: space.xl,
-    paddingVertical: space.xl + space.md,
-  },
-  partnersText: { flex: 1, minWidth: 300, gap: space.md },
-  light: { color: colors.ivory },
-  lightBody: { color: '#C9C6BD' },
-  words: { flexDirection: 'row', gap: space.md, flexGrow: 1, justifyContent: 'center' },
-  wordCard: {
-    width: 150,
-    paddingVertical: space.lg,
-    alignItems: 'center',
-    gap: 6,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.gold,
-    backgroundColor: colors.slate,
-  },
-  wordLabel: {
-    fontFamily: fonts.card,
-    fontSize: 11,
-    letterSpacing: 2,
-    color: colors.gold,
-    marginBottom: 6,
-  },
-  word: { fontFamily: fonts.card, fontSize: 17, letterSpacing: 2, color: colors.oatLight },
+  row: { flexDirection: 'row', alignItems: 'center', gap: space.md, padding: space.lg },
+  divider: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.hairline },
+  rowPressed: { backgroundColor: colors.oatLight },
+  rowText: { flex: 1, gap: 4 },
+  rowMeta: { fontFamily: fonts.bodyMedium, fontSize: 13, color: colors.clayText },
   step: { flexGrow: 1, flexBasis: 240, gap: space.sm },
-  stepNumber: { fontFamily: fonts.card, fontSize: 20, color: colors.clayText },
-  safety: { backgroundColor: colors.slate },
-  safetyRow: {
+  stepNumber: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(31,30,29,0.25)',
+    textAlign: 'center',
+    lineHeight: 28,
+    fontFamily: fonts.bodySemibold,
+    fontSize: 14,
+    color: colors.slate,
+  },
+  note: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     gap: space.lg,
-    paddingVertical: space.xl + space.md,
+    padding: space.lg,
+    marginBottom: space.md,
+    borderRadius: radii.md,
+    backgroundColor: colors.paper,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.hairline,
   },
+  noteText: { flexGrow: 1, flexBasis: 320, gap: space.sm },
   footer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     gap: space.md,
     paddingVertical: space.lg,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(240,238,230,0.15)',
   },
-  footerText: { fontFamily: fonts.body, fontSize: 13, color: '#B0AEA5' },
+  footerText: { fontFamily: fonts.body, fontSize: 13, color: colors.textSecondary },
 });

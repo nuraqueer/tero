@@ -1,7 +1,7 @@
 import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { locales, localeNames } from '@tero/i18n';
+import { localeNames } from '@tero/i18n';
 import { colors, fonts, radii, space, touchTarget } from '@tero/ui';
 import { CardMark } from '@/components/CardMark';
 import { PublicHome } from '@/components/PublicHome';
@@ -18,7 +18,7 @@ async function openFounderSetup() {
 }
 
 export default function Welcome() {
-  const { locale, setLocale, t } = useLocale();
+  const { locale, t } = useLocale();
   // On the web, the front door is the public site (D40); phones get the welcome screen.
   if (Platform.OS === 'web') return <PublicHome onFounder={openFounderSetup} />;
 
@@ -64,31 +64,35 @@ export default function Welcome() {
           </Pressable>
         </View>
 
-        <Text style={styles.label}>{t('welcome.language')}</Text>
-        <View style={styles.languages} accessibilityRole="radiogroup">
-          {locales.map((code) => {
-            const selected = code === locale;
-            return (
-              <Pressable
-                key={code}
-                accessibilityRole="radio"
-                accessibilityState={{ selected }}
-                onPress={() => setLocale(code)}
-                style={[styles.chip, selected && styles.chipSelected]}
-              >
-                <Text style={[styles.chipLabel, selected && styles.chipLabelSelected]}>
-                  {localeNames[code]}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.push('/language')}
+          style={({ pressed }) => [styles.langRow, pressed && styles.langPressed]}
+        >
+          <Text style={styles.langLabel}>{t('welcome.language')}</Text>
+          <Text style={styles.langValue}>{localeNames[locale]} ›</Text>
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  langRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    minHeight: touchTarget + 4,
+    marginTop: space.lg,
+    paddingHorizontal: space.md,
+    borderRadius: radii.md,
+    backgroundColor: colors.paper,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.hairline,
+  },
+  langPressed: { opacity: 0.7 },
+  langLabel: { fontFamily: fonts.bodyMedium, fontSize: 16, color: colors.slate },
+  langValue: { fontFamily: fonts.body, fontSize: 16, color: colors.textSecondary },
   safe: { flex: 1, backgroundColor: colors.ivory },
   page: {
     flexGrow: 1,
@@ -127,31 +131,4 @@ const styles = StyleSheet.create({
   primaryLabel: { fontFamily: fonts.bodySemibold, fontSize: 16, color: colors.ivory },
   secondary: { borderWidth: StyleSheet.hairlineWidth, borderColor: colors.hairline },
   secondaryLabel: { fontFamily: fonts.bodySemibold, fontSize: 16, color: colors.slate },
-  label: {
-    fontFamily: fonts.bodySemibold,
-    fontSize: 12,
-    letterSpacing: 0.6,
-    color: colors.textSecondary,
-    textTransform: 'uppercase',
-    textAlign: 'center',
-    marginTop: space.xl,
-  },
-  languages: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: space.sm,
-    marginTop: space.sm + 4,
-  },
-  chip: {
-    minHeight: touchTarget - 8,
-    paddingHorizontal: 14,
-    borderRadius: radii.pill,
-    justifyContent: 'center',
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.hairline,
-  },
-  chipSelected: { backgroundColor: colors.slate, borderColor: colors.slate },
-  chipLabel: { fontFamily: fonts.bodyMedium, fontSize: 14, color: colors.slate },
-  chipLabelSelected: { color: colors.ivory },
 });

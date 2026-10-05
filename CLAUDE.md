@@ -189,6 +189,11 @@ my-card|roles` (re-exports of the shared screens). Phones keep `/lock` and the t
   `WHEN_PASSCODE_SET_THIS_DEVICE_ONLY` (`requireAuthentication` failed in Expo Go). The open
   session keeps the seed in memory (`openSeed`, cleared on lock) so turning it on needs no
   passcode. Turned off by `finishSetup` (new or restored vault).
+- Not a game (D50): public site rebuilt plain and light (`PublicHome.tsx`), hero line
+  "Queer knowledge, resources, community, & support" (`app.tagline`, `public.title`), no
+  Fool card anywhere on the web (console avatar, `/admin/my-card` and greeting name removed).
+  Languages: `LanguageMenu.tsx` dropdown on the web; phones' welcome screen links to the
+  `language` list (now open in every state). Public headers are sticky.
 - Testing member screens in a browser: the web sends the Fool to `/admin`, and a full page
   load locks. To reach `/part/...` locally, add a temporary `router.push` link on the admin
   page, export, test with Playwright (see founder setup steps), then revert before committing.
