@@ -60,8 +60,8 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
 - The founder has claimed the Fool's seat (Sequence 0) on the web. Home shows a tarot
   card "0 · The Fool"; Tero cards show the inviter's card name under the QR code.
 - Phone app on Expo Go (2026-10-06, branch `preview`, group
-  `92ee3710-a47c-4961-9581-e88f6d13c707`): iOS `01a109de-5d8c-7b5f-8142-4fe447941065`,
-  Android `01a109de-5d8c-77f0-bb22-e514b89e215c`.
+  `f88400a5-0244-49e7-8024-592a90f25631`, built from `b25e190`): iOS
+  `01a10b9d-3d67-75c0-80fa-20421aeeccd0`, Android `01a10b9d-3d67-75fe-a894-78fdcc7f754b`.
 - Restore with the 12 words (`src/app/restore.tsx`): from the welcome screen (new
   device) or the lock screen ("Forgot it?"). Same words give the same address.
   12 numbered boxes; paste in any layout (`arrangePhraseWords`: "1 onion 2 tomato",
@@ -149,8 +149,9 @@ my-card|roles` (re-exports of the shared screens). Phones keep `/lock` and the t
 
 ## Next
 
-1. Put `EXPO_TOKEN` in the environment settings (the founder pasted one in chat for the
-   2026-10-06 publish; it should be rotated). Then build the Compose, Circle and chat screens as their milestones land.
+1. `EXPO_TOKEN` is in the environment (robot of the `pherus` Expo org). The founder pasted
+   one in chat earlier; it should be rotated. Build the Compose, Circle and chat screens as
+   their milestones land.
 2. After app changes, republish Expo Go: temporary `runtimeVersion: exposdk:57.0.0` in
    `apps/app/app.json`, `npx eas-cli@latest update --branch preview --platform all
 --environment preview --non-interactive` (newer eas-cli needs `--environment`), then remove the runtimeVersion. Needs `EXPO_TOKEN` (robot of the
