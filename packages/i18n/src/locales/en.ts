@@ -27,12 +27,16 @@ export const en = {
   'setup.passcode.bodyWeb':
     'In a browser, use a passphrase of at least 10 characters, like a few words only you know. Tero asks for it every time you open it.',
   'restore.title': 'Restore with your 12 words',
-  'restore.body': 'Type the 12 words from your paper, in order, with a space between each.',
+  'restore.body':
+    'Type each word in its numbered box, or paste all 12 at once in any layout, such as "1 onion 2 tomato". You can type just the first letters of a word and press space.',
   'restore.label': 'Your 12 words',
-  'restore.wrong': "Those words don't work. Check the spelling and the order.",
+  'restore.wrong': 'The words marked in red are not right. Check the spelling.',
   'lock.forgot': 'Forgot it? Use your 12 words',
   'welcome.restore': 'I have my 12 words',
   'card.fool': 'The Fool',
+  'restore.missing': '{count} boxes are still empty.',
+  'restore.order':
+    'All the words are real, but they are not in the right order. Check the numbers on your paper.',
   'setup.passcode.title': 'Choose a passcode',
   'setup.passcode.body': 'Six digits. Tero asks for it every time you open the app.',
   'setup.passcode.repeat': 'Enter your passcode again',

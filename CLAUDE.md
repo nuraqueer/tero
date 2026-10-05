@@ -63,6 +63,9 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   `01a109b0-7c08-73d0-a853-c11bbbf33e0d`, Android `01a109b0-7c08-7ec0-8691-f5737507fac8`.
 - Restore with the 12 words (`src/app/restore.tsx`): from the welcome screen (new
   device) or the lock screen ("Forgot it?"). Same words give the same address.
+  12 numbered boxes; paste in any layout (`arrangePhraseWords`: "1 onion 2 tomato",
+  numbered lines, commas) or type the first letters and press space
+  (`completePhraseWord`).
 - The Fool's seat: the hidden founder setup (long press on the welcome mark) opens only
   while `GET /api/founder` says `{open: true}`, i.e. Tero has no members. The first
   `POST /api/founder` after setup becomes Sequence 0; then the seat is closed for good.
@@ -70,7 +73,29 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
 
 ## Next
 
-1. M3: private chats. Start by comparing libsignal, vodozemac and OpenMLS
+1. **Save the 12 words as a .txt file** (founder asked): a "Save as a file" button on the
+   setup phrase screen, and a "Recovery words" screen for signed-in members that asks
+   for the passcode again before showing or saving the words. Numbered lines
+   ("1. word") so the file pastes straight into restore. Show a clear warning: anyone
+   with the file can take the account; keep it off shared or cloud-synced storage.
+   Web: Blob download. Phones: `expo-file-system` + `expo-sharing` (add with
+   `EXPO_OFFLINE=1 bunx expo install`).
+2. After app changes, republish Expo Go: temporary `runtimeVersion: exposdk:57.0.0` in
+   `apps/app/app.json`, `npx eas-cli@latest update --branch preview --platform all
+--non-interactive`, then remove the runtimeVersion. Needs `EXPO_TOKEN` (robot of the
+   `pherus` Expo org) in the environment.
+3. M3: private chats. Start by comparing libsignal, vodozemac and OpenMLS
    ([docs/build-plan.md](docs/build-plan.md)).
-2. Open design items: pick a logo concept; match the You-screen tarot card to the
+4. Open design items: pick a logo concept; match the You-screen tarot card to the
    founder's reference image (Pinterest is blocked here; ask for it as an attachment).
+
+## Testing tips
+
+- Local full stack: `apps/app`: `EXPO_OFFLINE=1 CI=1 bunx expo export --platform web`;
+  `apps/edge`: put `AUTH_SECRET=<32+ chars>` in `.dev.vars` (gitignored), then
+  `bunx wrangler dev --port 8787`. Re-exporting the web build breaks a running
+  `wrangler dev`; restart it. Delete `.dev.vars` afterwards.
+- Founder setup in a test browser: long-press the card mark on the welcome page.
+- When killing processes, don't use `pkill -f`/`pgrep -f` with patterns that also match
+  the shell's own command line (it kills the shell).
+- `docs.expo.dev` and `api.expo.dev` were added to the network allowlist; Pinterest isn't.

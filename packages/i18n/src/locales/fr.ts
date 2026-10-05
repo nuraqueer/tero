@@ -30,12 +30,16 @@ export const fr: Messages = {
   'setup.passcode.bodyWeb':
     "Dans un navigateur, utilise une phrase secrète d'au moins 10 caractères, par exemple quelques mots que toi seul·e connais. Tero la demande à chaque ouverture.",
   'restore.title': 'Restaurer avec tes 12 mots',
-  'restore.body': "Saisis les 12 mots de ton papier, dans l'ordre, séparés par un espace.",
+  'restore.body':
+    "Saisis chaque mot dans sa case numérotée, ou colle les 12 mots d'un coup, dans n'importe quel format, par exemple « 1 onion 2 tomato ». Tu peux taper seulement les premières lettres d'un mot puis appuyer sur espace.",
   'restore.label': 'Tes 12 mots',
-  'restore.wrong': "Ces mots ne fonctionnent pas. Vérifie l'orthographe et l'ordre.",
+  'restore.wrong': "Les mots en rouge ne sont pas bons. Vérifie l'orthographe.",
   'lock.forgot': 'Oublié ? Utilise tes 12 mots',
   'welcome.restore': "J'ai mes 12 mots",
   'card.fool': 'Le Mat',
+  'restore.missing': 'Il reste {count} cases vides.',
+  'restore.order':
+    'Tous les mots existent, mais ils ne sont pas dans le bon ordre. Vérifie les numéros sur ton papier.',
   'setup.passcode.title': 'Choisis un code',
   'setup.passcode.body': "Six chiffres. Tero te le demande à chaque ouverture de l'application.",
   'setup.passcode.repeat': 'Saisis ton code à nouveau',

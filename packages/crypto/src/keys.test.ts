@@ -1,10 +1,13 @@
-import { hexToBytes, bytesToHex } from '@noble/hashes/utils.js';
+import { bytesToHex, hexToBytes } from '@noble/hashes/utils.js';
 import { describe, expect, it } from 'vitest';
 import {
+  arrangePhraseWords,
+  completePhraseWord,
   createPhrase,
   deriveSecret,
   didFromPublicKey,
   identityFromSeed,
+  isPhraseWord,
   isValidPhrase,
   normalizePhrase,
   phraseToSeed,
@@ -107,5 +110,49 @@ describe('signatures', () => {
     expect(verify(signature, message, other.publicKey)).toBe(false);
     expect(verify(signature, new TextEncoder().encode('hellp'), identity.publicKey)).toBe(false);
     expect(verify(new Uint8Array(3), message, identity.publicKey)).toBe(false);
+  });
+});
+
+describe('isPhraseWord', () => {
+  it('knows the phrase words, ignoring case and spaces', () => {
+    expect(isPhraseWord('abandon')).toBe(true);
+    expect(isPhraseWord(' Zoo ')).toBe(true);
+    expect(isPhraseWord('tero')).toBe(false);
+  });
+});
+
+describe('completePhraseWord', () => {
+  it('fills in a word once the start can only be one word', () => {
+    expect(completePhraseWord('aban')).toBe('abandon');
+    expect(completePhraseWord('ZOO')).toBe('zoo');
+  });
+
+  it('waits while the start fits several words or none', () => {
+    expect(completePhraseWord('act')).toBeNull();
+    expect(completePhraseWord('ab')).toBeNull();
+    expect(completePhraseWord('qqq')).toBeNull();
+  });
+});
+
+describe('arrangePhraseWords', () => {
+  const twelve = 'onion tomato river lantern quiet morning zoo act fish abandon wolf kettle';
+  const words = twelve.split(' ');
+
+  it('takes plain words in order', () => {
+    expect(arrangePhraseWords(twelve)).toEqual(words);
+  });
+
+  it('places numbered words by their numbers, in any layout', () => {
+    const shuffled = words
+      .map((w, i) => `${i + 1}. ${w.toUpperCase()}`)
+      .reverse()
+      .join('\n');
+    expect(arrangePhraseWords(shuffled)).toEqual(words);
+    expect(arrangePhraseWords(words.map((w, i) => `${i + 1} ${w}`).join(' '))).toEqual(words);
+    expect(arrangePhraseWords(words.map((w, i) => `${i + 1}) ${w},`).join(''))).toEqual(words);
+  });
+
+  it('leaves gaps where words are missing', () => {
+    expect(arrangePhraseWords('1 onion 3 river').slice(0, 3)).toEqual(['onion', '', 'river']);
   });
 });

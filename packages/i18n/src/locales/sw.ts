@@ -30,12 +30,15 @@ export const sw: Messages = {
     'Kwenye kivinjari, tumia kaulisiri ya angalau herufi 10, kama maneno machache unayoyajua wewe tu. Tero itaiomba kila unapoifungua.',
   'restore.title': 'Rejesha kwa maneno yako 12',
   'restore.body':
-    'Andika maneno 12 kutoka kwenye karatasi yako, kwa mpangilio, ukiacha nafasi kati ya kila neno.',
+    'Andika kila neno katika kisanduku chake chenye namba, au bandika maneno yote 12 kwa mara moja kwa mpangilio wowote, kama "1 kitunguu 2 nyanya". Unaweza kuandika herufi za kwanza tu za neno kisha ubonyeze nafasi.',
   'restore.label': 'Maneno yako 12',
-  'restore.wrong': 'Maneno hayo hayafanyi kazi. Angalia tahajia na mpangilio.',
+  'restore.wrong': 'Maneno yaliyowekwa alama nyekundu si sahihi. Angalia tahajia.',
   'lock.forgot': 'Umesahau? Tumia maneno yako 12',
   'welcome.restore': 'Nina maneno yangu 12',
   'card.fool': 'The Fool',
+  'restore.missing': 'Visanduku {count} bado viko tupu.',
+  'restore.order':
+    'Maneno yote ni sahihi, lakini hayako kwa mpangilio sahihi. Angalia namba kwenye karatasi yako.',
   'setup.passcode.title': 'Chagua nambari ya siri',
   'setup.passcode.body': 'Tarakimu sita. Tero itaiomba kila unapofungua programu.',
   'setup.passcode.repeat': 'Weka nambari yako ya siri tena',
