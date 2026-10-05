@@ -59,8 +59,9 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   Unlocking accepts any length so older web vaults still open. Phones keep 6 digits.
 - The founder has claimed the Fool's seat (Sequence 0) on the web. Home shows a tarot
   card "0 · The Fool"; Tero cards show the inviter's card name under the QR code.
-- Phone app published to Expo Go (2026-10-05, branch `preview`): iOS update
-  `01a109b0-7c08-73d0-a853-c11bbbf33e0d`, Android `01a109b0-7c08-7ec0-8691-f5737507fac8`.
+- Phone app published to Expo Go (2026-10-06, branch `preview`, group
+  `7655e4af-848c-4ccc-9304-39b51d16bff9`): iOS update `01a109d1-5c34-72b9-a693-55b6d4b62c82`,
+  Android `01a109d1-5c34-7604-a206-94904b3a3b5c`. Includes logo, tabs, screens and the new pad.
 - Restore with the 12 words (`src/app/restore.tsx`): from the welcome screen (new
   device) or the lock screen ("Forgot it?"). Same words give the same address.
   12 numbered boxes; paste in any layout (`arrangePhraseWords`: "1 onion 2 tomato",
@@ -84,8 +85,7 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   in JS on Hermes, a few seconds; lowering it on phones is a founder decision.
 
 - Phone passcode pad (`PasscodePad.tsx`): enters by itself on the sixth digit, round
-  glass keys with letters (iOS 26 style), dots shake on a wrong code. Not yet on Expo Go:
-  this session had no `EXPO_TOKEN`.
+  glass keys with letters (iOS 26 style), dots shake on a wrong code. On Expo Go since 2026-10-06.
 
 - Design (2026-10-06): logo concept 1 "Sun card" is in use: drawn wordmark
   (`Wordmark.tsx`), SVG card mark, new app icons/splash/favicon (rendered from SVG with
@@ -97,11 +97,11 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
 
 ## Next
 
-1. **Publish to Expo Go**: needs `EXPO_TOKEN` in the environment (founder adding it).
-   Then build the Compose, Circle and chat screens as their milestones land.
+1. Put `EXPO_TOKEN` in the environment settings (the founder pasted one in chat for the
+   2026-10-06 publish; it should be rotated). Then build the Compose, Circle and chat screens as their milestones land.
 2. After app changes, republish Expo Go: temporary `runtimeVersion: exposdk:57.0.0` in
    `apps/app/app.json`, `npx eas-cli@latest update --branch preview --platform all
---non-interactive`, then remove the runtimeVersion. Needs `EXPO_TOKEN` (robot of the
+--environment preview --non-interactive` (newer eas-cli needs `--environment`), then remove the runtimeVersion. Needs `EXPO_TOKEN` (robot of the
    `pherus` Expo org) in the environment.
 3. M3: private chats. Start by comparing libsignal, vodozemac and OpenMLS
    ([docs/build-plan.md](docs/build-plan.md)).
