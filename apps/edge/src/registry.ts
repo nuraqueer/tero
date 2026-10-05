@@ -1,6 +1,7 @@
 import { bytesToBase64Url, pseudonym, randomBytes } from '@tero/crypto';
 import { AidBoard, aidSchema } from './aid';
 import { JobBoard, jobSchema } from './jobs';
+import { SkillBoard, skillSchema } from './skills';
 import { StoryBoard, storySchema } from './stories';
 import {
   claimedCardTtlMs,
@@ -148,6 +149,8 @@ export class Registry {
   readonly jobs: JobBoard;
   /** Stories members share. */
   readonly stories: StoryBoard;
+  /** Teaching, learning and resources. */
+  readonly skills: SkillBoard;
 
   constructor(
     private readonly sql: Sql,
@@ -157,12 +160,13 @@ export class Registry {
     /** Keys the pseudonyms that stand in for members in stored rows. */
     private readonly secret = 'tero-local',
   ) {
-    for (const statement of [...schema, ...aidSchema, ...jobSchema, ...storySchema])
+    for (const statement of [...schema, ...aidSchema, ...jobSchema, ...storySchema, ...skillSchema])
       sql.exec(statement);
     const member = (did: string) => this.member(did, Date.now());
     this.aid = new AidBoard(sql, member, secret);
     this.jobs = new JobBoard(sql, member, secret);
     this.stories = new StoryBoard(sql, member, secret);
+    this.skills = new SkillBoard(sql, member, secret);
     for (const [table, column, type, fill] of additions) {
       const columns = this.rows<{ name: string }>(`PRAGMA table_info(${table})`);
       if (columns.some((c) => c.name === column)) continue;

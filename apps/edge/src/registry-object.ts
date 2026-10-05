@@ -5,6 +5,7 @@ import type {
   NewAidPost,
   NewJob,
   NewPlace,
+  NewSkill,
   NewStory,
 } from '@tero/protocol';
 import type { Env } from './index';
@@ -96,5 +97,20 @@ export class RegistryObject extends DurableObject<Env> {
   }
   removeStory(did: string, id: string) {
     return this.registry.stories.remove(did, id);
+  }
+  listSkills(did: string) {
+    return this.registry.skills.list(did);
+  }
+  addSkill(did: string, skill: NewSkill) {
+    return this.registry.skills.add(did, skill, Date.now());
+  }
+  replySkill(did: string, id: string, note: string) {
+    return this.registry.skills.reply(did, id, note, Date.now());
+  }
+  skillReplies(did: string, id: string) {
+    return this.registry.skills.replies(did, id);
+  }
+  removeSkill(did: string, id: string) {
+    return this.registry.skills.remove(did, id);
   }
 }

@@ -45,6 +45,11 @@ export function testRegistry(founder?: string, clock = { now: Date.now() }) {
     addStory: (did, story) => registry.stories.add(did, story, clock.now),
     thankStory: (did, id, thanks) => registry.stories.thank(did, id, thanks),
     removeStory: (did, id) => registry.stories.remove(did, id),
+    listSkills: (did) => registry.skills.list(did),
+    addSkill: (did, skill) => registry.skills.add(did, skill, clock.now),
+    replySkill: (did, id, note) => registry.skills.reply(did, id, note, clock.now),
+    skillReplies: (did, id) => registry.skills.replies(did, id),
+    removeSkill: (did, id) => registry.skills.remove(did, id),
   };
   const namespace = { idFromName: () => 'registry', get: () => api };
   return { registry, clock, REGISTRY: namespace as unknown as Env['REGISTRY'] };

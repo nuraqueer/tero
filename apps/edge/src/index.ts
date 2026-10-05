@@ -8,6 +8,7 @@ import {
   isNewAidPost,
   isNewAidReply,
   isNewJob,
+  isNewSkill,
   isNewStory,
   isNewPlace,
   isPlaceId,
@@ -69,6 +70,11 @@ export type RegistryApi = Async<
     | 'addStory'
     | 'thankStory'
     | 'removeStory'
+    | 'listSkills'
+    | 'addSkill'
+    | 'replySkill'
+    | 'skillReplies'
+    | 'removeSkill'
   >
 >;
 
@@ -344,6 +350,43 @@ async function handleSignedIn(
     return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
   }
 
+  if (path === '/api/skills') {
+    if (method === 'GET') {
+      const result = await reg.listSkills(did);
+      return result.ok ? json({ skills: result.skills }) : error(result.error, 403);
+    }
+    if (method === 'POST') {
+      const body = await readJson(request);
+      if (!isNewSkill(body)) return error('bad_request', 400);
+      const result = await reg.addSkill(did, body);
+      return result.ok
+        ? json({ id: result.id }, 201)
+        : error(result.error, statusFor[result.error]!);
+    }
+    return error('method_not_allowed', 405);
+  }
+
+  const skill = path.match(/^\/api\/skills\/([^/]+)(\/replies)?$/);
+  if (skill && isPostId(skill[1])) {
+    const id = skill[1];
+    if (skill[2]) {
+      if (method === 'GET') {
+        const result = await reg.skillReplies(did, id);
+        return result.ok
+          ? json({ replies: result.replies })
+          : error(result.error, statusFor[result.error]!);
+      }
+      if (method !== 'POST') return error('method_not_allowed', 405);
+      const body = await readJson(request);
+      if (!isNewAidReply(body)) return error('bad_request', 400);
+      const result = await reg.replySkill(did, id, body.note);
+      return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
+    }
+    if (method !== 'DELETE') return error('method_not_allowed', 405);
+    const result = await reg.removeSkill(did, id);
+    return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
+  }
+
   return error('not_found', 404);
 }
 
@@ -362,7 +405,8 @@ async function handleApi(request: Request, path: string, env: Env): Promise<Resp
     path.startsWith('/api/places') ||
     path.startsWith('/api/aid') ||
     path.startsWith('/api/jobs') ||
-    path.startsWith('/api/stories');
+    path.startsWith('/api/stories') ||
+    path.startsWith('/api/skills');
   if (!known) return error('not_found', 404);
 
   // A short secret would make tokens guessable; refuse to run with one.

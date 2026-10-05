@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import type { MessageKey } from '@tero/i18n';
 import { isDirectoryPart } from '@tero/protocol';
 import { colors, fonts, radii, space } from '@tero/ui';
-import { Button } from '@/components/Button';
 import { Page } from '@/components/Page';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { Bone, BoneRow } from '@/components/Skeleton';
 import { Directory } from '@/components/Directory';
 import { Jobs } from '@/components/Jobs';
+import { Skills } from '@/components/Skills';
 import { Stories } from '@/components/Stories';
 import { MutualAid } from '@/components/MutualAid';
 import { SoonNote } from '@/components/SoonNote';
@@ -17,7 +17,7 @@ import { useLocale } from '@/lib/locale';
 import { allParts, partKind, type PartKind } from '@/lib/areas';
 
 /** Kinds of part that work for real; the rest still show placeholders. */
-const built: PartKind[] = ['directory', 'aid', 'jobs', 'stories'];
+const built: PartKind[] = ['directory', 'aid', 'jobs', 'stories', 'skills'];
 
 export function generateStaticParams() {
   return allParts.map((part) => ({ part }));
@@ -53,24 +53,6 @@ function BoneList({ rows = 4 }: { rows?: number }) {
         <BoneRow key={i} />
       ))}
     </View>
-  );
-}
-
-function Skills() {
-  const { t } = useLocale();
-  return (
-    <>
-      <View style={styles.actions}>
-        <Button label={t('skills.readGuides')} onPress={() => router.push('/guides')} />
-        <Button
-          label={t('skills.contribute')}
-          onPress={() => undefined}
-          kind="secondary"
-          disabled
-        />
-      </View>
-      <BoneList rows={3} />
-    </>
   );
 }
 
@@ -127,7 +109,6 @@ const styles = StyleSheet.create({
     marginTop: space.md,
     textAlign: 'center',
   },
-  actions: { gap: space.sm, marginTop: space.lg },
   list: {
     marginTop: space.md,
     paddingHorizontal: space.md,

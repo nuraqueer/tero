@@ -469,3 +469,71 @@ export function isNewStory(value: unknown): value is NewStory {
     (v.country === '' || /^[A-Z]{2}$/.test(v.country))
   );
 }
+
+// Skills and learning: teaching, wanting to learn, and resources worth sharing.
+
+export const skillKinds = ['teach', 'learn', 'resource'] as const;
+export type SkillKind = (typeof skillKinds)[number];
+
+export const skillTopics = [
+  'tech',
+  'design',
+  'languages',
+  'business',
+  'trades',
+  'wellbeing',
+  'other',
+] as const;
+export type SkillTopic = (typeof skillTopics)[number];
+
+export const skillLimits = { title: 80, details: 600, link: 200 } as const;
+
+/** How many skill posts one member may make in a day. */
+export const skillsPerDay = 3;
+
+export type NewSkill = {
+  kind: SkillKind;
+  topic: SkillTopic;
+  title: string;
+  details: string;
+  /** Can happen online. */
+  online: boolean;
+  /** ISO 3166-1 alpha-2; may be empty when online. */
+  country: string;
+  /** A web link: required for resources, optional otherwise. */
+  link: string;
+};
+
+export type Skill = NewSkill & {
+  id: string;
+  addedOn: number;
+  mine: boolean;
+  /** Replies so far; only told to the author. */
+  replies: number;
+  replied: boolean;
+};
+
+export type SkillListResponse = { skills: Skill[] };
+
+const isLink = (value: unknown) =>
+  typeof value === 'string' &&
+  value.length <= skillLimits.link &&
+  (value === '' || /^https?:\/\/\S+$/.test(value));
+
+export function isNewSkill(value: unknown): value is NewSkill {
+  const v = asObject(value);
+  if (!v) return false;
+  const country =
+    typeof v.country === 'string' &&
+    (/^[A-Z]{2}$/.test(v.country) || (v.country === '' && v.online === true));
+  return (
+    (skillKinds as readonly unknown[]).includes(v.kind) &&
+    (skillTopics as readonly unknown[]).includes(v.topic) &&
+    isText(v.title, skillLimits.title) &&
+    isText(v.details, skillLimits.details) &&
+    typeof v.online === 'boolean' &&
+    country &&
+    isLink(v.link) &&
+    (v.kind !== 'resource' || v.link !== '')
+  );
+}

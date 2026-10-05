@@ -7,6 +7,7 @@ import {
   isNewAidReply,
   isNewJob,
   isNewStory,
+  isNewSkill,
   isNewPlace,
   isClaimCardRequest,
   isCreateCardRequest,
@@ -158,5 +159,30 @@ describe('isNewStory', () => {
     expect(isNewStory({ ...story, country: 'Kenya' })).toBe(false);
     expect(isNewStory({ ...story, text: '' })).toBe(false);
     expect(isNewStory({ ...story, text: 'x'.repeat(4001) })).toBe(false);
+  });
+});
+
+describe('isNewSkill', () => {
+  const skill = {
+    kind: 'teach',
+    topic: 'languages',
+    title: 'Conversational French',
+    details: 'One hour a week on video.',
+    online: true,
+    country: '',
+    link: '',
+  };
+  it('accepts online teaching without a country or link', () =>
+    expect(isNewSkill(skill)).toBe(true));
+  it('needs a web link for resources', () => {
+    expect(isNewSkill({ ...skill, kind: 'resource' })).toBe(false);
+    expect(isNewSkill({ ...skill, kind: 'resource', link: 'https://example.org/course' })).toBe(
+      true,
+    );
+    expect(isNewSkill({ ...skill, kind: 'resource', link: 'javascript:alert(1)' })).toBe(false);
+  });
+  it('needs a country when not online', () => {
+    expect(isNewSkill({ ...skill, online: false })).toBe(false);
+    expect(isNewSkill({ ...skill, online: false, country: 'TZ' })).toBe(true);
   });
 });
