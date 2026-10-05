@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, fonts, radii, space } from '@tero/ui';
+import { useEffect, useRef, useState } from 'react';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import { colors, fonts, space } from '@tero/ui';
 import { useLocale } from '@/lib/locale';
 
 export const passcodeLength = 6;
 
 type Props = {
-  /** Called with the six digits when the person taps Enter. */
+  /** Called with the six digits as soon as the sixth is entered. */
   onSubmit: (code: string) => void;
   /** Shown under the dots, for example after a wrong passcode. */
   message?: string;
@@ -17,88 +17,117 @@ type Props = {
   choosing?: boolean;
 };
 
-const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', 'del'] as const;
+const keys = [
+  ['1', ''],
+  ['2', 'ABC'],
+  ['3', 'DEF'],
+  ['4', 'GHI'],
+  ['5', 'JKL'],
+  ['6', 'MNO'],
+  ['7', 'PQRS'],
+  ['8', 'TUV'],
+  ['9', 'WXYZ'],
+] as const;
 
-/** Six dots and a round keypad, as on the lock screen mockup. */
+/** Small dots and round glass keys, in the style of the phone's own lock screen. */
 export function PasscodePad({ onSubmit, message, busy = false, resetKey }: Props) {
   const { t } = useLocale();
   const [code, setCode] = useState('');
+  const shake = useRef(new Animated.Value(0)).current;
+  const first = useRef(true);
 
-  useEffect(() => setCode(''), [resetKey]);
+  // A reset after the first one means the passcode was wrong or didn't match: shake.
+  useEffect(() => {
+    setCode('');
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    if (!message) return;
+    shake.setValue(0);
+    Animated.sequence(
+      [14, -12, 9, -6, 3, 0].map((toValue) =>
+        Animated.timing(shake, { toValue, duration: 55, useNativeDriver: true }),
+      ),
+    ).start();
+  }, [resetKey]);
 
-  const press = (key: (typeof keys)[number]) => {
+  // Enter on its own once the sixth digit is in, after the last dot has filled.
+  useEffect(() => {
+    if (code.length !== passcodeLength) return;
+    const timer = setTimeout(() => onSubmit(code), 120);
+    return () => clearTimeout(timer);
+  }, [code]);
+
+  const press = (digit: string) => {
     if (busy) return;
-    if (key === 'del') setCode((c) => c.slice(0, -1));
-    else setCode((c) => (c.length < passcodeLength ? c + key : c));
+    setCode((c) => (c.length < passcodeLength ? c + digit : c));
   };
+  const remove = () => !busy && setCode((c) => c.slice(0, -1));
 
-  const full = code.length === passcodeLength;
+  const digitKey = (digit: string, letters = '') => (
+    <Pressable
+      key={digit}
+      accessibilityRole="button"
+      accessibilityLabel={digit}
+      onPress={() => press(digit)}
+      style={({ pressed }) => [styles.key, pressed && styles.keyPressed]}
+    >
+      <Text style={styles.digit}>{digit}</Text>
+      <Text style={styles.letters}>{letters}</Text>
+    </Pressable>
+  );
 
   return (
     <View style={styles.wrap}>
-      <View
-        style={styles.dots}
+      <Animated.View
+        style={[styles.dots, { transform: [{ translateX: shake }] }]}
         accessible
         accessibilityLabel={t('lock.progress', { count: code.length })}
       >
         {Array.from({ length: passcodeLength }, (_, i) => (
           <View key={i} style={[styles.dot, i < code.length && styles.dotFilled]} />
         ))}
-      </View>
+      </Animated.View>
       <Text style={styles.message} accessibilityLiveRegion="polite">
-        {message ?? ''}
+        {busy ? t('lock.opening') : (message ?? '')}
       </Text>
 
       <View style={styles.keypad}>
-        {keys.map((key, i) =>
-          key === '' ? (
-            <View key={i} style={styles.key} />
-          ) : (
-            <Pressable
-              key={i}
-              accessibilityRole="button"
-              accessibilityLabel={key === 'del' ? t('lock.delete') : key}
-              onPress={() => press(key)}
-              style={({ pressed }) => [
-                styles.key,
-                key !== 'del' && styles.keyRing,
-                pressed && styles.keyPressed,
-              ]}
-            >
-              <Text style={key === 'del' ? styles.delete : styles.digit}>
-                {key === 'del' ? '⌫' : key}
-              </Text>
-            </Pressable>
-          ),
-        )}
+        {keys.map(([digit, letters]) => digitKey(digit, letters))}
+        <View style={styles.spacer} />
+        {digitKey('0')}
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('lock.delete')}
+          accessibilityState={{ disabled: code.length === 0 }}
+          disabled={code.length === 0}
+          onPress={remove}
+          style={({ pressed }) => [styles.spacer, styles.textKey, pressed && styles.textPressed]}
+        >
+          <Text style={[styles.delete, code.length === 0 && styles.hidden]}>
+            {t('lock.delete')}
+          </Text>
+        </Pressable>
       </View>
-
-      <Pressable
-        accessibilityRole="button"
-        accessibilityState={{ disabled: !full || busy }}
-        disabled={!full || busy}
-        onPress={() => onSubmit(code)}
-        style={[styles.enter, !full && styles.enterHidden]}
-      >
-        <Text style={styles.enterLabel}>{busy ? t('lock.opening') : t('lock.enter')}</Text>
-      </Pressable>
     </View>
   );
 }
 
-const keySize = 76;
+const keySize = 78;
+const gap = 26;
 
 const styles = StyleSheet.create({
   wrap: { alignItems: 'center', width: '100%' },
-  dots: { flexDirection: 'row', gap: space.md, marginTop: space.lg },
+  dots: { flexDirection: 'row', gap: 18, marginTop: space.lg },
   dot: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    borderWidth: 1.5,
-    borderColor: colors.clay,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    borderWidth: 1.2,
+    borderColor: colors.slate,
   },
-  dotFilled: { backgroundColor: colors.clay },
+  dotFilled: { backgroundColor: colors.slate },
   message: {
     minHeight: 22,
     marginTop: space.md,
@@ -111,28 +140,37 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    rowGap: 18,
-    width: keySize * 3 + 2 * 28,
+    rowGap: 16,
+    width: keySize * 3 + gap * 2,
     marginTop: space.md,
   },
+  // Frosted glass: a faint fill, a light rim and a soft shadow underneath.
   key: {
     width: keySize,
     height: keySize,
     borderRadius: keySize / 2,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(31,30,29,0.055)',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'rgba(255,255,255,0.8)',
+    shadowColor: '#1F1E1D',
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
   },
-  keyRing: { borderWidth: StyleSheet.hairlineWidth, borderColor: 'rgba(31,30,29,0.22)' },
-  keyPressed: { backgroundColor: 'rgba(31,30,29,0.18)' },
-  digit: { fontFamily: fonts.display, fontSize: 32, color: colors.slate },
-  delete: { fontFamily: fonts.body, fontSize: 26, color: colors.slate },
-  enter: {
-    marginTop: space.xl,
-    backgroundColor: colors.clay,
-    borderRadius: radii.pill,
-    paddingVertical: 14,
-    paddingHorizontal: 44,
+  keyPressed: { backgroundColor: 'rgba(31,30,29,0.2)', transform: [{ scale: 0.96 }] },
+  digit: { fontFamily: fonts.body, fontSize: 34, lineHeight: 38, color: colors.slate },
+  letters: {
+    fontFamily: fonts.bodySemibold,
+    fontSize: 9.5,
+    letterSpacing: 2,
+    color: colors.slate,
+    minHeight: 12,
   },
-  enterHidden: { opacity: 0 },
-  enterLabel: { fontFamily: fonts.bodySemibold, fontSize: 17, color: colors.slate },
+  spacer: { width: keySize, height: keySize },
+  textKey: { alignItems: 'center', justifyContent: 'center' },
+  textPressed: { opacity: 0.5 },
+  delete: { fontFamily: fonts.body, fontSize: 17, color: colors.slate },
+  hidden: { opacity: 0 },
 });
