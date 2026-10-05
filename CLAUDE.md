@@ -59,9 +59,9 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   Unlocking accepts any length so older web vaults still open. Phones keep 6 digits.
 - The founder has claimed the Fool's seat (Sequence 0) on the web. Home shows a tarot
   card "0 · The Fool"; Tero cards show the inviter's card name under the QR code.
-- Phone app published to Expo Go (2026-10-06, branch `preview`, group
-  `7655e4af-848c-4ccc-9304-39b51d16bff9`): iOS update `01a109d1-5c34-72b9-a693-55b6d4b62c82`,
-  Android `01a109d1-5c34-7604-a206-94904b3a3b5c`. Includes logo, tabs, screens and the new pad.
+- Phone app on Expo Go (2026-10-06, branch `preview`, group
+  `92ee3710-a47c-4961-9581-e88f6d13c707`): iOS `01a109de-5d8c-7b5f-8142-4fe447941065`,
+  Android `01a109de-5d8c-77f0-bb22-e514b89e215c`.
 - Restore with the 12 words (`src/app/restore.tsx`): from the welcome screen (new
   device) or the lock screen ("Forgot it?"). Same words give the same address.
   12 numbered boxes; paste in any layout (`arrangePhraseWords`: "1 onion 2 tomato",
@@ -94,6 +94,17 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   Android). You: member card with the sun art, number, name and Sequence. Suits: four suit
   cards, each opening `suit/[suit]` with its parts marked "Soon". Gathering, Circles,
   Messages: real layouts with empty states (no fake content).
+
+- Founder feedback round (2026-10-06): phones use the system tab bar (`NativeTabs`:
+  real Liquid Glass on iOS 26, SF Symbols / Material icons); the web keeps `GlassBar`,
+  lower, with a capsule behind the chosen tab. You tab follows the mockup (card, list:
+  Tero cards → `cards.tsx`, Recovery words, Language → `language.tsx`; address as small
+  print). The app locks when closed or after 30 minutes away (`awayLockMs`), not on every
+  switch (D19 updated). New phone vaults use scrypt 2^12 (web keeps 2^14). Scroll bars
+  hidden.
+- M5 public site in progress: guide content in `src/guides/` (online safety, HRT basics, in
+  four languages); landing page and guide screens not built yet. Other guides stay
+  "being written" until experts can write them.
 
 ## Next
 
