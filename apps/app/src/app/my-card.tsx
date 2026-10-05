@@ -48,7 +48,7 @@ export default function MyCard() {
 
   if (!session || session.arcana === null) return null;
 
-  const cardWidth = Math.min(width - 64, (height - 220) / 1.55, 340);
+  const cardWidth = Math.min(width - 64, (height - 220) / 1.55, 320);
   const front = turn.interpolate({ inputRange: [0, 1], outputRange: ['180deg', '360deg'] });
   const back = turn.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
 
@@ -82,7 +82,7 @@ export default function MyCard() {
 const styles = StyleSheet.create({
   table: {
     flex: 1,
-    backgroundColor: '#0E0E0D',
+    backgroundColor: colors.ivory,
     alignItems: 'center',
     justifyContent: 'center',
     gap: space.lg,
@@ -94,13 +94,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backfaceVisibility: 'hidden',
   },
-  hint: { fontFamily: fonts.body, fontSize: 14, color: colors.textMuted },
+  hint: { fontFamily: fonts.body, fontSize: 14, color: colors.textSecondary },
   close: {
     paddingVertical: 12,
     paddingHorizontal: 28,
     borderRadius: 999,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(230,201,168,0.5)',
+    borderColor: colors.hairline,
+    backgroundColor: colors.paper,
   },
-  closeLabel: { fontFamily: fonts.bodySemibold, fontSize: 16, color: colors.goldLight },
+  closeLabel: { fontFamily: fonts.bodySemibold, fontSize: 16, color: colors.slate },
 });

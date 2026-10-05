@@ -65,6 +65,15 @@ export type ApiErrorCode =
   | 'not_allowed'
   | 'conflict';
 
+/** How Tero is doing, for the Fool and the council only. Counts, never who. */
+export type StatusResponse = {
+  members: number;
+  council: number;
+  openCards: number;
+  /** Server time, to show the check is fresh. */
+  checkedAt: number;
+};
+
 /** Whether the Fool's seat is still open: true only until the first member exists. */
 export type FounderSeatResponse = { open: boolean };
 

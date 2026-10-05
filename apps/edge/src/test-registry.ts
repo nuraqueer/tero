@@ -21,6 +21,7 @@ export function testRegistry(founder?: string, clock = { now: Date.now() }) {
   const api: RegistryApi = {
     member: (did) => registry.member(did, clock.now),
     founderSeatOpen: () => registry.founderSeatOpen(),
+    stats: () => registry.stats(clock.now),
     claimFounder: (did) => registry.claimFounder(did, clock.now),
     listCards: (inviter) => registry.listCards(inviter, clock.now),
     createCard: (inviter, card) => registry.createCard(inviter, card, clock.now),

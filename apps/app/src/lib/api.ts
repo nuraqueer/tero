@@ -14,6 +14,7 @@ import {
   type MeResponse,
   type SignInRequest,
   type SignInResponse,
+  type StatusResponse,
 } from '@tero/protocol';
 
 /** The Worker phones talk to: Tero's one address. */
@@ -82,6 +83,7 @@ export async function founderSeatOpen(): Promise<boolean> {
 export function authed(token: string) {
   return {
     me: () => request<MeResponse>('/api/me', 'GET', token),
+    status: () => request<StatusResponse>('/api/status', 'GET', token),
     claimFounder: () => request<{ sequence: number }>('/api/founder', 'POST', token),
     listCards: async () => (await request<CardListResponse>('/api/cards', 'GET', token)).cards,
     createCard: (card: CreateCardRequest) =>

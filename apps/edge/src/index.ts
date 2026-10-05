@@ -8,6 +8,8 @@ import {
   type ApiErrorCode,
   type FounderSeatResponse,
   type MeResponse,
+  type StatusResponse,
+  webRoles,
 } from '@tero/protocol';
 import { createChallenge, sessionDid, signIn } from './auth';
 import type { RegistryObject } from './registry-object';
@@ -35,6 +37,7 @@ export type RegistryApi = Async<
     RegistryObject,
     | 'member'
     | 'founderSeatOpen'
+    | 'stats'
     | 'claimFounder'
     | 'listCards'
     | 'createCard'
@@ -134,6 +137,14 @@ async function handleSignedIn(
     return json(me);
   }
 
+  if (path === '/api/status') {
+    if (method !== 'GET') return error('method_not_allowed', 405);
+    const member = await reg.member(did);
+    if (!member || !webRoles.includes(member.role)) return error('not_allowed', 403);
+    const status: StatusResponse = { ...(await reg.stats()), checkedAt: Date.now() };
+    return json(status);
+  }
+
   if (path === '/api/founder') {
     if (method !== 'POST') return error('method_not_allowed', 405);
     const result = await reg.claimFounder(did);
@@ -194,6 +205,7 @@ async function handleApi(request: Request, path: string, env: Env): Promise<Resp
   const known =
     path.startsWith('/api/auth/') ||
     path === '/api/me' ||
+    path === '/api/status' ||
     path === '/api/founder' ||
     path.startsWith('/api/cards');
   if (!known) return error('not_found', 404);

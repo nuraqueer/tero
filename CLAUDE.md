@@ -128,6 +128,14 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   Grey `Skeleton` blocks + `SoonNote`; reached from Gathering's +, "See how a Circle/chat
   will look" links, suit rows and You. The web console collapses to a top bar under 760px.
 
+- Founder round 3 (2026-10-06): "TERO" is now set in Cinzel (`Wordmark.tsx`; the
+  founder disliked the monospace and the hand-drawn letters). Web lock is a split screen
+  (dark card-back panel + white form, nothing identifying). Console: centred, 288px
+  sidebar, System status panel (`GET /api/status`, Fool/council only: counts, never
+  who), "Who can see what" page (`roles.tsx`). my-card on ivory. Next: rebuild Suits after
+  the founder's Transspace structure (Health, Safety, Get involved, Grow; resources
+  directory, map, mutual aid, stories, jobs, skills).
+
 ## Next
 
 1. Put `EXPO_TOKEN` in the environment settings (the founder pasted one in chat for the

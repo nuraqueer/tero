@@ -48,6 +48,7 @@ export function WebShell({ children }: { children: ReactNode }) {
     { label: t('console.countries') },
     { label: t('console.moderators') },
     { label: t('console.log') },
+    { label: t('roles.title'), href: '/roles' },
   ];
   const settings: Item[] = [
     { label: t('words.open'), href: '/words' },
@@ -154,7 +155,7 @@ function PhoneOnly() {
 const styles = StyleSheet.create({
   shell: { flex: 1, flexDirection: 'row', backgroundColor: colors.ivory },
   side: {
-    width: 248,
+    width: 288,
     paddingHorizontal: space.md,
     paddingVertical: space.lg,
     gap: 2,

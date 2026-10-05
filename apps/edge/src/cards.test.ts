@@ -181,3 +181,13 @@ describe('Tero cards over the API', () => {
     expect(res.headers.get('x-robots-tag')).toBe('noindex, nofollow');
   });
 });
+
+describe('status', () => {
+  it('gives counts to the Fool and nobody else', async () => {
+    const { fool, session } = await world();
+    const asFool = await session(fool);
+    const asNew = await session(await person());
+    expect(await (await asFool('/api/status')).json()).toMatchObject({ members: 1, council: 1 });
+    expect((await asNew('/api/status')).status).toBe(403);
+  });
+});

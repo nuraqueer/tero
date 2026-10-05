@@ -15,6 +15,9 @@ export class RegistryObject extends DurableObject<Env> {
   member(did: string) {
     return this.registry.member(did, Date.now());
   }
+  stats() {
+    return this.registry.stats(Date.now());
+  }
   founderSeatOpen() {
     return this.registry.founderSeatOpen();
   }

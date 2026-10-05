@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import type { MessageKey } from '@tero/i18n';
+import type { StatusResponse } from '@tero/protocol';
 import { colors, fonts, radii, space } from '@tero/ui';
 import { Button } from '@/components/Button';
 import { Code } from '@/components/Code';
@@ -22,6 +23,7 @@ export default function Console() {
   const session = useFullSession();
   const title = useCardTitle(session?.arcana ?? 0);
   const [openCards, setOpenCards] = useState<number | null>(null);
+  const [status, setStatus] = useState<(StatusResponse & { ms: number }) | 'down' | null>(null);
   const member = session?.member;
   const api = session?.api;
   const connected = session?.connection === 'connected';
@@ -29,10 +31,22 @@ export default function Console() {
   useFocusEffect(
     useCallback(() => {
       if (!member || !connected || !api) return;
-      api()
+      const client = api();
+      client
         ?.listCards()
         .then((list) => setOpenCards(list.length))
         .catch(() => undefined);
+      // Ask how the system is doing, and time the round trip.
+      const check = () => {
+        const started = Date.now();
+        client
+          ?.status()
+          .then((s) => setStatus({ ...s, ms: Date.now() - started }))
+          .catch(() => setStatus('down'));
+      };
+      check();
+      const timer = setInterval(check, 30_000);
+      return () => clearInterval(timer);
     }, [member, connected, api]),
   );
 
@@ -62,10 +76,6 @@ export default function Console() {
       label: t('console.stat.sequence'),
       value: session.sequence === null ? '–' : String(session.sequence),
     },
-    {
-      label: t('console.stat.connection'),
-      value: connected ? t('console.online') : t('console.offlineShort'),
-    },
   ];
 
   const later: Array<[MessageKey, MessageKey]> = [
@@ -86,6 +96,46 @@ export default function Console() {
           <View key={stat.label} style={[styles.panel, styles.stat]}>
             <Text style={styles.statLabel}>{stat.label}</Text>
             <Text style={styles.statValue}>{stat.value}</Text>
+          </View>
+        ))}
+      </View>
+
+      <View style={[styles.panel, styles.system]}>
+        <Text style={styles.panelTitle}>{t('status.title')}</Text>
+        {[
+          {
+            label: t('status.api'),
+            ok: status !== 'down' && status !== null,
+            value:
+              status === 'down'
+                ? t('status.down')
+                : status
+                  ? t('status.fast', { ms: status.ms })
+                  : t('home.connecting'),
+          },
+          {
+            label: t('status.registry'),
+            ok: status !== 'down' && status !== null,
+            value: status && status !== 'down' ? String(status.members) : '–',
+          },
+          {
+            label: t('status.council'),
+            ok: status !== 'down' && status !== null,
+            value:
+              status && status !== 'down'
+                ? t('status.seats', { count: status.council, total: 22 })
+                : '–',
+          },
+          {
+            label: t('status.cards'),
+            ok: status !== 'down' && status !== null,
+            value: status && status !== 'down' ? String(status.openCards) : '–',
+          },
+        ].map((line) => (
+          <View key={line.label} style={styles.statusRow}>
+            <View style={[styles.light, line.ok ? styles.lightOn : styles.lightOff]} />
+            <Text style={styles.statusLabel}>{line.label}</Text>
+            <Text style={styles.statusValue}>{line.value}</Text>
           </View>
         ))}
       </View>
@@ -121,6 +171,7 @@ const styles = StyleSheet.create({
     paddingTop: space.xl + space.md,
     maxWidth: 1040,
     width: '100%',
+    alignSelf: 'center',
   },
   title: { fontFamily: fonts.display, fontSize: 34, lineHeight: 40, color: colors.slate },
   sub: { fontFamily: fonts.body, fontSize: 16, color: colors.textSecondary, marginTop: space.xs },
@@ -150,4 +201,11 @@ const styles = StyleSheet.create({
   panelTitle: { fontFamily: fonts.bodySemibold, fontSize: 17, color: colors.slate },
   panelBody: { fontFamily: fonts.body, fontSize: 14, lineHeight: 21, color: colors.textSecondary },
   soon: { fontFamily: fonts.body, fontSize: 12, color: colors.textMuted },
+  system: { marginTop: space.md, gap: space.sm },
+  statusRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm + 2, minHeight: 30 },
+  light: { width: 8, height: 8, borderRadius: 4 },
+  lightOn: { backgroundColor: '#3E8E5E' },
+  lightOff: { backgroundColor: colors.clay },
+  statusLabel: { flex: 1, fontFamily: fonts.body, fontSize: 15, color: colors.slate },
+  statusValue: { fontFamily: fonts.bodyMedium, fontSize: 14, color: colors.textSecondary },
 });

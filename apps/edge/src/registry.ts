@@ -126,6 +126,17 @@ export class Registry {
     return null;
   }
 
+  /** Counts for the council's status panel. Nothing about who. */
+  stats(now: number): { members: number; council: number; openCards: number } {
+    this.prune(now);
+    const count = (query: string) => this.rows<{ n: number }>(query)[0]?.n ?? 0;
+    return {
+      members: count('SELECT COUNT(*) AS n FROM members'),
+      council: count("SELECT COUNT(*) AS n FROM members WHERE role IN ('fool', 'council')"),
+      openCards: count('SELECT COUNT(*) AS n FROM cards'),
+    };
+  }
+
   /** True only until the first member exists: the Fool's seat is still open. */
   founderSeatOpen(): boolean {
     const [{ count } = { count: 0 }] = this.rows<{ count: number }>(
