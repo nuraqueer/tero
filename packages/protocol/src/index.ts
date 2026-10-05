@@ -351,3 +351,68 @@ export function isNewAidReply(value: unknown): value is NewAidReply {
 
 /** Place and aid post ids: 16 base64url characters. */
 export const isPostId = isPlaceId;
+
+// Jobs and careers: openings, freelance work and mentoring, shared by members.
+
+export const jobTypes = ['job', 'freelance', 'internship', 'mentoring'] as const;
+export type JobType = (typeof jobTypes)[number];
+
+export const jobLimits = {
+  title: 80,
+  organisation: 80,
+  details: 800,
+  city: 60,
+  pay: 60,
+  apply: 200,
+} as const;
+
+/** How many openings one member may share in a day. */
+export const jobsPerDay = 5;
+
+/** Openings come down by themselves after this long. */
+export const jobTtlMs = 60 * 24 * 60 * 60 * 1000;
+
+export type NewJob = {
+  type: JobType;
+  title: string;
+  /** Who is hiring. Optional: some members can't say. */
+  organisation: string;
+  details: string;
+  remote: boolean;
+  /** ISO 3166-1 alpha-2, upper case; may be empty only for remote work. */
+  country: string;
+  /** City or area; optional. */
+  city: string;
+  /** Pay or range, in the poster's words; optional. */
+  pay: string;
+  /** How to apply: a link, an email, or "reply here". */
+  apply: string;
+};
+
+export type Job = NewJob & {
+  id: string;
+  /** Day it was shared (midnight UTC). */
+  addedOn: number;
+  mine: boolean;
+};
+
+export type JobListResponse = { jobs: Job[] };
+
+export function isNewJob(value: unknown): value is NewJob {
+  const v = asObject(value);
+  if (!v) return false;
+  const country =
+    typeof v.country === 'string' &&
+    (/^[A-Z]{2}$/.test(v.country) || (v.country === '' && v.remote === true));
+  return (
+    (jobTypes as readonly unknown[]).includes(v.type) &&
+    isText(v.title, jobLimits.title) &&
+    isText(v.organisation, jobLimits.organisation, false) &&
+    isText(v.details, jobLimits.details) &&
+    typeof v.remote === 'boolean' &&
+    country &&
+    isText(v.city, jobLimits.city, false) &&
+    isText(v.pay, jobLimits.pay, false) &&
+    isText(v.apply, jobLimits.apply)
+  );
+}

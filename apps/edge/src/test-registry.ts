@@ -38,6 +38,9 @@ export function testRegistry(founder?: string, clock = { now: Date.now() }) {
     aidReplies: (did, id) => registry.aid.replies(did, id, clock.now),
     closeAid: (did, id) => registry.aid.close(did, id),
     removeAid: (did, id) => registry.aid.remove(did, id),
+    listJobs: (did) => registry.jobs.list(did, clock.now),
+    addJob: (did, job) => registry.jobs.add(did, job, clock.now),
+    removeJob: (did, id) => registry.jobs.remove(did, id),
   };
   const namespace = { idFromName: () => 'registry', get: () => api };
   return { registry, clock, REGISTRY: namespace as unknown as Env['REGISTRY'] };

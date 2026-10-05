@@ -7,6 +7,7 @@ import {
   isDirectoryPart,
   isNewAidPost,
   isNewAidReply,
+  isNewJob,
   isNewPlace,
   isPlaceId,
   isPostId,
@@ -60,6 +61,9 @@ export type RegistryApi = Async<
     | 'aidReplies'
     | 'closeAid'
     | 'removeAid'
+    | 'listJobs'
+    | 'addJob'
+    | 'removeJob'
   >
 >;
 
@@ -283,6 +287,29 @@ async function handleSignedIn(
     return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
   }
 
+  if (path === '/api/jobs') {
+    if (method === 'GET') {
+      const result = await reg.listJobs(did);
+      return result.ok ? json({ jobs: result.jobs }) : error(result.error, 403);
+    }
+    if (method === 'POST') {
+      const body = await readJson(request);
+      if (!isNewJob(body)) return error('bad_request', 400);
+      const result = await reg.addJob(did, body);
+      return result.ok
+        ? json({ id: result.id }, 201)
+        : error(result.error, statusFor[result.error]!);
+    }
+    return error('method_not_allowed', 405);
+  }
+
+  const job = path.match(/^\/api\/jobs\/([^/]+)$/);
+  if (job && isPostId(job[1])) {
+    if (method !== 'DELETE') return error('method_not_allowed', 405);
+    const result = await reg.removeJob(did, job[1]);
+    return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
+  }
+
   return error('not_found', 404);
 }
 
@@ -299,7 +326,8 @@ async function handleApi(request: Request, path: string, env: Env): Promise<Resp
     path === '/api/founder' ||
     path.startsWith('/api/cards') ||
     path.startsWith('/api/places') ||
-    path.startsWith('/api/aid');
+    path.startsWith('/api/aid') ||
+    path.startsWith('/api/jobs');
   if (!known) return error('not_found', 404);
 
   // A short secret would make tokens guessable; refuse to run with one.

@@ -1,5 +1,11 @@
 import { DurableObject } from 'cloudflare:workers';
-import type { CreateCardRequest, DirectoryPart, NewAidPost, NewPlace } from '@tero/protocol';
+import type {
+  CreateCardRequest,
+  DirectoryPart,
+  NewAidPost,
+  NewJob,
+  NewPlace,
+} from '@tero/protocol';
 import type { Env } from './index';
 import { Registry } from './registry';
 
@@ -68,5 +74,14 @@ export class RegistryObject extends DurableObject<Env> {
   }
   removeAid(did: string, id: string) {
     return this.registry.aid.remove(did, id);
+  }
+  listJobs(did: string) {
+    return this.registry.jobs.list(did, Date.now());
+  }
+  addJob(did: string, job: NewJob) {
+    return this.registry.jobs.add(did, job, Date.now());
+  }
+  removeJob(did: string, id: string) {
+    return this.registry.jobs.remove(did, id);
   }
 }

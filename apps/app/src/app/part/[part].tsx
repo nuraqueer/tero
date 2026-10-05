@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import type { MessageKey } from '@tero/i18n';
 import { isDirectoryPart } from '@tero/protocol';
@@ -9,6 +9,7 @@ import { Page } from '@/components/Page';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { Bone, BoneRow } from '@/components/Skeleton';
 import { Directory } from '@/components/Directory';
+import { Jobs } from '@/components/Jobs';
 import { MutualAid } from '@/components/MutualAid';
 import { SoonNote } from '@/components/SoonNote';
 import { useLocale } from '@/lib/locale';
@@ -36,39 +37,10 @@ export default function PartScreen() {
       {kind === 'showCard' && <ShowCard />}
       {kind === 'journeys' && <Journey />}
       {kind === 'list' && <BoneList />}
-      {!isDirectoryPart(part) && kind !== 'aid' && <SoonNote text={t('part.soon')} />}
+      {!isDirectoryPart(part) && kind !== 'aid' && kind !== 'jobs' && (
+        <SoonNote text={t('part.soon')} />
+      )}
     </Page>
-  );
-}
-
-function Search({ placeholder }: { placeholder: string }) {
-  return (
-    <View style={styles.search} accessibilityState={{ disabled: true }}>
-      <Text style={styles.searchText}>{placeholder}</Text>
-    </View>
-  );
-}
-
-function Toggles({ keys }: { keys: MessageKey[] }) {
-  const { t } = useLocale();
-  const [on, setOn] = useState<boolean[]>(keys.map(() => false));
-  return (
-    <View style={styles.toggles}>
-      {keys.map((key, i) => (
-        <Pressable
-          key={key}
-          accessibilityRole="checkbox"
-          accessibilityState={{ checked: on[i] }}
-          onPress={() => setOn((all) => all.map((v, j) => (j === i ? !v : v)))}
-          style={[styles.toggle, on[i] && styles.toggleOn]}
-        >
-          <Text style={[styles.toggleText, on[i] && styles.toggleTextOn]}>
-            {on[i] ? '✓ ' : ''}
-            {t(key)}
-          </Text>
-        </Pressable>
-      ))}
-    </View>
   );
 }
 
@@ -79,20 +51,6 @@ function BoneList({ rows = 4 }: { rows?: number }) {
         <BoneRow key={i} />
       ))}
     </View>
-  );
-}
-
-function Jobs() {
-  const { t } = useLocale();
-  return (
-    <>
-      <Search placeholder={t('jobs.search')} />
-      <Toggles keys={['jobs.remote', 'dir.verified']} />
-      <BoneList />
-      <View style={styles.actions}>
-        <Button label={t('jobs.post')} onPress={() => undefined} kind="secondary" disabled />
-      </View>
-    </>
   );
 }
 
@@ -174,28 +132,6 @@ function Journey() {
 
 const styles = StyleSheet.create({
   lead: { fontFamily: fonts.body, fontSize: 16, lineHeight: 24, color: colors.textSecondary },
-  search: {
-    marginTop: space.lg,
-    minHeight: 46,
-    justifyContent: 'center',
-    paddingHorizontal: space.md,
-    borderRadius: radii.pill,
-    backgroundColor: colors.paper,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.hairline,
-  },
-  searchText: { fontFamily: fonts.body, fontSize: 15, color: colors.textMuted },
-  toggles: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: space.sm },
-  toggle: {
-    paddingVertical: 7,
-    paddingHorizontal: 12,
-    borderRadius: radii.pill,
-    borderWidth: 1,
-    borderColor: 'rgba(31,30,29,0.15)',
-  },
-  toggleOn: { backgroundColor: colors.oatLight, borderColor: colors.clayText },
-  toggleText: { fontFamily: fonts.bodyMedium, fontSize: 13, color: colors.slate },
-  toggleTextOn: { color: colors.clayText },
   note: {
     fontFamily: fonts.body,
     fontSize: 13,

@@ -1,5 +1,6 @@
 import { bytesToBase64Url, pseudonym, randomBytes } from '@tero/crypto';
 import { AidBoard, aidSchema } from './aid';
+import { JobBoard, jobSchema } from './jobs';
 import {
   claimedCardTtlMs,
   cardTtlMs,
@@ -142,6 +143,8 @@ function summary(row: CardRow): CardSummary {
 export class Registry {
   /** Mutual aid posts and replies. */
   readonly aid: AidBoard;
+  /** Openings shared by members. */
+  readonly jobs: JobBoard;
 
   constructor(
     private readonly sql: Sql,
@@ -151,8 +154,10 @@ export class Registry {
     /** Keys the pseudonyms that stand in for members in stored rows. */
     private readonly secret = 'tero-local',
   ) {
-    for (const statement of [...schema, ...aidSchema]) sql.exec(statement);
-    this.aid = new AidBoard(sql, (did) => this.member(did, Date.now()), secret);
+    for (const statement of [...schema, ...aidSchema, ...jobSchema]) sql.exec(statement);
+    const member = (did: string) => this.member(did, Date.now());
+    this.aid = new AidBoard(sql, member, secret);
+    this.jobs = new JobBoard(sql, member, secret);
     for (const [table, column, type, fill] of additions) {
       const columns = this.rows<{ name: string }>(`PRAGMA table_info(${table})`);
       if (columns.some((c) => c.name === column)) continue;

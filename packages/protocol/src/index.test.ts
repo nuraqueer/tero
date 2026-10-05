@@ -5,6 +5,7 @@ import {
   isApproveCardRequest,
   isNewAidPost,
   isNewAidReply,
+  isNewJob,
   isNewPlace,
   isClaimCardRequest,
   isCreateCardRequest,
@@ -115,5 +116,29 @@ describe('isNewAidPost', () => {
     expect(isNewAidReply({ note: 'I can help, Signal: x' })).toBe(true);
     expect(isNewAidReply({ note: '' })).toBe(false);
     expect(isNewAidReply({ note: 'x'.repeat(301) })).toBe(false);
+  });
+});
+
+describe('isNewJob', () => {
+  const job = {
+    type: 'job',
+    title: 'Front-end developer',
+    organisation: '',
+    details: 'React and TypeScript, part time.',
+    remote: true,
+    country: '',
+    city: '',
+    pay: '',
+    apply: 'jobs@example.org',
+  };
+  it('accepts remote work without a country', () => expect(isNewJob(job)).toBe(true));
+  it('needs a country for work on site', () => {
+    expect(isNewJob({ ...job, remote: false })).toBe(false);
+    expect(isNewJob({ ...job, remote: false, country: 'NG' })).toBe(true);
+  });
+  it('refuses unknown types and missing ways to apply', () => {
+    expect(isNewJob({ ...job, type: 'gig' })).toBe(false);
+    expect(isNewJob({ ...job, apply: '' })).toBe(false);
+    expect(isNewJob({ ...job, details: 'x'.repeat(801) })).toBe(false);
   });
 });

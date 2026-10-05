@@ -12,7 +12,9 @@ import {
   type AidListResponse,
   type AidRepliesResponse,
   type CreateCardRequest,
+  type JobListResponse,
   type NewAidPost,
+  type NewJob,
   type DirectoryPart,
   type NewPlace,
   type PlaceListResponse,
@@ -117,6 +119,9 @@ export function authed(token: string) {
       (await request<AidRepliesResponse>(`/api/aid/${id}/replies`, 'GET', token)).replies,
     closeAid: (id: string) => request<void>(`/api/aid/${id}/close`, 'POST', token),
     removeAid: (id: string) => request<void>(`/api/aid/${id}`, 'DELETE', token),
+    listJobs: async () => (await request<JobListResponse>('/api/jobs', 'GET', token)).jobs,
+    addJob: (job: NewJob) => request<{ id: string }>('/api/jobs', 'POST', token, job),
+    removeJob: (id: string) => request<void>(`/api/jobs/${id}`, 'DELETE', token),
   };
 }
 

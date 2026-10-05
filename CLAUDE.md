@@ -162,14 +162,16 @@ my-card|roles` (re-exports of the shared screens). Phones keep `/lock` and the t
   (`AidBoard`, `registry.aid`). API: `GET|POST /api/aid`, `GET|POST /api/aid/:id/replies`
   (GET for the author only), `POST /api/aid/:id/close`, `DELETE /api/aid/:id`. Posts expire
   after 30 days, 3 per member per day. Shared form pieces in `components/Form.tsx`.
+- Jobs are real (D44): `components/Jobs.tsx`; server `apps/edge/src/jobs.ts` (`JobBoard`,
+  `registry.jobs`). API: `GET|POST /api/jobs`, `DELETE /api/jobs/:id`. 60 days, 5/day.
 - Testing member screens in a browser: the web sends the Fool to `/admin`, and a full page
   load locks. To reach `/part/...` locally, add a temporary `router.push` link on the admin
   page, export, test with Playwright (see founder setup steps), then revert before committing.
 
 ## Next
 
-1. Real features, one by one (founder): directory and mutual aid done; next jobs, then
-   stories, skills, journeys. Each: protocol shape + registry table + routes +
+1. Real features, one by one (founder): directory, mutual aid and jobs done; next
+   stories, then skills, journeys. Each: protocol shape + registry table + routes +
    tests + screen, no placeholders.
 2. `EXPO_TOKEN` is in the environment (robot of the `pherus` Expo org). The founder pasted
    one in chat earlier; it should be rotated. Build the Compose, Circle and chat screens as
