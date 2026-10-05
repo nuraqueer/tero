@@ -87,9 +87,18 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   glass keys with letters (iOS 26 style), dots shake on a wrong code. Not yet on Expo Go:
   this session had no `EXPO_TOKEN`.
 
+- Design (2026-10-06): logo concept 1 "Sun card" is in use: drawn wordmark
+  (`Wordmark.tsx`), SVG card mark, new app icons/splash/favicon (rendered from SVG with
+  Playwright). Signed-in members land on five tabs under a floating glass bar
+  (`app/(tabs)`, expo-router headless tabs, `GlassBar` blurs on iOS/web, solid on
+  Android). You: member card with the sun art, number, name and Sequence. Suits: four suit
+  cards, each opening `suit/[suit]` with its parts marked "Soon". Gathering, Circles,
+  Messages: real layouts with empty states (no fake content).
+
 ## Next
 
-1. **Design work** (founder: "start the actual designs", move fast).
+1. **Publish to Expo Go**: needs `EXPO_TOKEN` in the environment (founder adding it).
+   Then build the Compose, Circle and chat screens as their milestones land.
 2. After app changes, republish Expo Go: temporary `runtimeVersion: exposdk:57.0.0` in
    `apps/app/app.json`, `npx eas-cli@latest update --branch preview --platform all
 --non-interactive`, then remove the runtimeVersion. Needs `EXPO_TOKEN` (robot of the
