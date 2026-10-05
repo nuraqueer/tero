@@ -88,6 +88,12 @@ function Screens() {
           options={{ animation: 'fade', contentStyle: { backgroundColor: '#0E0E0D' } }}
         />
         <Stack.Screen name="suit/[suit]" />
+        <Stack.Screen name="part/[part]" />
+        <Stack.Screen name="compose" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="circle" />
+        <Stack.Screen name="chat" />
+        <Stack.Screen name="space" />
+        <Stack.Screen name="moderation" />
       </Stack.Protected>
       {/* The open guides are public: readable in every state, decoy view included. */}
       <Stack.Screen name="guides/index" />

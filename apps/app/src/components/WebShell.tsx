@@ -6,6 +6,7 @@ import {
   Text,
   View,
   type PressableStateCallbackType,
+  useWindowDimensions,
 } from 'react-native';
 import { router, usePathname, type Href } from 'expo-router';
 import { webRoles } from '@tero/protocol';
@@ -33,6 +34,7 @@ export function WebShell({ children }: { children: ReactNode }) {
   const session = useFullSession();
   const path = usePathname();
   const title = useCardTitle(session?.arcana ?? 0);
+  const { width } = useWindowDimensions();
   if (!session) return null;
 
   // Not a member yet (waiting to be let in) or still asking the server: show the page.
@@ -75,6 +77,30 @@ export function WebShell({ children }: { children: ReactNode }) {
       </Pressable>
     );
   };
+
+  // A narrow window gets a top bar with the links in one scrolling row.
+  if (width < 760) {
+    return (
+      <View style={styles.narrow}>
+        <View style={styles.topBar}>
+          <View style={styles.brandRow}>
+            <CardMark height={26} />
+            <Wordmark height={14} />
+          </View>
+          <Button label={t('home.lock')} onPress={session.lock} kind="secondary" />
+        </View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.topLinks}
+          contentContainerStyle={styles.topLinksRow}
+        >
+          {[...(council ? items.filter((item) => item.href) : []), ...settings].map(link)}
+        </ScrollView>
+        <View style={styles.main}>{children}</View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.shell}>
@@ -179,6 +205,21 @@ const styles = StyleSheet.create({
   meName: { fontFamily: fonts.display, fontSize: 18, color: colors.slate },
   meSub: { fontFamily: fonts.body, fontSize: 12, color: colors.textSecondary },
   main: { flex: 1 },
+  narrow: { flex: 1, backgroundColor: colors.ivory },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: space.md,
+    paddingTop: space.md,
+  },
+  brandRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
+  topLinks: {
+    flexGrow: 0,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.hairline,
+  },
+  topLinksRow: { gap: space.xs, paddingHorizontal: space.sm, paddingVertical: space.sm },
   only: {
     flexGrow: 1,
     alignItems: 'center',

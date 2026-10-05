@@ -121,6 +121,13 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   four languages). Other guides stay
   "being written" until experts can write them.
 
+- Placeholder designs (founder: "design all the other UI with placeholders"): `compose`
+  (six post types), `circle`, `chat`, `space`, `part/[part]` (each suit part; Show my Tero
+  card with the three changing words; Resources with "Not aware of Tero"; Journeys steps),
+  `moderation` (phones; shown to the Fool and council until a moderator role exists).
+  Grey `Skeleton` blocks + `SoonNote`; reached from Gathering's +, "See how a Circle/chat
+  will look" links, suit rows and You. The web console collapses to a top bar under 760px.
+
 ## Next
 
 1. Put `EXPO_TOKEN` in the environment settings (the founder pasted one in chat for the

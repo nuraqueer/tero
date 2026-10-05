@@ -1,4 +1,5 @@
 import { EmptyState } from '@/components/EmptyState';
+import { PreviewLink } from '@/components/PreviewLink';
 import { Page } from '@/components/Page';
 import { SectionLabel } from '@/components/SectionLabel';
 import { TabHeader } from '@/components/TabHeader';
@@ -18,6 +19,7 @@ export default function Circles() {
         title={t('circles.empty.title')}
         body={t('circles.empty.body')}
       />
+      <PreviewLink label={t('preview.circle')} href="/circle" />
     </Page>
   );
 }

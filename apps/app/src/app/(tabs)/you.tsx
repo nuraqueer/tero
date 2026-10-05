@@ -60,6 +60,12 @@ export default function You() {
       show: member === true,
     },
     { label: t('words.open'), href: '/words', show: true },
+    // Moderators work on phones; the Fool and council see it too until moderators exist.
+    {
+      label: t('mod.title'),
+      href: '/moderation',
+      show: session.role === 'fool' || session.role === 'council',
+    },
     { label: t('welcome.language'), value: localeNames[locale], href: '/language', show: true },
   ];
 

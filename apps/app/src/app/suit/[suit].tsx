@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import type { MessageKey } from '@tero/i18n';
 import { colors, fonts, radii, space } from '@tero/ui';
@@ -36,13 +36,22 @@ export default function SuitScreen() {
       </View>
       <View style={styles.list}>
         {parts[suit].map((part, i) => (
-          <View key={part} style={[styles.row, i > 0 && styles.divider]}>
+          <Pressable
+            key={part}
+            accessibilityRole="button"
+            onPress={() => router.push({ pathname: '/part/[part]', params: { part } })}
+            style={({ pressed }) => [
+              styles.row,
+              i > 0 && styles.divider,
+              pressed && styles.pressed,
+            ]}
+          >
             <View style={styles.rowText}>
               <Text style={styles.rowTitle}>{t(`suit.part.${part}` as MessageKey)}</Text>
               <Text style={styles.rowBody}>{t(`suit.part.${part}.body` as MessageKey)}</Text>
             </View>
-            <Text style={styles.soon}>{t('suit.soon')}</Text>
-          </View>
+            <Text style={styles.chevron}>›</Text>
+          </Pressable>
         ))}
       </View>
       <View style={styles.actions}>
@@ -81,6 +90,7 @@ const styles = StyleSheet.create({
   rowText: { flex: 1, gap: 2 },
   rowTitle: { fontFamily: fonts.bodySemibold, fontSize: 16, color: colors.slate },
   rowBody: { fontFamily: fonts.body, fontSize: 14, lineHeight: 20, color: colors.textSecondary },
-  soon: { fontFamily: fonts.bodyMedium, fontSize: 12, color: colors.textMuted },
+  chevron: { fontFamily: fonts.body, fontSize: 22, color: colors.textMuted },
+  pressed: { backgroundColor: colors.oatLight },
   actions: { marginTop: space.lg },
 });

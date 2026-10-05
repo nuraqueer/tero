@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { colors, fonts, space } from '@tero/ui';
 import { EmptyState } from '@/components/EmptyState';
+import { PreviewLink } from '@/components/PreviewLink';
 import { Page } from '@/components/Page';
 import { TabHeader } from '@/components/TabHeader';
 import { TabIcon } from '@/components/TabIcons';
@@ -20,6 +21,7 @@ export default function Messages() {
         title={t('messages.empty.title')}
         body={t('messages.empty.body')}
       />
+      <PreviewLink label={t('preview.chat')} href="/chat" />
     </Page>
   );
 }
