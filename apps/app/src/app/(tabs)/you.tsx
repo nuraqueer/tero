@@ -1,25 +1,23 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { router, useFocusEffect } from 'expo-router';
-import { bytesToBase64Url, cardIdFromToken, cardToken, randomBytes } from '@tero/crypto';
-import { openCardLimit, type CardSummary } from '@tero/protocol';
+import { router, useFocusEffect, type Href } from 'expo-router';
+import { localeNames } from '@tero/i18n';
 import { colors, fonts, radii, space } from '@tero/ui';
 import { Button } from '@/components/Button';
 import { Code } from '@/components/Code';
 import { MemberCard } from '@/components/MemberCard';
 import { Page } from '@/components/Page';
+import { TabHeader } from '@/components/TabHeader';
 import { useLocale } from '@/lib/locale';
 import { useFullSession } from '@/lib/session';
-import { timeLeft } from '@/lib/time';
 
 const pollMs = 4000;
 
+/** Your card, then a short list of what's yours, as in the You mockup. */
 export default function You() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const session = useFullSession();
-  const [cards, setCards] = useState<CardSummary[] | null>(null);
-  const [problem, setProblem] = useState<string>();
-  const [busy, setBusy] = useState(false);
+  const [openCards, setOpenCards] = useState<number | null>(null);
 
   const member = session?.member;
   const connected = session?.connection === 'connected';
@@ -33,22 +31,14 @@ export default function You() {
     return () => clearInterval(timer);
   }, [member, connected, refreshMember]);
 
-  // Members see their live cards, refreshed while this screen is in front.
+  // How many cards are out, for the row's count.
   useFocusEffect(
     useCallback(() => {
       if (!member || !connected || !api) return;
-      let stopped = false;
-      const load = () =>
-        api()
-          ?.listCards()
-          .then((list) => !stopped && setCards(list))
-          .catch(() => undefined);
-      load();
-      const timer = setInterval(load, pollMs);
-      return () => {
-        stopped = true;
-        clearInterval(timer);
-      };
+      api()
+        ?.listCards()
+        .then((list) => setOpenCards(list.length))
+        .catch(() => undefined);
     }, [member, connected, api]),
   );
 
@@ -60,53 +50,29 @@ export default function You() {
     offline: t('home.offline'),
   }[session.connection];
 
-  const atLimit =
-    cards !== null && session.sequence !== null && cards.length >= openCardLimit(session.sequence);
-
-  const makeCard = async () => {
-    const client = session.api();
-    if (!client) return;
-    setBusy(true);
-    setProblem(undefined);
-    try {
-      const nonce = randomBytes(16);
-      const id = cardIdFromToken(cardToken(session.cardSecret, nonce));
-      await client.createCard({ id, nonce: bytesToBase64Url(nonce), type: 'member' });
-      router.push({ pathname: '/card/[id]', params: { id } });
-    } catch {
-      setProblem(t('card.failed'));
-    } finally {
-      setBusy(false);
-    }
-  };
+  const rows: Array<{ label: string; value?: string; href: Href; show: boolean }> = [
+    {
+      label: t('home.cards.title'),
+      value: openCards ? String(openCards) : undefined,
+      href: '/cards',
+      show: member === true,
+    },
+    { label: t('words.open'), href: '/words', show: true },
+    { label: t('welcome.language'), value: localeNames[locale], href: '/language', show: true },
+  ];
 
   return (
     <Page tabs>
-      <View style={styles.top}>
-        <Text style={styles.pageTitle} accessibilityRole="header">
-          {t('tabs.you')}
-        </Text>
-        <Button label={t('home.lock')} onPress={session.lock} kind="secondary" />
-      </View>
+      <TabHeader
+        title={t('tabs.you')}
+        right={<Button label={t('home.lock')} onPress={session.lock} kind="secondary" />}
+      />
+
       {member && session.arcana !== null && (
         <View style={styles.memberCard}>
           <MemberCard arcana={session.arcana} sequence={session.sequence} />
         </View>
       )}
-      <View style={styles.panel}>
-        <Text style={styles.label}>{t('home.address')}</Text>
-        <Text style={styles.address} selectable>
-          {session.identity.did}
-        </Text>
-        <View style={styles.status}>
-          <View style={[styles.light, connected && styles.lightOn]} />
-          <Text style={styles.statusText} accessibilityLiveRegion="polite">
-            {connection}
-            {session.sequence !== null &&
-              ` · ${t('home.sequence', { sequence: session.sequence })}`}
-          </Text>
-        </View>
-      </View>
 
       {member === false && session.join && (
         <View style={styles.section}>
@@ -122,116 +88,78 @@ export default function You() {
 
       {member === false && !session.join && <Text style={styles.body}>{t('home.notMember')}</Text>}
 
-      {member && (
-        <View style={styles.section}>
-          <Text style={styles.heading} accessibilityRole="header">
-            {t('home.cards.title')}
-          </Text>
-          {cards?.map((card) => (
+      <View style={styles.list}>
+        {rows
+          .filter((row) => row.show)
+          .map((row, i) => (
             <Pressable
-              key={card.id}
+              key={row.label}
               accessibilityRole="button"
-              onPress={() => router.push({ pathname: '/card/[id]', params: { id: card.id } })}
-              style={({ pressed }) => [styles.cardRow, pressed && styles.pressed]}
+              onPress={() => router.push(row.href)}
+              style={({ pressed }) => [
+                styles.row,
+                i > 0 && styles.divider,
+                pressed && styles.pressed,
+              ]}
             >
-              <Text style={styles.cardRowText}>
-                {card.state === 'claimed'
-                  ? t('home.cards.claimed')
-                  : t('home.cards.open', { time: timeLeft(t, card.expiresAt) })}
-              </Text>
+              <Text style={styles.rowLabel}>{row.label}</Text>
+              {row.value !== undefined && <Text style={styles.rowValue}>{row.value}</Text>}
               <Text style={styles.chevron}>›</Text>
             </Pressable>
           ))}
-          {atLimit ? (
-            <Text style={styles.body}>{t('home.cards.limit')}</Text>
-          ) : (
-            <Button label={t('home.cards.make')} onPress={makeCard} disabled={busy || !connected} />
-          )}
-          <Text style={styles.error} accessibilityLiveRegion="polite">
-            {problem ?? ''}
+      </View>
+
+      <View style={styles.foot}>
+        <View style={styles.status}>
+          <View style={[styles.light, connected && styles.lightOn]} />
+          <Text style={styles.statusText} accessibilityLiveRegion="polite">
+            {connection}
           </Text>
         </View>
-      )}
-
-      <View style={styles.list}>
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => router.push('/words')}
-          style={({ pressed }) => [styles.listRow, pressed && styles.pressed]}
-        >
-          <Text style={styles.cardRowText}>{t('words.open')}</Text>
-          <Text style={styles.chevron}>›</Text>
-        </Pressable>
+        <Text style={styles.address} selectable accessibilityLabel={t('home.address')}>
+          {session.identity.did}
+        </Text>
       </View>
     </Page>
   );
 }
 
 const styles = StyleSheet.create({
-  top: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: space.md,
-  },
-  pageTitle: { fontFamily: fonts.display, fontSize: 36, lineHeight: 42, color: colors.slate },
-  memberCard: { marginBottom: space.xl },
-  list: {
-    marginTop: space.xl,
-    borderRadius: radii.md,
-    backgroundColor: colors.paper,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.hairline,
-    overflow: 'hidden',
-  },
-  listRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    minHeight: 52,
-    paddingHorizontal: space.md,
-  },
-  panel: {
-    backgroundColor: colors.paper,
-    borderRadius: radii.lg,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.hairline,
-    padding: space.lg,
-    gap: space.sm,
-  },
-  label: {
-    fontFamily: fonts.bodySemibold,
-    fontSize: 12,
-    letterSpacing: 0.6,
-    color: colors.textSecondary,
-    textTransform: 'uppercase',
-  },
-  address: { fontFamily: fonts.mark, fontSize: 14, lineHeight: 21, color: colors.slate },
-  status: { flexDirection: 'row', alignItems: 'center', gap: space.sm, marginTop: space.sm },
-  light: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.oat },
-  lightOn: { backgroundColor: colors.clay },
-  statusText: { flex: 1, fontFamily: fonts.body, fontSize: 15, color: colors.textSecondary },
-  section: { marginTop: space.xl, gap: space.sm + 4 },
+  memberCard: { marginTop: space.sm, marginBottom: space.lg },
+  section: { marginTop: space.md, gap: space.sm + 4 },
   heading: { fontFamily: fonts.display, fontSize: 26, lineHeight: 32, color: colors.slate },
   body: {
     fontFamily: fonts.body,
     fontSize: 16,
     lineHeight: 24,
     color: colors.textSecondary,
-    marginTop: space.md,
+    marginTop: space.sm,
   },
   code: { marginTop: space.md },
-  cardRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    minHeight: 56,
-    paddingHorizontal: space.md,
+  list: {
+    marginTop: space.lg,
     borderRadius: radii.md,
     backgroundColor: colors.paper,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.hairline,
+    overflow: 'hidden',
   },
-  pressed: { opacity: 0.75 },
-  cardRowText: { flex: 1, fontFamily: fonts.bodyMedium, fontSize: 16, color: colors.slate },
-  chevron: { fontFamily: fonts.body, fontSize: 24, color: colors.textMuted },
-  error: { minHeight: 22, fontFamily: fonts.body, fontSize: 15, color: colors.clayText },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.sm + 4,
+    minHeight: 50,
+    paddingHorizontal: space.md,
+  },
+  divider: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: 'rgba(31,30,29,0.12)' },
+  pressed: { backgroundColor: colors.oatLight },
+  rowLabel: { flex: 1, fontFamily: fonts.body, fontSize: 16, color: colors.slate },
+  rowValue: { fontFamily: fonts.body, fontSize: 14, color: colors.textSecondary },
+  chevron: { fontFamily: fonts.body, fontSize: 22, color: '#9C9A92', marginTop: -2 },
+  foot: { marginTop: space.lg, gap: space.xs, paddingHorizontal: space.xs },
+  status: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
+  light: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.oat },
+  lightOn: { backgroundColor: colors.clay },
+  statusText: { fontFamily: fonts.body, fontSize: 13, color: colors.textSecondary },
+  address: { fontFamily: fonts.mark, fontSize: 11, lineHeight: 16, color: colors.textMuted },
 });

@@ -19,6 +19,8 @@ export function Page({
       <ScrollView
         contentContainerStyle={[styles.page, center && styles.center, tabs && styles.tabs]}
         keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        contentInsetAdjustmentBehavior="automatic"
       >
         {children}
       </ScrollView>

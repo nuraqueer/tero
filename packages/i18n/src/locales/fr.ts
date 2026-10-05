@@ -183,4 +183,6 @@ export const fr: Messages = {
   'suit.part.courses': 'Cours',
   'suit.part.courses.body': 'Apprends une compétence ou une langue avec d’autres.',
   'suit.soon': 'Bientôt',
+  'cards.body':
+    'Donne-la à quelqu’un en qui tu as confiance. Chaque carte ne sert qu’une fois et est détruite quand la personne est admise.',
 };

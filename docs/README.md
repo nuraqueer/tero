@@ -40,7 +40,7 @@ These documents record what has been decided **before any code is written**.
 | D16 | Minimum age: **18, or the country's legal age if higher**. |
 | D17 | App store rules and app size are design constraints from day one. |
 | D18 | ~~PassID registration.~~ Not needed after D24. `tero.pherus.org` is still in development. |
-| D19 | The app locks every time it's closed. A decoy passcode on the same screen opens only basic info and silently sends a duress alert. No disguised icon. |
+| D19 | The app locks when it's closed, or after 30 minutes in the background (changed 2026-10-06 at the founder's request; it used to lock on every switch away). A decoy passcode on the same screen opens only basic info and silently sends a duress alert. No disguised icon. |
 | D20 | Private chats clear by default and are kept only if both agree. Screenshot alerts warn but don't block. |
 | D21 | Spaces (live audio rooms) and anonymous "someone to talk to" are part of Cups. |
 | D22 | The council oversees moderators and countries. Moderators moderate the platform. The Fool can remove a council member alone; otherwise it takes a vote. |

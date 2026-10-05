@@ -42,8 +42,8 @@ rarely online as peers because iOS and Android stop background apps.
 
 ## On the device
 
-- **Passcode every time.** Each time the app is closed or put in the
-  background, it locks. The passcode unlocks the encrypted vault and the
+- **Passcode every time.** The app locks when it's closed, after 30 minutes in
+  the background, or straight away with the Lock button. The passcode unlocks the encrypted vault and the
   keys.
 - **Decoy passcode, entered on the same lock screen.** It opens only the
   most basic, harmless information. Nothing on the screen shows that a

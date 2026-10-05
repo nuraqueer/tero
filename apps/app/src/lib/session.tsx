@@ -20,6 +20,9 @@ import {
 import { ApiError, authed, signIn, type Api } from './api';
 import * as vault from './vault';
 
+/** How long Tero stays open while you're in another app or tab. */
+export const awayLockMs = 30 * 60_000;
+
 export type Connection = 'connecting' | 'connected' | 'offline';
 
 /** A card this phone has claimed, while the newcomer sets up and waits for approval. */
@@ -100,12 +103,27 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     setState((s) => (s.status === 'open' ? { status: 'locked' } : s));
   }, []);
 
-  // Lock every time the app leaves the screen. On the web this is when the tab is hidden.
+  // Lock after 30 minutes away (another app, or a hidden browser tab). Closing the app
+  // or the tab locks at once: the keys only ever live in memory.
   useEffect(() => {
+    let leftAt: number | null = null;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     const sub = AppState.addEventListener('change', (next) => {
-      if (next === 'background') lock();
+      if (next === 'background') {
+        leftAt = Date.now();
+        clearTimeout(timer);
+        timer = setTimeout(lock, awayLockMs);
+      } else if (next === 'active') {
+        clearTimeout(timer);
+        // Timers may not run while the app is away, so check the clock too.
+        if (leftAt !== null && Date.now() - leftAt >= awayLockMs) lock();
+        leftAt = null;
+      }
     });
-    return () => sub.remove();
+    return () => {
+      clearTimeout(timer);
+      sub.remove();
+    };
   }, [lock]);
 
   const updateFull = (current: number, change: Partial<FullSession>) => {

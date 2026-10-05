@@ -76,6 +76,8 @@ async function slotKey(
     r,
     p,
     dkLen: 32,
+    // Yield to the screen less often: each pause is slow on phones without a JIT.
+    asyncTick: 100,
   });
   return hkdf(sha256, concatBytes(stretched, deviceSecret), undefined, slotInfo, 32);
 }

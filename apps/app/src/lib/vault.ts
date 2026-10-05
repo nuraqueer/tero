@@ -2,11 +2,14 @@ import {
   base64UrlToBytes,
   bytesToBase64Url,
   createVault,
+  defaultCost,
   openVault,
   phraseToSeed,
   randomBytes,
   sealSlot,
+  type ScryptCost,
 } from '@tero/crypto';
+import { Platform } from 'react-native';
 import { deleteItem, getItem, setItem } from './secure-storage';
 
 const keys = {
@@ -25,6 +28,15 @@ type Payload = { v: 1; mode: 'full'; phrase: string; seed?: string } | { v: 1; m
 export type Unlocked = { mode: 'full'; phrase: string; seed: Uint8Array } | { mode: 'basic' };
 
 export type UnlockResult = { ok: true; value: Unlocked } | { ok: false; waitMs: number };
+
+/**
+ * scrypt runs in JavaScript, which is slow on phones. On a phone the device secret sits
+ * in the Keychain or Keystore, so the passcode alone can't be guessed offline and a
+ * lighter cost is enough. In a browser the device secret sits beside the vault, so the
+ * passphrase gets the full cost.
+ */
+const vaultCost: ScryptCost =
+  Platform.OS === 'web' ? defaultCost : { ...defaultCost, log2N: defaultCost.log2N - 2 };
 
 /** Wrong tries allowed before Tero makes the person wait. */
 const freeTries = 5;
@@ -48,7 +60,7 @@ export async function saveNewVault(
   const device = randomBytes(32);
   const full: Payload = { v: 1, mode: 'full', phrase, seed: bytesToBase64Url(seed) };
   const basic: Payload = { v: 1, mode: 'basic' };
-  const { vault, slot } = await createVault(passcode, JSON.stringify(full), device);
+  const { vault, slot } = await createVault(passcode, JSON.stringify(full), device, vaultCost);
   const withDecoy = await sealSlot(
     vault,
     slot === 0 ? 1 : 0,

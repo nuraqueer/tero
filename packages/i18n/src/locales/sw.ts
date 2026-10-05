@@ -183,4 +183,6 @@ export const sw: Messages = {
   'suit.part.courses': 'Kozi',
   'suit.part.courses.body': 'Jifunze ujuzi au lugha pamoja na wengine.',
   'suit.soon': 'Karibuni',
+  'cards.body':
+    'Mpe mtu unayemwamini. Kila kadi inafanya kazi mara moja na huharibiwa anaporuhusiwa kuingia.',
 };

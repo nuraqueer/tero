@@ -172,4 +172,5 @@ export const zh: Messages = {
   'suit.part.courses': '课程',
   'suit.part.courses.body': '和他人一起学习技能或语言。',
   'suit.soon': '即将推出',
+  'cards.body': '把它交给你信任的人。每张卡只能用一次，对方被允许加入后卡就会销毁。',
 };

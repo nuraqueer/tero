@@ -14,17 +14,18 @@ export const GlassBar = forwardRef<View, ViewProps & { children?: ReactNode }>(f
   const insets = useSafeAreaInsets();
   const blur = Platform.OS !== 'android';
   return (
-    <View
-      ref={ref}
-      {...props}
-      style={[styles.wrap, { bottom: Math.max(insets.bottom, 12) + 8 }, style]}
-    >
-      {blur && <BlurView intensity={40} tint="light" style={StyleSheet.absoluteFill} />}
+    <View ref={ref} {...props} style={[styles.wrap, { bottom: barBottom(insets.bottom) }, style]}>
+      {blur && <BlurView intensity={70} tint="light" style={StyleSheet.absoluteFill} />}
       <View style={[StyleSheet.absoluteFill, blur ? styles.tint : styles.solid]} />
       <View style={styles.row}>{children}</View>
     </View>
   );
 });
+
+/** Sits low, as on iOS 26: inside the home-indicator area on phones that have one. */
+function barBottom(inset: number): number {
+  return inset > 0 ? Math.max(inset - 18, 6) : 8;
+}
 
 const styles = StyleSheet.create({
   wrap: {
@@ -37,20 +38,31 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     overflow: 'hidden',
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(31,30,29,0.15)',
+    borderColor: 'rgba(31,30,29,0.18)',
     shadowColor: '#141413',
-    shadowOpacity: 0.08,
-    shadowRadius: 24,
+    shadowOpacity: 0.16,
+    shadowRadius: 28,
     shadowOffset: { width: 0, height: 8 },
     elevation: 6,
   },
-  tint: { backgroundColor: 'rgba(255,255,255,0.72)' },
+  tint: { backgroundColor: 'rgba(240,238,230,0.62)' },
+  // A bright edge along the top, like light catching the rim of glass.
+  rim: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 32,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.95)',
+  },
   solid: { backgroundColor: '#FFFFFF' },
   row: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingHorizontal: 6,
+    paddingHorizontal: 5,
   },
 });

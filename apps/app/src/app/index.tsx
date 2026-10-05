@@ -21,7 +21,7 @@ export default function Welcome() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.page}>
+      <ScrollView contentContainerStyle={styles.page} showsVerticalScrollIndicator={false}>
         <View style={styles.brand}>
           {/* The founder sets up without a card: a long press on the mark. It only opens
               while the server says the Fool's seat is free (Tero has no members yet), and

@@ -176,6 +176,8 @@ export const en = {
   'suit.part.courses': 'Courses',
   'suit.part.courses.body': 'Learn a skill or a language with others.',
   'suit.soon': 'Soon',
+  'cards.body':
+    "Hand one to someone you trust. Each card works once and is destroyed when they're let in.",
 } as const;
 
 export type MessageKey = keyof typeof en;
