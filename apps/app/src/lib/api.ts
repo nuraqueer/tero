@@ -9,7 +9,10 @@ import {
   type ChallengeResponse,
   type ClaimCardRequest,
   type ClaimCardResponse,
+  type AidListResponse,
+  type AidRepliesResponse,
   type CreateCardRequest,
+  type NewAidPost,
   type DirectoryPart,
   type NewPlace,
   type PlaceListResponse,
@@ -106,6 +109,14 @@ export function authed(token: string) {
     vouchPlace: (id: string, vouch: boolean) =>
       request<void>(`/api/places/${id}/vouch`, vouch ? 'PUT' : 'DELETE', token),
     removePlace: (id: string) => request<void>(`/api/places/${id}`, 'DELETE', token),
+    listAid: async () => (await request<AidListResponse>('/api/aid', 'GET', token)).posts,
+    addAid: (post: NewAidPost) => request<{ id: string }>('/api/aid', 'POST', token, post),
+    replyAid: (id: string, note: string) =>
+      request<void>(`/api/aid/${id}/replies`, 'POST', token, { note }),
+    aidReplies: async (id: string) =>
+      (await request<AidRepliesResponse>(`/api/aid/${id}/replies`, 'GET', token)).replies,
+    closeAid: (id: string) => request<void>(`/api/aid/${id}/close`, 'POST', token),
+    removeAid: (id: string) => request<void>(`/api/aid/${id}`, 'DELETE', token),
   };
 }
 

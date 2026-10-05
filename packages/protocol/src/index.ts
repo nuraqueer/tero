@@ -283,3 +283,71 @@ export function isNewPlace(value: unknown): value is NewPlace {
     typeof v.unaware === 'boolean'
   );
 }
+
+// Mutual aid: asking for help and offering it. Replies go only to the person who posted.
+
+export const aidKinds = ['request', 'offer'] as const;
+export type AidKind = (typeof aidKinds)[number];
+
+export const aidCategories = ['rent', 'food', 'travel', 'health', 'work', 'other'] as const;
+export type AidCategory = (typeof aidCategories)[number];
+
+export const aidLimits = { title: 80, details: 600, city: 60, reply: 300 } as const;
+
+/** How many aid posts one member may make in a day. */
+export const aidPostsPerDay = 3;
+
+/** Posts close by themselves after this long. */
+export const aidTtlMs = 30 * 24 * 60 * 60 * 1000;
+
+export type NewAidPost = {
+  kind: AidKind;
+  category: AidCategory;
+  title: string;
+  details: string;
+  /** ISO 3166-1 alpha-2, upper case. */
+  country: string;
+  /** City or area only. */
+  city: string;
+};
+
+export type AidPost = NewAidPost & {
+  id: string;
+  /** Day it was posted (midnight UTC), not the exact time. */
+  addedOn: number;
+  /** Still open; the author marks it done. */
+  open: boolean;
+  mine: boolean;
+  /** Replies so far; only told to the author, 0 for everyone else. */
+  replies: number;
+  /** The person asking has replied. */
+  replied: boolean;
+};
+
+export type AidReply = { id: string; note: string; addedOn: number };
+
+export type AidListResponse = { posts: AidPost[] };
+export type AidRepliesResponse = { replies: AidReply[] };
+export type NewAidReply = { note: string };
+
+export function isNewAidPost(value: unknown): value is NewAidPost {
+  const v = asObject(value);
+  return (
+    !!v &&
+    (aidKinds as readonly unknown[]).includes(v.kind) &&
+    (aidCategories as readonly unknown[]).includes(v.category) &&
+    isText(v.title, aidLimits.title) &&
+    isText(v.details, aidLimits.details) &&
+    typeof v.country === 'string' &&
+    /^[A-Z]{2}$/.test(v.country) &&
+    isText(v.city, aidLimits.city)
+  );
+}
+
+export function isNewAidReply(value: unknown): value is NewAidReply {
+  const v = asObject(value);
+  return !!v && isText(v.note, aidLimits.reply);
+}
+
+/** Place and aid post ids: 16 base64url characters. */
+export const isPostId = isPlaceId;

@@ -1,5 +1,5 @@
 import { DurableObject } from 'cloudflare:workers';
-import type { CreateCardRequest, DirectoryPart, NewPlace } from '@tero/protocol';
+import type { CreateCardRequest, DirectoryPart, NewAidPost, NewPlace } from '@tero/protocol';
 import type { Env } from './index';
 import { Registry } from './registry';
 
@@ -50,5 +50,23 @@ export class RegistryObject extends DurableObject<Env> {
   }
   removePlace(did: string, id: string) {
     return this.registry.removePlace(did, id, Date.now());
+  }
+  listAid(did: string) {
+    return this.registry.aid.list(did, Date.now());
+  }
+  addAid(did: string, post: NewAidPost) {
+    return this.registry.aid.add(did, post, Date.now());
+  }
+  replyAid(did: string, id: string, note: string) {
+    return this.registry.aid.reply(did, id, note, Date.now());
+  }
+  aidReplies(did: string, id: string) {
+    return this.registry.aid.replies(did, id, Date.now());
+  }
+  closeAid(did: string, id: string) {
+    return this.registry.aid.close(did, id);
+  }
+  removeAid(did: string, id: string) {
+    return this.registry.aid.remove(did, id);
   }
 }

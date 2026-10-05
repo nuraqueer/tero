@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import type { MessageKey } from '@tero/i18n';
 import {
@@ -13,6 +13,7 @@ import {
 import { colors, fonts, radii, space } from '@tero/ui';
 import { Button } from '@/components/Button';
 import { Checkbox } from '@/components/Checkbox';
+import { Chip, Chips, Field, FieldLabel, SmallButton } from '@/components/Form';
 import { ApiError } from '@/lib/api';
 import { useLocale } from '@/lib/locale';
 import { useFullSession } from '@/lib/session';
@@ -87,31 +88,17 @@ export function Directory({ part }: { part: DirectoryPart }) {
         style={styles.search}
         accessibilityLabel={t('dir.search')}
       />
-      <View style={styles.toggles}>
+      <Chips>
         {(
           [
             ['vouched', 'dir.verified'],
             ['free', 'dir.free'],
             ['international', 'dir.international'],
           ] as const
-        ).map(([f, key]) => {
-          const on = filters.includes(f);
-          return (
-            <Pressable
-              key={f}
-              accessibilityRole="checkbox"
-              accessibilityState={{ checked: on }}
-              onPress={() => toggle(f)}
-              style={[styles.toggle, on && styles.toggleOn]}
-            >
-              <Text style={[styles.toggleText, on && styles.toggleTextOn]}>
-                {on ? '✓ ' : ''}
-                {t(key)}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
+        ).map(([f, key]) => (
+          <Chip key={f} label={t(key)} on={filters.includes(f)} onPress={() => toggle(f)} />
+        ))}
+      </Chips>
 
       {!connected && <Text style={styles.note}>{t('dir.offline')}</Text>}
       {problem && <Text style={styles.problem}>{problem}</Text>}
@@ -209,63 +196,14 @@ function PlaceRow({
           {t('dir.vouches', { count: place.vouches })}
         </Text>
         {!place.mine && (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityState={{ selected: place.vouched }}
+          <SmallButton
+            label={place.vouched ? `✓ ${t('dir.vouched')}` : t('dir.vouch')}
+            on={place.vouched}
             onPress={onVouch}
-            style={({ pressed }) => [
-              styles.smallButton,
-              place.vouched && styles.smallButtonOn,
-              pressed && styles.pressed,
-            ]}
-          >
-            <Text style={[styles.smallText, place.vouched && styles.smallTextOn]}>
-              {place.vouched ? `✓ ${t('dir.vouched')}` : t('dir.vouch')}
-            </Text>
-          </Pressable>
+          />
         )}
-        {canRemove && (
-          <Pressable
-            accessibilityRole="button"
-            onPress={onRemove}
-            style={({ pressed }) => [styles.smallButton, pressed && styles.pressed]}
-          >
-            <Text style={styles.smallText}>{t('dir.remove')}</Text>
-          </Pressable>
-        )}
+        {canRemove && <SmallButton label={t('dir.remove')} onPress={onRemove} />}
       </View>
-    </View>
-  );
-}
-
-function Field({
-  label,
-  value,
-  onChange,
-  max,
-  multiline,
-  autoCapitalize,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  max: number;
-  multiline?: boolean;
-  autoCapitalize?: 'characters' | 'sentences';
-}) {
-  return (
-    <View style={styles.field}>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput
-        value={value}
-        onChangeText={onChange}
-        maxLength={max}
-        multiline={multiline}
-        autoCapitalize={autoCapitalize}
-        autoCorrect={false}
-        accessibilityLabel={label}
-        style={[styles.input, multiline && styles.inputMulti]}
-      />
     </View>
   );
 }
@@ -363,22 +301,18 @@ function PlaceForm({
         onChange={setContact}
         max={placeLimits.contact}
       />
-      <Text style={styles.label}>{t('dir.form.cost')}</Text>
-      <View style={styles.toggles}>
+      <FieldLabel>{t('dir.form.cost')}</FieldLabel>
+      <Chips>
         {placeCosts.map((c) => (
-          <Pressable
+          <Chip
             key={c}
-            accessibilityRole="radio"
-            accessibilityState={{ selected: cost === c }}
+            role="radio"
+            label={t(`dir.cost.${c}` as MessageKey)}
+            on={cost === c}
             onPress={() => setCost(c)}
-            style={[styles.toggle, cost === c && styles.toggleOn]}
-          >
-            <Text style={[styles.toggleText, cost === c && styles.toggleTextOn]}>
-              {t(`dir.cost.${c}` as MessageKey)}
-            </Text>
-          </Pressable>
+          />
         ))}
-      </View>
+      </Chips>
       <Checkbox
         label={t('dir.international')}
         checked={international}
@@ -407,17 +341,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.slate,
   },
-  toggles: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: space.sm },
-  toggle: {
-    paddingVertical: 7,
-    paddingHorizontal: 12,
-    borderRadius: radii.pill,
-    borderWidth: 1,
-    borderColor: 'rgba(31,30,29,0.15)',
-  },
-  toggleOn: { backgroundColor: colors.oatLight, borderColor: colors.clayText },
-  toggleText: { fontFamily: fonts.bodyMedium, fontSize: 13, color: colors.slate },
-  toggleTextOn: { color: colors.clayText },
   count: {
     fontFamily: fonts.bodyMedium,
     fontSize: 14,
@@ -480,17 +403,6 @@ const styles = StyleSheet.create({
     marginTop: space.sm,
   },
   vouches: { flex: 1, fontFamily: fonts.body, fontSize: 13, color: colors.textSecondary },
-  smallButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: radii.pill,
-    borderWidth: 1,
-    borderColor: 'rgba(31,30,29,0.18)',
-  },
-  smallButtonOn: { backgroundColor: colors.slate, borderColor: colors.slate },
-  smallText: { fontFamily: fonts.bodyMedium, fontSize: 13, color: colors.slate },
-  smallTextOn: { color: colors.ivory },
-  pressed: { opacity: 0.7 },
   note: {
     fontFamily: fonts.body,
     fontSize: 13,
@@ -516,27 +428,6 @@ const styles = StyleSheet.create({
     borderColor: colors.hairline,
   },
   formTitle: { fontFamily: fonts.display, fontSize: 22, color: colors.slate },
-  field: { gap: 4 },
-  label: {
-    fontFamily: fonts.bodySemibold,
-    fontSize: 12,
-    letterSpacing: 0.6,
-    color: colors.textSecondary,
-    textTransform: 'uppercase',
-    marginTop: space.sm,
-  },
-  input: {
-    minHeight: 44,
-    paddingHorizontal: space.sm + 4,
-    borderRadius: radii.sm,
-    backgroundColor: colors.ivory,
-    borderWidth: 1,
-    borderColor: 'rgba(31,30,29,0.15)',
-    fontFamily: fonts.body,
-    fontSize: 16,
-    color: colors.slate,
-  },
-  inputMulti: { minHeight: 96, paddingTop: space.sm, textAlignVertical: 'top' },
   row: { flexDirection: 'row', gap: space.sm },
   countryField: { width: 110 },
   flex: { flex: 1 },

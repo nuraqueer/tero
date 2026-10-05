@@ -3,6 +3,8 @@ import {
   cardUrl,
   drawArcana,
   isApproveCardRequest,
+  isNewAidPost,
+  isNewAidReply,
   isNewPlace,
   isClaimCardRequest,
   isCreateCardRequest,
@@ -90,5 +92,28 @@ describe('isNewPlace', () => {
     expect(isNewPlace({ ...place, name: '   ' })).toBe(false);
     expect(isNewPlace({ ...place, offers: 'x'.repeat(401) })).toBe(false);
     expect(isNewPlace({ ...place, cost: 'cheap' })).toBe(false);
+  });
+});
+
+describe('isNewAidPost', () => {
+  const post = {
+    kind: 'request',
+    category: 'rent',
+    title: 'Short on rent this month',
+    details: 'About 50 USD would cover it.',
+    country: 'KE',
+    city: 'Mombasa',
+  };
+  it('accepts a well-formed post', () => expect(isNewAidPost(post)).toBe(true));
+  it('refuses bad kinds, categories and blank text', () => {
+    expect(isNewAidPost({ ...post, kind: 'sale' })).toBe(false);
+    expect(isNewAidPost({ ...post, category: 'cars' })).toBe(false);
+    expect(isNewAidPost({ ...post, title: ' ' })).toBe(false);
+    expect(isNewAidPost({ ...post, country: 'ke' })).toBe(false);
+  });
+  it('checks replies', () => {
+    expect(isNewAidReply({ note: 'I can help, Signal: x' })).toBe(true);
+    expect(isNewAidReply({ note: '' })).toBe(false);
+    expect(isNewAidReply({ note: 'x'.repeat(301) })).toBe(false);
   });
 });

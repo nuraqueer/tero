@@ -5,8 +5,11 @@ import {
   isClaimCardRequest,
   isCreateCardRequest,
   isDirectoryPart,
+  isNewAidPost,
+  isNewAidReply,
   isNewPlace,
   isPlaceId,
+  isPostId,
   isSignInRequest,
   type ApiErrorCode,
   type FounderSeatResponse,
@@ -51,6 +54,12 @@ export type RegistryApi = Async<
     | 'addPlace'
     | 'vouchPlace'
     | 'removePlace'
+    | 'listAid'
+    | 'addAid'
+    | 'replyAid'
+    | 'aidReplies'
+    | 'closeAid'
+    | 'removeAid'
   >
 >;
 
@@ -232,6 +241,48 @@ async function handleSignedIn(
     return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
   }
 
+  if (path === '/api/aid') {
+    if (method === 'GET') {
+      const result = await reg.listAid(did);
+      return result.ok ? json({ posts: result.posts }) : error(result.error, 403);
+    }
+    if (method === 'POST') {
+      const body = await readJson(request);
+      if (!isNewAidPost(body)) return error('bad_request', 400);
+      const result = await reg.addAid(did, body);
+      return result.ok
+        ? json({ id: result.id }, 201)
+        : error(result.error, statusFor[result.error]!);
+    }
+    return error('method_not_allowed', 405);
+  }
+
+  const aid = path.match(/^\/api\/aid\/([^/]+)(\/replies|\/close)?$/);
+  if (aid && isPostId(aid[1])) {
+    const id = aid[1];
+    if (aid[2] === '/replies') {
+      if (method === 'GET') {
+        const result = await reg.aidReplies(did, id);
+        return result.ok
+          ? json({ replies: result.replies })
+          : error(result.error, statusFor[result.error]!);
+      }
+      if (method !== 'POST') return error('method_not_allowed', 405);
+      const body = await readJson(request);
+      if (!isNewAidReply(body)) return error('bad_request', 400);
+      const result = await reg.replyAid(did, id, body.note);
+      return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
+    }
+    if (aid[2] === '/close') {
+      if (method !== 'POST') return error('method_not_allowed', 405);
+      const result = await reg.closeAid(did, id);
+      return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
+    }
+    if (method !== 'DELETE') return error('method_not_allowed', 405);
+    const result = await reg.removeAid(did, id);
+    return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
+  }
+
   return error('not_found', 404);
 }
 
@@ -247,7 +298,8 @@ async function handleApi(request: Request, path: string, env: Env): Promise<Resp
     path === '/api/status' ||
     path === '/api/founder' ||
     path.startsWith('/api/cards') ||
-    path.startsWith('/api/places');
+    path.startsWith('/api/places') ||
+    path.startsWith('/api/aid');
   if (!known) return error('not_found', 404);
 
   // A short secret would make tokens guessable; refuse to run with one.

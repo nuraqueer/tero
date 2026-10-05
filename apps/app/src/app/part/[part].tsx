@@ -9,6 +9,7 @@ import { Page } from '@/components/Page';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { Bone, BoneRow } from '@/components/Skeleton';
 import { Directory } from '@/components/Directory';
+import { MutualAid } from '@/components/MutualAid';
 import { SoonNote } from '@/components/SoonNote';
 import { useLocale } from '@/lib/locale';
 import { allParts, partKind } from '@/lib/areas';
@@ -35,7 +36,7 @@ export default function PartScreen() {
       {kind === 'showCard' && <ShowCard />}
       {kind === 'journeys' && <Journey />}
       {kind === 'list' && <BoneList />}
-      {!isDirectoryPart(part) && <SoonNote text={t('part.soon')} />}
+      {!isDirectoryPart(part) && kind !== 'aid' && <SoonNote text={t('part.soon')} />}
     </Page>
   );
 }
@@ -44,26 +45,6 @@ function Search({ placeholder }: { placeholder: string }) {
   return (
     <View style={styles.search} accessibilityState={{ disabled: true }}>
       <Text style={styles.searchText}>{placeholder}</Text>
-    </View>
-  );
-}
-
-function Pills({ keys }: { keys: MessageKey[] }) {
-  const { t } = useLocale();
-  const [on, setOn] = useState(0);
-  return (
-    <View style={styles.pills}>
-      {keys.map((key, i) => (
-        <Pressable
-          key={key}
-          accessibilityRole="radio"
-          accessibilityState={{ selected: i === on }}
-          onPress={() => setOn(i)}
-          style={[styles.pill, i === on && styles.pillOn]}
-        >
-          <Text style={[styles.pillText, i === on && styles.pillTextOn]}>{t(key)}</Text>
-        </Pressable>
-      ))}
     </View>
   );
 }
@@ -98,25 +79,6 @@ function BoneList({ rows = 4 }: { rows?: number }) {
         <BoneRow key={i} />
       ))}
     </View>
-  );
-}
-
-function MutualAid() {
-  const { t } = useLocale();
-  return (
-    <>
-      <View style={styles.twoButtons}>
-        <View style={styles.flex}>
-          <Button label={t('aid.request')} onPress={() => undefined} disabled />
-        </View>
-        <View style={styles.flex}>
-          <Button label={t('aid.offer')} onPress={() => undefined} kind="secondary" disabled />
-        </View>
-      </View>
-      <Pills keys={['aid.all', 'aid.requests', 'aid.offers']} />
-      <BoneList />
-      <Text style={styles.note}>{t('aid.privacy')}</Text>
-    </>
   );
 }
 
@@ -223,14 +185,6 @@ const styles = StyleSheet.create({
     borderColor: colors.hairline,
   },
   searchText: { fontFamily: fonts.body, fontSize: 15, color: colors.textMuted },
-  label: {
-    fontFamily: fonts.bodySemibold,
-    fontSize: 12,
-    letterSpacing: 0.6,
-    color: colors.textSecondary,
-    textTransform: 'uppercase',
-    marginTop: space.lg,
-  },
   toggles: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: space.sm },
   toggle: {
     paddingVertical: 7,
@@ -242,27 +196,6 @@ const styles = StyleSheet.create({
   toggleOn: { backgroundColor: colors.oatLight, borderColor: colors.clayText },
   toggleText: { fontFamily: fonts.bodyMedium, fontSize: 13, color: colors.slate },
   toggleTextOn: { color: colors.clayText },
-  count: {
-    fontFamily: fonts.bodyMedium,
-    fontSize: 14,
-    color: colors.textSecondary,
-    marginTop: space.lg,
-  },
-  empty: {
-    marginTop: space.sm,
-    padding: space.lg,
-    alignItems: 'center',
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: 'rgba(31,30,29,0.18)',
-  },
-  emptyText: {
-    fontFamily: fonts.body,
-    fontSize: 15,
-    color: colors.textSecondary,
-    textAlign: 'center',
-  },
   note: {
     fontFamily: fonts.body,
     fontSize: 13,
@@ -272,20 +205,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   actions: { gap: space.sm, marginTop: space.lg },
-  twoButtons: { flexDirection: 'row', gap: space.sm, marginTop: space.lg },
-  flex: { flex: 1 },
-  pills: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: space.lg },
-  pill: {
-    paddingVertical: 7,
-    paddingHorizontal: 14,
-    borderRadius: radii.pill,
-    backgroundColor: 'rgba(31,30,29,0.07)',
-    borderWidth: 1,
-    borderColor: 'rgba(31,30,29,0.12)',
-  },
-  pillOn: { backgroundColor: colors.slate, borderColor: colors.slate },
-  pillText: { fontFamily: fonts.bodyMedium, fontSize: 14, color: colors.slate },
-  pillTextOn: { color: colors.ivory },
   list: {
     marginTop: space.md,
     paddingHorizontal: space.md,
