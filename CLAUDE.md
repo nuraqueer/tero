@@ -1,0 +1,66 @@
+# Tero: notes for Claude
+
+Read this first in every session. Keep it current: update "Where we are" and
+"Next" whenever a milestone lands or a decision changes.
+
+## What Tero is
+
+A global, invite-only platform where queer people help each other, built for
+places where being seen is dangerous. Inspired by the Tarot Club in _Lord of the
+Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
+[docs/README.md](docs/README.md) (decisions log D1–D38) and [docs/vision.md](docs/vision.md).
+
+## Working rules
+
+- **Only use the `main` branch.** Commit and push straight to `main`. Never create
+  other branches; the founder asked for this to avoid conflicts.
+- **Bun** is the package manager: `bun install`, `bun run check` (format, types, tests;
+  same as CI). Add app packages with `bunx expo install <name>`.
+- Run `bun run check` before every push. CI (`.github/workflows/ci.yml`) must stay green.
+- Discuss big product or safety decisions with the founder before building them.
+- Never write secrets into files, commits or chat. Secrets live in the environment
+  settings (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`) or as Worker secrets.
+- The founder prefers plain language, decisions recorded in `docs/`, and a calm,
+  grown-up design (see [docs/design.md](docs/design.md)).
+
+## Layout
+
+| Path                | What                                                               |
+| ------------------- | ------------------------------------------------------------------ |
+| `apps/app`          | Expo SDK 57 + expo-router: iOS, Android, web. Screens in `src/app` |
+| `apps/edge`         | Cloudflare Worker `tero`: API, Tero cards, serves the web build    |
+| `packages/crypto`   | Phrase (BIP-39), keys (HKDF, Ed25519), did:key, two-slot vault     |
+| `packages/protocol` | Sign-in message and API shapes                                     |
+| `packages/ui`       | Colours, fonts, sizes                                              |
+| `packages/i18n`     | en, sw, zh, fr (non-English text needs native review)              |
+| `design/mockups`    | Screen mockups (`.dc.html`) and screenshot scripts                 |
+| `docs/`             | Product, safety and build decisions                                |
+
+## Deployment
+
+- Worker `tero` on the Pherus Cloudflare account. Live at
+  `https://tero.pherus.workers.dev` (previews) and `tero.pherus.org` (custom domain).
+- Deploy: `cd apps/app && bunx expo export --platform web`, then
+  `cd apps/edge && bunx wrangler deploy` (needs `CLOUDFLARE_API_TOKEN`).
+- Worker secrets/vars: `AUTH_SECRET` (signs challenges and sessions),
+  `FOUNDER_DID` (the Fool's address; makes the first member).
+- Members and cards live in the `RegistryObject` SQLite Durable Object.
+- Expo project id `f339bd48-af04-41e7-b1c6-5706f9f0680c`; EAS profiles in `apps/app/eas.json`.
+  Phones talk to `EXPO_PUBLIC_API_URL`, defaulting to the workers.dev address.
+- Mockups canvas: https://claude.ai/artifact/TpPoDJbAyYFAFGKgxdzqYd
+
+## Where we are (2026-10-05)
+
+- M0 foundations, M1 identity and lock, M2 Tero cards: done and deployed.
+- Not for real members yet: nothing goes to real people before M7's security audit.
+- Known weak spot: on the **web**, the vault's device secret sits in local storage
+  beside the vault, so a copied browser profile can be brute-forced offline through
+  the six-digit passcode. Phones are protected by the Keychain / Keystore.
+
+## Next
+
+1. Harden the web vault (longer passphrase on web, or web limited to guides).
+2. M3: private chats. Start by comparing libsignal, vodozemac and OpenMLS
+   ([docs/build-plan.md](docs/build-plan.md)).
+3. Open design items: pick a logo concept; match the You-screen tarot card to the
+   founder's reference image (Pinterest is blocked here; ask for it as an attachment).
