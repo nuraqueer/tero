@@ -30,9 +30,9 @@ export function PublicHome({ onFounder }: { onFounder: () => void }) {
   );
 
   return (
-    <ScrollView style={styles.page} showsVerticalScrollIndicator={false}>
-      {/* Hero, on the dark ground of the cards. */}
-      <View style={styles.hero}>
+    <ScrollView style={styles.page} showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
+      {/* The header stays at the top while the page scrolls. */}
+      <View style={styles.bar}>
         <View style={styles.wrap}>
           <View style={styles.header}>
             {/* The founder's hidden setup: a long press on the mark (only while the seat is open). */}
@@ -59,7 +59,11 @@ export function PublicHome({ onFounder }: { onFounder: () => void }) {
               </View>
             </View>
           </View>
-
+        </View>
+      </View>
+      {/* Hero, on the dark ground of the cards. */}
+      <View style={styles.hero}>
+        <View style={styles.wrap}>
           <View style={styles.heroBody}>
             <View style={styles.heroText}>
               <Text style={styles.kicker}>{t('public.kicker')}</Text>
@@ -217,13 +221,19 @@ const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: colors.ivory },
   wrap: { width: '100%', maxWidth: wide, alignSelf: 'center', paddingHorizontal: space.lg },
   hero: { backgroundColor: colors.slate },
+  bar: {
+    backgroundColor: colors.slate,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: 'rgba(250,249,245,0.12)',
+    zIndex: 10,
+  },
   header: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: space.md,
-    paddingVertical: space.lg,
+    paddingVertical: space.md,
   },
   brand: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
   nav: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space.lg },

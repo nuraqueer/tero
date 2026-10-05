@@ -13,7 +13,11 @@ export function PublicPage({ children }: { children: ReactNode }) {
   const home = () => (router.canGoBack() ? router.back() : router.replace('/'));
   return (
     <SafeAreaView style={styles.safe}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scroll}
+        stickyHeaderIndices={[0]}
+      >
         <View style={styles.header}>
           <Pressable accessibilityRole="link" onPress={home} style={styles.brand}>
             <CardMark height={28} />
@@ -40,6 +44,8 @@ const styles = StyleSheet.create({
     paddingVertical: space.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.hairline,
+    backgroundColor: colors.ivory,
+    zIndex: 10,
   },
   brand: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
   link: { fontFamily: fonts.bodyMedium, fontSize: 15, color: colors.clayText },
