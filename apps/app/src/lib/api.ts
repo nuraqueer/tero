@@ -15,8 +15,8 @@ import {
   type SignInResponse,
 } from '@tero/protocol';
 
-/** The Worker phones talk to. tero.pherus.org once the custom domain is set up. */
-const defaultServer = 'https://tero.pherus.workers.dev';
+/** The Worker phones talk to: Tero's one address. */
+const defaultServer = 'https://tero.pherus.org';
 
 // The web app is served by the same Worker as the API. Phones talk to it directly.
 const base = process.env.EXPO_PUBLIC_API_URL ?? (Platform.OS === 'web' ? '' : defaultServer);

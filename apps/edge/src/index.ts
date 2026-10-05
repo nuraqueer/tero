@@ -188,9 +188,17 @@ async function handleApi(request: Request, path: string, env: Env): Promise<Resp
   return handleSignedIn(request, path, did, reg);
 }
 
+/** Tero has one address. Everything else (the workers.dev preview address) forwards here. */
+export const canonicalOrigin = 'https://tero.pherus.org';
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+    if (url.hostname.endsWith('.workers.dev')) {
+      return withSecurityHeaders(
+        Response.redirect(canonicalOrigin + url.pathname + url.search, 308),
+      );
+    }
     if (url.pathname.startsWith('/api/')) return handleApi(request, url.pathname, env);
     if (!env.ASSETS) return error('not_found', 404);
 

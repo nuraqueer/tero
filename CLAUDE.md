@@ -38,15 +38,15 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
 
 ## Deployment
 
-- Worker `tero` on the Pherus Cloudflare account. Live at
-  `https://tero.pherus.workers.dev` (previews) and `tero.pherus.org` (custom domain).
+- Worker `tero` on the Pherus Cloudflare account. **One address: `https://tero.pherus.org`.**
+  The workers.dev address only forwards there (308), and the phone app uses tero.pherus.org.
 - Deploy: `cd apps/app && bunx expo export --platform web`, then
   `cd apps/edge && bunx wrangler deploy` (needs `CLOUDFLARE_API_TOKEN`).
 - Worker secrets/vars: `AUTH_SECRET` (signs challenges and sessions),
   `FOUNDER_DID` (the Fool's address; makes the first member).
 - Members and cards live in the `RegistryObject` SQLite Durable Object.
 - Expo project id `f339bd48-af04-41e7-b1c6-5706f9f0680c`; EAS profiles in `apps/app/eas.json`.
-  Phones talk to `EXPO_PUBLIC_API_URL`, defaulting to the workers.dev address.
+  Phones talk to `EXPO_PUBLIC_API_URL`, defaulting to tero.pherus.org.
 - Mockups canvas: https://claude.ai/artifact/TpPoDJbAyYFAFGKgxdzqYd
 
 ## Where we are (2026-10-05)
@@ -56,6 +56,10 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
 - Web vault hardened: in a browser, new passcodes must be passphrases of 10+
   characters (`PasscodePad.web.tsx`), because the device secret sits in local storage.
   Unlocking accepts any length so older web vaults still open. Phones keep 6 digits.
+- Restore with the 12 words (`src/app/restore.tsx`): from the welcome screen (new
+  device) or the lock screen ("Forgot it?"). Same words give the same address.
+- `FOUNDER_DID` is not set yet: once the founder has set up on tero.pherus.org, set it
+  to their address (`bunx wrangler secret put FOUNDER_DID` in `apps/edge`).
 
 ## Next
 

@@ -65,6 +65,9 @@ function Screens() {
       <Stack.Protected guard={state.status === 'locked'}>
         <Stack.Screen name="lock" />
       </Stack.Protected>
+      <Stack.Protected guard={state.status === 'new' || state.status === 'locked'}>
+        <Stack.Screen name="restore" />
+      </Stack.Protected>
       <Stack.Protected guard={full}>
         <Stack.Screen name="home" />
         <Stack.Screen name="card/[id]" />

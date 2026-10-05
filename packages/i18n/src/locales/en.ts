@@ -26,6 +26,12 @@ export const en = {
   'lock.passphrase.hint': 'At least {count} characters',
   'setup.passcode.bodyWeb':
     'In a browser, use a passphrase of at least 10 characters, like a few words only you know. Tero asks for it every time you open it.',
+  'restore.title': 'Restore with your 12 words',
+  'restore.body': 'Type the 12 words from your paper, in order, with a space between each.',
+  'restore.label': 'Your 12 words',
+  'restore.wrong': "Those words don't work. Check the spelling and the order.",
+  'lock.forgot': 'Forgot it? Use your 12 words',
+  'welcome.restore': 'I have my 12 words',
   'setup.passcode.title': 'Choose a passcode',
   'setup.passcode.body': 'Six digits. Tero asks for it every time you open the app.',
   'setup.passcode.repeat': 'Enter your passcode again',

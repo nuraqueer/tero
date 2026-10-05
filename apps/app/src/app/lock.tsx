@@ -4,6 +4,8 @@ import { colors, fonts, space } from '@tero/ui';
 import { CardMark } from '@/components/CardMark';
 import { Page } from '@/components/Page';
 import { PasscodePad } from '@/components/PasscodePad';
+import { Button } from '@/components/Button';
+import { router } from 'expo-router';
 import { useLocale } from '@/lib/locale';
 import { useSession } from '@/lib/session';
 
@@ -43,6 +45,9 @@ export default function Lock() {
         </Text>
       </View>
       <PasscodePad onSubmit={submit} busy={busy} message={message} resetKey={tries} />
+      <View style={styles.forgot}>
+        <Button label={t('lock.forgot')} kind="quiet" onPress={() => router.push('/restore')} />
+      </View>
     </Page>
   );
 }
@@ -50,5 +55,6 @@ export default function Lock() {
 const styles = StyleSheet.create({
   brand: { alignItems: 'center', gap: 14, marginTop: space.xl },
   wordmark: { fontFamily: fonts.mark, fontSize: 44, color: colors.slate, letterSpacing: 0.9 },
+  forgot: { marginTop: space.lg, alignItems: 'center' },
   prompt: { fontFamily: fonts.body, fontSize: 16, color: colors.textSecondary },
 });

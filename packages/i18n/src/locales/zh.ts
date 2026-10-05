@@ -28,6 +28,12 @@ export const zh: Messages = {
   'lock.passphrase.hint': '至少 {count} 个字符',
   'setup.passcode.bodyWeb':
     '在浏览器中，请使用至少 10 个字符的密码短语，例如几个只有你知道的词。每次打开 Tero 时都需要输入。',
+  'restore.title': '用你的 12 个词恢复',
+  'restore.body': '按顺序输入纸上的 12 个词，每个词之间用空格隔开。',
+  'restore.label': '你的 12 个词',
+  'restore.wrong': '这些词无法使用。请检查拼写和顺序。',
+  'lock.forgot': '忘记了？使用你的 12 个词',
+  'welcome.restore': '我有我的 12 个词',
   'setup.passcode.title': '设置密码',
   'setup.passcode.body': '六位数字。每次打开应用时，Tero 都会要求输入。',
   'setup.passcode.repeat': '再次输入密码',

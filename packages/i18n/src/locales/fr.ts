@@ -29,6 +29,12 @@ export const fr: Messages = {
   'lock.passphrase.hint': 'Au moins {count} caractères',
   'setup.passcode.bodyWeb':
     "Dans un navigateur, utilise une phrase secrète d'au moins 10 caractères, par exemple quelques mots que toi seul·e connais. Tero la demande à chaque ouverture.",
+  'restore.title': 'Restaurer avec tes 12 mots',
+  'restore.body': "Saisis les 12 mots de ton papier, dans l'ordre, séparés par un espace.",
+  'restore.label': 'Tes 12 mots',
+  'restore.wrong': "Ces mots ne fonctionnent pas. Vérifie l'orthographe et l'ordre.",
+  'lock.forgot': 'Oublié ? Utilise tes 12 mots',
+  'welcome.restore': "J'ai mes 12 mots",
   'setup.passcode.title': 'Choisis un code',
   'setup.passcode.body': "Six chiffres. Tero te le demande à chaque ouverture de l'application.",
   'setup.passcode.repeat': 'Saisis ton code à nouveau',

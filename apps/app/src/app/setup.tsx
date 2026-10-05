@@ -30,14 +30,27 @@ function pickPlaces(): number[] {
 }
 
 export default function Setup() {
+  return <SetupFlow />;
+}
+
+/**
+ * Choosing the phrase and passcodes. With restorePhrase (typed in from paper), it skips
+ * straight to choosing a new passcode for the same keys.
+ */
+export function SetupFlow({ restorePhrase }: { restorePhrase?: string }) {
   const { t } = useLocale();
   const { state, finishSetup } = useSession();
   // Joining with a card: the keys were made when the card was claimed. Without a card
   // (only the founder, before the first card exists) new keys are made here.
   const join = state.status === 'new' ? state.join : null;
-  const phrase = useMemo(() => join?.phrase ?? createPhrase(), [join]);
+  const phrase = useMemo(
+    () => restorePhrase ?? join?.phrase ?? createPhrase(),
+    [restorePhrase, join],
+  );
   const words = phrase.split(' ');
-  const [step, setStep] = useState<Step>(join ? { name: 'code' } : { name: 'phrase' });
+  const [step, setStep] = useState<Step>(
+    restorePhrase ? { name: 'passcode' } : join ? { name: 'code' } : { name: 'phrase' },
+  );
   const [message, setMessage] = useState<string>();
   // Bumped to clear the keypad after a mismatch.
   const [resets, setResets] = useState(0);

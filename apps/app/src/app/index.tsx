@@ -37,6 +37,13 @@ export default function Welcome() {
           </Pressable>
           <Pressable
             accessibilityRole="button"
+            onPress={() => router.push('/restore')}
+            style={[styles.button, styles.secondary]}
+          >
+            <Text style={styles.secondaryLabel}>{t('welcome.restore')}</Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
             accessibilityState={{ disabled: true }}
             disabled
             style={[styles.button, styles.secondary]}

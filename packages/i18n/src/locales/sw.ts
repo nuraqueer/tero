@@ -28,6 +28,13 @@ export const sw: Messages = {
   'lock.passphrase.hint': 'Angalau herufi {count}',
   'setup.passcode.bodyWeb':
     'Kwenye kivinjari, tumia kaulisiri ya angalau herufi 10, kama maneno machache unayoyajua wewe tu. Tero itaiomba kila unapoifungua.',
+  'restore.title': 'Rejesha kwa maneno yako 12',
+  'restore.body':
+    'Andika maneno 12 kutoka kwenye karatasi yako, kwa mpangilio, ukiacha nafasi kati ya kila neno.',
+  'restore.label': 'Maneno yako 12',
+  'restore.wrong': 'Maneno hayo hayafanyi kazi. Angalia tahajia na mpangilio.',
+  'lock.forgot': 'Umesahau? Tumia maneno yako 12',
+  'welcome.restore': 'Nina maneno yangu 12',
   'setup.passcode.title': 'Chagua nambari ya siri',
   'setup.passcode.body': 'Tarakimu sita. Tero itaiomba kila unapofungua programu.',
   'setup.passcode.repeat': 'Weka nambari yako ya siri tena',
