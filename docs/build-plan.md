@@ -43,8 +43,8 @@ All cryptography uses well-known, audited libraries.
 
 - **Seed, recovery phrase and signing:** the `@noble` and `@scure` libraries
   (BIP-39 12-word phrases, Ed25519 signatures, key derivation).
-- **End-to-end messaging:** the one big decision left. The first task of
-  milestone 3 is a short comparison of three proven options, then a pick:
+- **End-to-end messaging:** decided: OpenMLS (D39, [messaging-choice.md](messaging-choice.md)).
+  The three options compared:
 
   | Option | Notes |
   |---|---|

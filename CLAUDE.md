@@ -8,7 +8,7 @@ Read this first in every session. Keep it current: update "Where we are" and
 A global, invite-only platform where queer people help each other, built for
 places where being seen is dangerous. Inspired by the Tarot Club in _Lord of the
 Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
-[docs/README.md](docs/README.md) (decisions log D1–D38) and [docs/vision.md](docs/vision.md).
+[docs/README.md](docs/README.md) (decisions log D1–D39) and [docs/vision.md](docs/vision.md).
 
 ## Working rules
 
@@ -103,8 +103,8 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
    `apps/app/app.json`, `npx eas-cli@latest update --branch preview --platform all
 --environment preview --non-interactive` (newer eas-cli needs `--environment`), then remove the runtimeVersion. Needs `EXPO_TOKEN` (robot of the
    `pherus` Expo org) in the environment.
-3. M3: private chats. Start by comparing libsignal, vodozemac and OpenMLS
-   ([docs/build-plan.md](docs/build-plan.md)).
+3. M3: private chats use OpenMLS (D39, [docs/messaging-choice.md](docs/messaging-choice.md)).
+   On hold: the founder said to work on other things first. Needs an EAS test build.
 4. Open design items: pick a logo concept; match the You-screen tarot card to the
    founder's reference image (Pinterest is blocked here; ask for it as an attachment).
 
