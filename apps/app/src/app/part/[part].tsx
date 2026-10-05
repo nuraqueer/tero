@@ -6,9 +6,10 @@ import { isDirectoryPart } from '@tero/protocol';
 import { colors, fonts, radii, space } from '@tero/ui';
 import { Page } from '@/components/Page';
 import { ScreenHeader } from '@/components/ScreenHeader';
-import { Bone, BoneRow } from '@/components/Skeleton';
+import { BoneRow } from '@/components/Skeleton';
 import { Directory } from '@/components/Directory';
 import { Jobs } from '@/components/Jobs';
+import { Journeys } from '@/components/Journeys';
 import { Skills } from '@/components/Skills';
 import { Stories } from '@/components/Stories';
 import { MutualAid } from '@/components/MutualAid';
@@ -17,7 +18,7 @@ import { useLocale } from '@/lib/locale';
 import { allParts, partKind, type PartKind } from '@/lib/areas';
 
 /** Kinds of part that work for real; the rest still show placeholders. */
-const built: PartKind[] = ['directory', 'aid', 'jobs', 'stories', 'skills'];
+const built: PartKind[] = ['directory', 'aid', 'jobs', 'stories', 'skills', 'journeys'];
 
 export function generateStaticParams() {
   return allParts.map((part) => ({ part }));
@@ -39,7 +40,7 @@ export default function PartScreen() {
       {kind === 'stories' && <Stories />}
       {kind === 'skills' && <Skills />}
       {kind === 'showCard' && <ShowCard />}
-      {kind === 'journeys' && <Journey />}
+      {kind === 'journeys' && <Journeys />}
       {kind === 'list' && <BoneList />}
       {!built.includes(kind) && <SoonNote text={t('part.soon')} />}
     </Page>
@@ -81,24 +82,6 @@ function ShowCard() {
   );
 }
 
-function Journey() {
-  return (
-    <View style={styles.steps}>
-      {[1, 2, 3, 4, 5].map((n) => (
-        <View key={n} style={styles.step}>
-          <View style={[styles.stepDot, n === 1 && styles.stepDotOn]}>
-            <Text style={[styles.stepNumber, n === 1 && styles.stepNumberOn]}>{n}</Text>
-          </View>
-          <View style={styles.stepLines}>
-            <Bone width="55%" />
-            <Bone width="85%" height={12} />
-          </View>
-        </View>
-      ))}
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   lead: { fontFamily: fonts.body, fontSize: 16, lineHeight: 24, color: colors.textSecondary },
   note: {
@@ -132,19 +115,4 @@ const styles = StyleSheet.create({
   wordLabel: { fontFamily: fonts.card, fontSize: 12, letterSpacing: 2, color: colors.gold },
   word: { fontFamily: fonts.card, fontSize: 22, letterSpacing: 3, color: colors.oatLight },
   changes: { fontFamily: fonts.bodyMedium, fontSize: 14, color: colors.textSecondary },
-  steps: { marginTop: space.lg, gap: space.md },
-  step: { flexDirection: 'row', alignItems: 'center', gap: space.md },
-  stepDot: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1.5,
-    borderColor: colors.slate,
-  },
-  stepDotOn: { backgroundColor: colors.slate },
-  stepNumber: { fontFamily: fonts.bodySemibold, fontSize: 14, color: colors.slate },
-  stepNumberOn: { color: colors.ivory },
-  stepLines: { flex: 1, gap: space.sm },
 });

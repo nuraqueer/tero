@@ -113,4 +113,10 @@ export class RegistryObject extends DurableObject<Env> {
   removeSkill(did: string, id: string) {
     return this.registry.skills.remove(did, id);
   }
+  getJourneys(did: string) {
+    return this.registry.journeys.get(did);
+  }
+  saveJourneys(did: string, box: string, version: number) {
+    return this.registry.journeys.save(did, box, version, Date.now());
+  }
 }

@@ -5,3 +5,4 @@ export * from './sign';
 export * from './vault';
 export { bytesToBase64Url, base64UrlToBytes, randomBytes } from './bytes';
 export * from './pseudonym';
+export * from './box';

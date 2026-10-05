@@ -537,3 +537,31 @@ export function isNewSkill(value: unknown): value is NewSkill {
     (v.kind !== 'resource' || v.link !== '')
   );
 }
+
+// Journeys: a member's private plans, sealed on their devices. The server keeps one
+// sealed box per member and cannot read it.
+
+/** The largest sealed box the server keeps (base64url characters). */
+export const journeyBoxLimit = 120_000;
+
+export type JourneyBoxResponse = {
+  /** Null until the member saves their first plan. */
+  box: string | null;
+  /** Goes up by one with each save; a save must name the version it replaces. */
+  version: number;
+};
+
+export type SaveJourneyBoxRequest = { box: string; version: number };
+
+export function isSaveJourneyBoxRequest(value: unknown): value is SaveJourneyBoxRequest {
+  const v = asObject(value);
+  return (
+    !!v &&
+    typeof v.box === 'string' &&
+    v.box.length > 0 &&
+    v.box.length <= journeyBoxLimit &&
+    /^[A-Za-z0-9_-]+$/.test(v.box) &&
+    Number.isInteger(v.version) &&
+    (v.version as number) >= 0
+  );
+}

@@ -12,6 +12,7 @@ import {
   isNewStory,
   isNewPlace,
   isPlaceId,
+  isSaveJourneyBoxRequest,
   isPostId,
   isSignInRequest,
   type ApiErrorCode,
@@ -75,6 +76,8 @@ export type RegistryApi = Async<
     | 'replySkill'
     | 'skillReplies'
     | 'removeSkill'
+    | 'getJourneys'
+    | 'saveJourneys'
   >
 >;
 
@@ -387,6 +390,24 @@ async function handleSignedIn(
     return result.ok ? noContent() : error(result.error, statusFor[result.error]!);
   }
 
+  if (path === '/api/journeys') {
+    if (method === 'GET') {
+      const result = await reg.getJourneys(did);
+      return result.ok
+        ? json({ box: result.box, version: result.version })
+        : error(result.error, 403);
+    }
+    if (method === 'PUT') {
+      const body = await readJson(request);
+      if (!isSaveJourneyBoxRequest(body)) return error('bad_request', 400);
+      const result = await reg.saveJourneys(did, body.box, body.version);
+      return result.ok
+        ? json({ version: result.version })
+        : error(result.error, statusFor[result.error]!);
+    }
+    return error('method_not_allowed', 405);
+  }
+
   return error('not_found', 404);
 }
 
@@ -406,7 +427,8 @@ async function handleApi(request: Request, path: string, env: Env): Promise<Resp
     path.startsWith('/api/aid') ||
     path.startsWith('/api/jobs') ||
     path.startsWith('/api/stories') ||
-    path.startsWith('/api/skills');
+    path.startsWith('/api/skills') ||
+    path === '/api/journeys';
   if (!known) return error('not_found', 404);
 
   // A short secret would make tokens guessable; refuse to run with one.

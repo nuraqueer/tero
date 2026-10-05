@@ -35,6 +35,8 @@ export type FullSession = {
   identity: Identity;
   /** Makes the tokens of this member's Tero cards. */
   cardSecret: Uint8Array;
+  /** Seals the member's journeys; never leaves the device. */
+  journeySecret: Uint8Array;
   connection: Connection;
   /** Null until the server has answered. */
   member: boolean | null;
@@ -168,6 +170,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         mode: 'full',
         identity,
         cardSecret: deriveSecret(seed, 'cards'),
+        journeySecret: deriveSecret(seed, 'journeys'),
         connection: 'connecting',
         member: null,
         sequence: null,

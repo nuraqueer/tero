@@ -8,6 +8,7 @@ import {
   isNewJob,
   isNewStory,
   isNewSkill,
+  isSaveJourneyBoxRequest,
   isNewPlace,
   isClaimCardRequest,
   isCreateCardRequest,
@@ -184,5 +185,16 @@ describe('isNewSkill', () => {
   it('needs a country when not online', () => {
     expect(isNewSkill({ ...skill, online: false })).toBe(false);
     expect(isNewSkill({ ...skill, online: false, country: 'TZ' })).toBe(true);
+  });
+});
+
+describe('isSaveJourneyBoxRequest', () => {
+  it('accepts a base64url box with a version', () =>
+    expect(isSaveJourneyBoxRequest({ box: 'abc_-123', version: 0 })).toBe(true));
+  it('refuses odd characters, huge boxes and bad versions', () => {
+    expect(isSaveJourneyBoxRequest({ box: 'a b', version: 0 })).toBe(false);
+    expect(isSaveJourneyBoxRequest({ box: 'a'.repeat(120_001), version: 0 })).toBe(false);
+    expect(isSaveJourneyBoxRequest({ box: 'abc', version: -1 })).toBe(false);
+    expect(isSaveJourneyBoxRequest({ box: 'abc', version: 1.5 })).toBe(false);
   });
 });

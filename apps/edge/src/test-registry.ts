@@ -50,6 +50,8 @@ export function testRegistry(founder?: string, clock = { now: Date.now() }) {
     replySkill: (did, id, note) => registry.skills.reply(did, id, note, clock.now),
     skillReplies: (did, id) => registry.skills.replies(did, id),
     removeSkill: (did, id) => registry.skills.remove(did, id),
+    getJourneys: (did) => registry.journeys.get(did),
+    saveJourneys: (did, box, version) => registry.journeys.save(did, box, version, clock.now),
   };
   const namespace = { idFromName: () => 'registry', get: () => api };
   return { registry, clock, REGISTRY: namespace as unknown as Env['REGISTRY'] };

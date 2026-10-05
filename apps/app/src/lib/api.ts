@@ -23,6 +23,7 @@ import {
   type NewPlace,
   type PlaceListResponse,
   type FounderSeatResponse,
+  type JourneyBoxResponse,
   type MeResponse,
   type SignInRequest,
   type SignInResponse,
@@ -139,6 +140,9 @@ export function authed(token: string) {
     skillReplies: async (id: string) =>
       (await request<AidRepliesResponse>(`/api/skills/${id}/replies`, 'GET', token)).replies,
     removeSkill: (id: string) => request<void>(`/api/skills/${id}`, 'DELETE', token),
+    getJourneys: () => request<JourneyBoxResponse>('/api/journeys', 'GET', token),
+    saveJourneys: (box: string, version: number) =>
+      request<{ version: number }>('/api/journeys', 'PUT', token, { box, version }),
   };
 }
 

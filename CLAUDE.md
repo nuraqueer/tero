@@ -171,14 +171,18 @@ my-card|roles` (re-exports of the shared screens). Phones keep `/lock` and the t
 - Skills are real (D46): `components/Skills.tsx`; server `apps/edge/src/skills.ts`
   (`SkillBoard`). API: `GET|POST /api/skills`, `GET|POST /api/skills/:id/replies`,
   `DELETE /api/skills/:id`. Resources need an http(s) link and take no replies.
+- Journeys are real (D47): `components/Journeys.tsx`, `lib/journeys.ts` (book model,
+  templates), sealed with `sealText`/`openText` (`packages/crypto/src/box.ts`) and
+  `session.journeySecret` (`deriveSecret(seed, 'journeys')`). API: `GET|PUT /api/journeys`
+  (one sealed box per member, version check, `apps/edge/src/journeys.ts`).
 - Testing member screens in a browser: the web sends the Fool to `/admin`, and a full page
   load locks. To reach `/part/...` locally, add a temporary `router.push` link on the admin
   page, export, test with Playwright (see founder setup steps), then revert before committing.
 
 ## Next
 
-1. Real features, one by one (founder): directory, mutual aid, jobs, stories and
-   skills done; next journeys. Each: protocol shape + registry table + routes +
+1. Real features, one by one (founder): all six Help parts are real (directory,
+   mutual aid, jobs, stories, skills, journeys). Each: protocol shape + registry table + routes +
    tests + screen, no placeholders.
 2. `EXPO_TOKEN` is in the environment (robot of the `pherus` Expo org). The founder pasted
    one in chat earlier; it should be rotated. Build the Compose, Circle and chat screens as
