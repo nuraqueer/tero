@@ -41,7 +41,9 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
 - Worker `tero` on the Pherus Cloudflare account. **One address only: `https://tero.pherus.org`.**
   workers.dev and preview URLs are disabled in `wrangler.jsonc`; smart placement is on.
 - Deploy: `cd apps/app && bunx expo export --platform web`, then
-  `cd apps/edge && bunx wrangler deploy` (needs `CLOUDFLARE_API_TOKEN`).
+  `cd apps/edge && bunx wrangler deploy` (needs `CLOUDFLARE_API_TOKEN`). The Pherus account id
+  is `153a8ed929a532d28a173e235ceda5c4`; on 2026-10-06 `CLOUDFLARE_ACCOUNT_ID` in the
+  environment held something else, so pass the id inline if deploy says code 7003.
 - Worker secrets/vars: `AUTH_SECRET` (signs challenges and sessions); optional
   `FOUNDER_DID` (restricts who may take the Fool's seat).
 - Members and cards live in the `RegistryObject` SQLite Durable Object.
@@ -59,9 +61,8 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   Unlocking accepts any length so older web vaults still open. Phones keep 6 digits.
 - The founder has claimed the Fool's seat (Sequence 0) on the web. Home shows a tarot
   card "0 · The Fool"; Tero cards show the inviter's card name under the QR code.
-- Phone app on Expo Go (2026-10-06, branch `preview`, group
-  `f88400a5-0244-49e7-8024-592a90f25631`, built from `b25e190`): iOS
-  `01a10b9d-3d67-75c0-80fa-20421aeeccd0`, Android `01a10b9d-3d67-75fe-a894-78fdcc7f754b`.
+- Phone app on Expo Go (2026-10-06, branch `preview`, built from `b035c25`): iOS
+  `01a10bcd-0562-72dd-941f-db82917ed206`, Android `01a10bcd-0562-741c-8d54-10363295212d`.
 - Restore with the 12 words (`src/app/restore.tsx`): from the welcome screen (new
   device) or the lock screen ("Forgot it?"). Same words give the same address.
   12 numbered boxes; paste in any layout (`arrangePhraseWords`: "1 onion 2 tomato",
