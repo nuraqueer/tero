@@ -1,15 +1,15 @@
-import type { Suit } from '@/components/SuitIcon';
+import type { Area } from '@/components/AreaIcon';
 
-/** What a part of a suit looks like inside. */
+/** What a part looks like inside. */
 export type PartKind =
   'directory' | 'aid' | 'jobs' | 'stories' | 'skills' | 'showCard' | 'journeys' | 'list';
 
-/** The parts of each suit, after the founder's Transspace structure (2026-10-06). */
-export const suitParts: Record<Suit, string[]> = {
-  cups: ['mentalHealth', 'listen', 'communities', 'stories'],
-  pentacles: ['jobs', 'aid', 'fundraisers'],
-  swords: ['safeSpaces', 'legal', 'travel', 'showCard'],
-  wands: ['providers', 'affirming', 'generalHealth', 'skills', 'journeys'],
+/** The parts of each area of help (after the founder's Transspace structure, 2026-10-06). */
+export const areaParts: Record<Area, string[]> = {
+  care: ['mentalHealth', 'listen', 'communities', 'stories'],
+  work: ['jobs', 'aid', 'fundraisers'],
+  safety: ['safeSpaces', 'legal', 'travel', 'showCard'],
+  health: ['providers', 'affirming', 'generalHealth', 'skills', 'journeys'],
 };
 
 export const partKind: Record<string, PartKind> = {
@@ -31,4 +31,4 @@ export const partKind: Record<string, PartKind> = {
   journeys: 'journeys',
 };
 
-export const allParts = Object.values(suitParts).flat();
+export const allParts = Object.values(areaParts).flat();

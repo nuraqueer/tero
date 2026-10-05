@@ -9,13 +9,13 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { Bone, BoneRow } from '@/components/Skeleton';
 import { SoonNote } from '@/components/SoonNote';
 import { useLocale } from '@/lib/locale';
-import { allParts, partKind } from '@/lib/suits';
+import { allParts, partKind } from '@/lib/areas';
 
 export function generateStaticParams() {
   return allParts.map((part) => ({ part }));
 }
 
-/** One part of a suit, laid out for what it holds, with placeholders until it's built. */
+/** One part of an area of help, laid out for what it holds, with placeholders until it's built. */
 export default function PartScreen() {
   const { t } = useLocale();
   const { part: param } = useLocalSearchParams<{ part: string }>();
@@ -23,8 +23,8 @@ export default function PartScreen() {
   const kind = partKind[part] ?? 'list';
   return (
     <Page>
-      <ScreenHeader title={t(`suit.part.${part}` as MessageKey)} />
-      <Text style={styles.lead}>{t(`suit.part.${part}.body` as MessageKey)}</Text>
+      <ScreenHeader title={t(`part.${part}` as MessageKey)} />
+      <Text style={styles.lead}>{t(`part.${part}.body` as MessageKey)}</Text>
       {kind === 'directory' && <Directory part={part} />}
       {kind === 'aid' && <MutualAid />}
       {kind === 'jobs' && <Jobs />}

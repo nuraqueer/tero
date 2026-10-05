@@ -32,7 +32,7 @@ Five tabs at the bottom:
 | **Gathering** | Your home: posts, live Spaces, news from your Circles |
 | **Circles** | Communities (see below) |
 | **Messages** | Private chats, iMessage-like, including "someone to talk to" and professionals |
-| **Suits** | Explore by suit: Cups, Pentacles, Swords, Wands (resources, jobs, legal, journeys) |
+| **Help** | Four plain areas: Support and care, Work and money, Safety and law, Health and growth (D41) |
 | **You** | Your card, your Sequence, wallet, safety settings |
 
 ### Circles (instead of Discord servers)
@@ -113,11 +113,12 @@ the screenshots used in the README are in [`docs/screens/`](screens).
 | Group | Screens |
 |---|---|
 | App | Lock, Gathering, Circle, Live Space, Messages, Suits, You, New post |
-| Inside the Suits | Support (Cups), Someone to talk to, Resources with Tero partner and not-aware places, Show my Tero card (Swords), Opportunities (Pentacles), Journey planner (Wands) |
+| Inside Help | Support, Someone to talk to, Resources with Tero partner and not-aware places, Show my Tero card, Opportunities, Journey planner |
 | Public website | Home, guide page |
 | Running Tero | Council dashboard, moderation dashboard |
 | Brand | Logo concepts: Tero inside a tarot card (not chosen yet) |
 
-Each suit has its own layout: Cups is calm and conversational, Swords is a
-directory, Pentacles mixes a showcase with lists, and Wands is a step-by-step
-timeline.
+Each part has its own layout: support is calm and conversational, safety is a
+directory, work mixes a showcase with lists, and journeys are a step-by-step
+timeline. The mockups still show the old suit names (Cups, Pentacles, Swords,
+Wands); the app uses the plain area names (D41).

@@ -3,21 +3,21 @@ import { router, type Href } from 'expo-router';
 import type { MessageKey } from '@tero/i18n';
 import { colors, fonts, radii, space } from '@tero/ui';
 import { Page } from '@/components/Page';
-import { SuitIcon, suits } from '@/components/SuitIcon';
+import { AreaIcon, areas } from '@/components/AreaIcon';
 import { TabHeader } from '@/components/TabHeader';
 import { useLocale } from '@/lib/locale';
-import { suitParts } from '@/lib/suits';
+import { areaParts } from '@/lib/areas';
 
-/** Help, in four kinds: each suit a short menu of what it holds. */
-export default function Suits() {
+/** Help, in four kinds: each area a short menu of what it holds. */
+export default function Help() {
   const { t } = useLocale();
   const quick: Array<{ title: MessageKey; body: MessageKey; href: Href; strong?: boolean }> = [
-    { title: 'suits.crisis.title', body: 'suits.crisis.body', href: '/crisis', strong: true },
-    { title: 'suits.map.title', body: 'suits.map.body', href: '/map' },
+    { title: 'help.crisis.title', body: 'help.crisis.body', href: '/crisis', strong: true },
+    { title: 'help.map.title', body: 'help.map.body', href: '/map' },
   ];
   return (
     <Page tabs>
-      <TabHeader title={t('tabs.suits')} right={t('suits.tagline')} />
+      <TabHeader title={t('tabs.help')} right={t('help.tagline')} />
       <View style={styles.quick}>
         {quick.map((q) => (
           <Pressable
@@ -37,19 +37,18 @@ export default function Suits() {
           </Pressable>
         ))}
       </View>
-      {suits.map((suit) => (
-        <View key={suit} style={styles.group}>
+      {areas.map((area) => (
+        <View key={area} style={styles.group}>
           <View style={styles.groupHead}>
             <View style={styles.icon}>
-              <SuitIcon suit={suit} size={20} color={colors.clayText} />
+              <AreaIcon area={area} size={20} color={colors.clayText} />
             </View>
             <Text style={styles.groupTitle} accessibilityRole="header">
-              {t(`suit.${suit}` as MessageKey)}
+              {t(`area.${area}` as MessageKey)}
             </Text>
-            <Text style={styles.groupSub}>{t(`suit.${suit}.sub` as MessageKey)}</Text>
           </View>
           <View style={styles.list}>
-            {suitParts[suit].map((part, i) => (
+            {areaParts[area].map((part, i) => (
               <Pressable
                 key={part}
                 accessibilityRole="button"
@@ -61,8 +60,8 @@ export default function Suits() {
                 ]}
               >
                 <View style={styles.rowText}>
-                  <Text style={styles.rowTitle}>{t(`suit.part.${part}` as MessageKey)}</Text>
-                  <Text style={styles.rowBody}>{t(`suit.part.${part}.body` as MessageKey)}</Text>
+                  <Text style={styles.rowTitle}>{t(`part.${part}` as MessageKey)}</Text>
+                  <Text style={styles.rowBody}>{t(`part.${part}.body` as MessageKey)}</Text>
                 </View>
                 <Text style={styles.chevron}>›</Text>
               </Pressable>
@@ -102,13 +101,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.oatLight,
   },
   groupTitle: { fontFamily: fonts.display, fontSize: 22, color: colors.slate },
-  groupSub: {
-    flex: 1,
-    textAlign: 'right',
-    fontFamily: fonts.body,
-    fontSize: 13,
-    color: colors.textSecondary,
-  },
   list: {
     borderRadius: radii.md,
     backgroundColor: colors.paper,

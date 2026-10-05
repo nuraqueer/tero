@@ -4,7 +4,7 @@ import { locales, localeNames, type MessageKey } from '@tero/i18n';
 import { colors, fonts, radii, space } from '@tero/ui';
 import { CardMark } from '@/components/CardMark';
 import { MemberCard } from '@/components/MemberCard';
-import { SuitIcon, suits } from '@/components/SuitIcon';
+import { AreaIcon, areas } from '@/components/AreaIcon';
 import { Wordmark } from '@/components/Wordmark';
 import { guides } from '@/guides';
 import { useLocale } from '@/lib/locale';
@@ -98,19 +98,19 @@ export function PublicHome({ onFounder }: { onFounder: () => void }) {
         </View>
       </View>
 
-      {/* The four suits. */}
+      {/* The four areas of help. */}
       <View style={[styles.wrap, styles.section]}>
         <Text style={styles.h2} accessibilityRole="header">
-          {t('public.suits.title')}
+          {t('public.areas.title')}
         </Text>
         <View style={styles.grid}>
-          {suits.map((suit) => (
-            <View key={suit} style={styles.suit}>
-              <View style={styles.suitIcon}>
-                <SuitIcon suit={suit} size={26} color={colors.clayText} />
+          {areas.map((area) => (
+            <View key={area} style={styles.area}>
+              <View style={styles.areaIcon}>
+                <AreaIcon area={area} size={26} color={colors.clayText} />
               </View>
-              <Text style={styles.suitName}>{t(`suit.${suit}` as MessageKey)}</Text>
-              <Text style={styles.body}>{t(`public.suit.${suit}` as MessageKey)}</Text>
+              <Text style={styles.areaName}>{t(`area.${area}` as MessageKey)}</Text>
+              <Text style={styles.body}>{t(`public.area.${area}` as MessageKey)}</Text>
             </View>
           ))}
         </View>
@@ -134,8 +134,8 @@ export function PublicHome({ onFounder }: { onFounder: () => void }) {
               }
               style={({ pressed }) => [styles.guide, pressed && styles.pressed]}
             >
-              <Text style={styles.guideSuit}>
-                {t(`suit.${guide.suit}` as MessageKey).toUpperCase()}
+              <Text style={styles.guideArea}>
+                {t(`area.${guide.area}` as MessageKey).toUpperCase()}
                 {guide.text ? '' : ` · ${t('guides.writing').toUpperCase()}`}
               </Text>
               <Text style={styles.guideTitle}>{t(`guide.${guide.key}.title` as MessageKey)}</Text>
@@ -179,7 +179,7 @@ export function PublicHome({ onFounder }: { onFounder: () => void }) {
           {[1, 2, 3].map((n) => (
             <View key={n} style={styles.step}>
               <Text style={styles.stepNumber}>{['I', 'II', 'III'][n - 1]}</Text>
-              <Text style={styles.suitName}>{t(`public.join.${n}.title` as MessageKey)}</Text>
+              <Text style={styles.areaName}>{t(`public.join.${n}.title` as MessageKey)}</Text>
               <Text style={styles.body}>{t(`public.join.${n}.body` as MessageKey)}</Text>
             </View>
           ))}
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   h2: { fontFamily: fonts.display, fontSize: 32, lineHeight: 38, color: colors.slate },
   note: { fontFamily: fonts.body, fontSize: 14, color: colors.textSecondary },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: space.md },
-  suit: {
+  area: {
     flexGrow: 1,
     flexBasis: 220,
     gap: space.sm,
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.hairline,
   },
-  suitIcon: {
+  areaIcon: {
     width: 44,
     height: 44,
     borderRadius: 22,
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: colors.oatLight,
   },
-  suitName: { fontFamily: fonts.bodySemibold, fontSize: 18, color: colors.slate },
+  areaName: { fontFamily: fonts.bodySemibold, fontSize: 18, color: colors.slate },
   body: { fontFamily: fonts.body, fontSize: 15, lineHeight: 23, color: colors.textSecondary },
   guide: {
     flexGrow: 1,
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.hairline,
   },
-  guideSuit: {
+  guideArea: {
     fontFamily: fonts.bodySemibold,
     fontSize: 11,
     letterSpacing: 1,

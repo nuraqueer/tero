@@ -28,7 +28,7 @@ export default function GuidePage() {
   return (
     <PublicPage>
       <Text style={styles.kicker}>
-        {t(`suit.${guide.suit}` as MessageKey).toUpperCase()} · {t('guides.guide').toUpperCase()}
+        {t(`area.${guide.area}` as MessageKey).toUpperCase()} · {t('guides.guide').toUpperCase()}
       </Text>
       <Text style={styles.title} accessibilityRole="header">
         {t(`guide.${guide.key}.title` as MessageKey)}

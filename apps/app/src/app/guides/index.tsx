@@ -24,8 +24,8 @@ export default function Guides() {
             }
             style={({ pressed }) => [styles.item, pressed && styles.pressed]}
           >
-            <Text style={styles.suit}>
-              {t(`suit.${guide.suit}` as MessageKey).toUpperCase()}
+            <Text style={styles.area}>
+              {t(`area.${guide.area}` as MessageKey).toUpperCase()}
               {guide.text ? '' : ` · ${t('guides.writing').toUpperCase()}`}
             </Text>
             <Text style={styles.itemTitle}>{t(`guide.${guide.key}.title` as MessageKey)}</Text>
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     borderColor: colors.hairline,
   },
   pressed: { opacity: 0.8 },
-  suit: { fontFamily: fonts.bodySemibold, fontSize: 11, letterSpacing: 1, color: colors.clayText },
+  area: { fontFamily: fonts.bodySemibold, fontSize: 11, letterSpacing: 1, color: colors.clayText },
   itemTitle: { fontFamily: fonts.display, fontSize: 22, lineHeight: 28, color: colors.slate },
   itemBody: { fontFamily: fonts.body, fontSize: 15, lineHeight: 22, color: colors.textSecondary },
 });

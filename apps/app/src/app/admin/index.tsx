@@ -158,7 +158,7 @@ export default function Console() {
           <View key={heading} style={[styles.panel, styles.cell]}>
             <View style={styles.cellHead}>
               <Text style={styles.panelTitle}>{t(heading)}</Text>
-              <Text style={styles.soon}>{t('suit.soon')}</Text>
+              <Text style={styles.soon}>{t('common.soon')}</Text>
             </View>
             <Text style={styles.panelBody}>{t(body)}</Text>
           </View>

@@ -1,6 +1,6 @@
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 
-export type TabName = 'gathering' | 'circles' | 'messages' | 'suits' | 'you';
+export type TabName = 'gathering' | 'circles' | 'messages' | 'help' | 'you';
 
 /** The tab bar icons from the mockups: thin lines that take the tab's colour. */
 export function TabIcon({ name, color }: { name: TabName; color: string }) {
@@ -30,7 +30,7 @@ export function TabIcon({ name, color }: { name: TabName; color: string }) {
       {name === 'messages' && (
         <Path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H10l-5 4V6a1 1 0 0 1 1-1z" {...line} />
       )}
-      {name === 'suits' && (
+      {name === 'help' && (
         <>
           <Rect x={4} y={4} width={7} height={7} rx={2} {...line} />
           <Rect x={13} y={4} width={7} height={7} rx={2} {...line} />

@@ -12,14 +12,14 @@ export default function Crisis() {
   const { t } = useLocale();
   return (
     <Page>
-      <ScreenHeader title={t('suits.crisis.title')} />
+      <ScreenHeader title={t('help.crisis.title')} />
       <View style={styles.panel}>
         <Text style={styles.title}>{t('crisis.now.title')}</Text>
         <Text style={styles.body}>{t('crisis.now.body')}</Text>
       </View>
       <View style={styles.actions}>
         <Button
-          label={t('suit.part.listen')}
+          label={t('part.listen')}
           onPress={() => router.push({ pathname: '/part/[part]', params: { part: 'listen' } })}
         />
         <Button

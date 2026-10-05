@@ -11,7 +11,7 @@ export default function MapScreen() {
   const { t } = useLocale();
   return (
     <Page>
-      <ScreenHeader title={t('suits.map.title')} />
+      <ScreenHeader title={t('help.map.title')} />
       <View style={styles.search}>
         <Text style={styles.searchText}>{t('map.search')}</Text>
       </View>

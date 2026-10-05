@@ -74,7 +74,7 @@ export function WebShell({ children }: { children: ReactNode }) {
         <Text style={[styles.itemText, on && styles.itemTextOn, !item.href && styles.itemSoon]}>
           {item.label}
         </Text>
-        {!item.href && <Text style={styles.soon}>{t('suit.soon')}</Text>}
+        {!item.href && <Text style={styles.soon}>{t('common.soon')}</Text>}
       </Pressable>
     );
   };

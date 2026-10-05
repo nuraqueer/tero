@@ -8,14 +8,14 @@ import { GlassBar } from '@/components/GlassBar';
 import { TabIcon, type TabName } from '@/components/TabIcons';
 import { useLocale } from '@/lib/locale';
 
-const tabs: TabName[] = ['gathering', 'circles', 'messages', 'suits', 'you'];
+const tabs: TabName[] = ['gathering', 'circles', 'messages', 'help', 'you'];
 
 /** The system's own symbols for the native tab bar: SF Symbols on iOS, Material on Android. */
 const nativeIcons = {
   gathering: { sf: 'person.3', md: 'groups' },
   circles: { sf: 'circle.circle', md: 'join' },
   messages: { sf: 'message', md: 'chat_bubble' },
-  suits: { sf: 'square.grid.2x2', md: 'grid_view' },
+  help: { sf: 'square.grid.2x2', md: 'grid_view' },
   you: { sf: 'person.text.rectangle', md: 'badge' },
 } as const;
 

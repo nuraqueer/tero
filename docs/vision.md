@@ -7,14 +7,16 @@ medically, legally and financially.
 It's built like the Tarot Club: members gather "above the gray fog",
 known by their card and pseudonym, not by their real identity.
 
-## The four suits (sections of the app)
+## The four areas of help (the Help tab)
 
-| Suit | Area | Examples |
-|---|---|---|
-| **Cups** | Community and care | Spaces (live audio rooms like X Spaces), group chats, posts (like X), meetings, someone to talk to (anonymous emotional support), therapy, marriage and relationship counselling |
-| **Pentacles** | Money and livelihood | Jobs, opportunities, queer-owned businesses (help them trend), housing, mutual aid and donations |
-| **Swords** | Law and safety | Lawyers, legal help, wills the community helps uphold, safety guides, emergency help |
-| **Wands** | Growth and journeys | Learning skills, HRT information, surgery planning (top, bottom and others), travel plans, estimates, people travelling who can bring things |
+Plain names, no tarot suits (D41).
+
+| Area | Examples |
+|---|---|
+| **Support and care** | Spaces (live audio rooms like X Spaces), group chats, posts (like X), meetings, someone to talk to (anonymous emotional support), therapy, marriage and relationship counselling |
+| **Work and money** | Jobs, opportunities, queer-owned businesses (help them trend), housing, mutual aid and donations |
+| **Safety and law** | Lawyers, legal help, wills the community helps uphold, safety guides, emergency help |
+| **Health and growth** | Learning skills, HRT information, surgery planning (top, bottom and others), travel plans, estimates, people travelling who can bring things |
 
 ## Access levels
 
@@ -42,7 +44,7 @@ known by their card and pseudonym, not by their real identity.
 
 1. **Foundation:** self-held identity keys and recovery, Tero cards, Sequences, encrypted vault, decoy passcode and duress alert, ephemeral chats, community spaces and chat, moderation, public resources, the four languages.
 2. **Professionals:** verification flows and council voting, consultations.
-3. **Pentacles:** jobs, skills, businesses, housing, wallet.
+3. **Work and money:** jobs, skills, businesses, housing, wallet.
 4. **Journeys:** HRT and travel requests, surgery planning.
 5. **Legal:** wills, lawyer networks, hospital partnerships, Tor route, mesh.
 

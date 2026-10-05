@@ -7,7 +7,7 @@ export function SoonNote({ text }: { text: string }) {
   const { t } = useLocale();
   return (
     <View style={styles.wrap}>
-      <Text style={styles.tag}>{t('suit.soon').toUpperCase()}</Text>
+      <Text style={styles.tag}>{t('common.soon').toUpperCase()}</Text>
       <Text style={styles.text}>{text}</Text>
     </View>
   );
