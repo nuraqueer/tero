@@ -35,6 +35,7 @@ export const sw: Messages = {
   'restore.wrong': 'Maneno hayo hayafanyi kazi. Angalia tahajia na mpangilio.',
   'lock.forgot': 'Umesahau? Tumia maneno yako 12',
   'welcome.restore': 'Nina maneno yangu 12',
+  'card.fool': 'The Fool',
   'setup.passcode.title': 'Chagua nambari ya siri',
   'setup.passcode.body': 'Tarakimu sita. Tero itaiomba kila unapofungua programu.',
   'setup.passcode.repeat': 'Weka nambari yako ya siri tena',

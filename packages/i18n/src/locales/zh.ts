@@ -34,6 +34,7 @@ export const zh: Messages = {
   'restore.wrong': '这些词无法使用。请检查拼写和顺序。',
   'lock.forgot': '忘记了？使用你的 12 个词',
   'welcome.restore': '我有我的 12 个词',
+  'card.fool': '愚者',
   'setup.passcode.title': '设置密码',
   'setup.passcode.body': '六位数字。每次打开应用时，Tero 都会要求输入。',
   'setup.passcode.repeat': '再次输入密码',

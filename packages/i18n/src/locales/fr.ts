@@ -35,6 +35,7 @@ export const fr: Messages = {
   'restore.wrong': "Ces mots ne fonctionnent pas. Vérifie l'orthographe et l'ordre.",
   'lock.forgot': 'Oublié ? Utilise tes 12 mots',
   'welcome.restore': "J'ai mes 12 mots",
+  'card.fool': 'Le Mat',
   'setup.passcode.title': 'Choisis un code',
   'setup.passcode.body': "Six chiffres. Tero te le demande à chaque ouverture de l'application.",
   'setup.passcode.repeat': 'Saisis ton code à nouveau',

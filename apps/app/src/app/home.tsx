@@ -7,6 +7,7 @@ import { colors, fonts, radii, space } from '@tero/ui';
 import { AppHeader } from '@/components/AppHeader';
 import { Button } from '@/components/Button';
 import { Code } from '@/components/Code';
+import { MemberCard } from '@/components/MemberCard';
 import { Page } from '@/components/Page';
 import { useLocale } from '@/lib/locale';
 import { useFullSession } from '@/lib/session';
@@ -83,6 +84,11 @@ export default function Home() {
   return (
     <Page>
       <AppHeader />
+      {member && session.sequence !== null && (
+        <View style={styles.memberCard}>
+          <MemberCard sequence={session.sequence} />
+        </View>
+      )}
       <View style={styles.panel}>
         <Text style={styles.label}>{t('home.address')}</Text>
         <Text style={styles.address} selectable>
@@ -147,6 +153,7 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
+  memberCard: { marginBottom: space.xl },
   panel: {
     backgroundColor: colors.paper,
     borderRadius: radii.lg,
