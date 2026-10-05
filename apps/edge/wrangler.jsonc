@@ -13,6 +13,7 @@
     "bindings": [{ "name": "REGISTRY", "class_name": "RegistryObject" }],
   },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["RegistryObject"] }],
-  // The custom domain is added at the first deploy:
-  // "routes": [{ "pattern": "tero.pherus.org", "custom_domain": true }]
+  "routes": [{ "pattern": "tero.pherus.org", "custom_domain": true }],
+  // Kept on while phone previews still point at tero.pherus.workers.dev.
+  "workers_dev": true,
 }
