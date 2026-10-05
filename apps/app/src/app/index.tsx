@@ -13,7 +13,12 @@ export default function Welcome() {
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.page}>
         <View style={styles.brand}>
-          <CardMark height={68} />
+          {/* The founder makes the first keys without a card: a long press on the mark.
+              Being the Fool is decided only by the server (FOUNDER_DID), so anyone else
+              who finds this just ends up with keys that aren't a member. */}
+          <Pressable onLongPress={() => router.push('/setup')} delayLongPress={1500}>
+            <CardMark height={68} />
+          </Pressable>
           <Text style={styles.wordmark} accessibilityRole="header">
             Tero
           </Text>

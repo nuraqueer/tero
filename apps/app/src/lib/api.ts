@@ -15,14 +15,16 @@ import {
   type SignInResponse,
 } from '@tero/protocol';
 
-// The web app is served by the same Worker as the API. Phones talk to it directly.
-const base =
-  process.env.EXPO_PUBLIC_API_URL ?? (Platform.OS === 'web' ? '' : 'https://tero.pherus.org');
+/** The Worker phones talk to. tero.pherus.org once the custom domain is set up. */
+const defaultServer = 'https://tero.pherus.workers.dev';
 
-/** Where card links point: this site on the web, tero.pherus.org from the phone apps. */
+// The web app is served by the same Worker as the API. Phones talk to it directly.
+const base = process.env.EXPO_PUBLIC_API_URL ?? (Platform.OS === 'web' ? '' : defaultServer);
+
+/** Where card links point: this site on the web, the default server from the phone apps. */
 export function publicOrigin(): string {
   if (Platform.OS === 'web' && typeof window !== 'undefined') return window.location.origin;
-  return process.env.EXPO_PUBLIC_API_URL ?? 'https://tero.pherus.org';
+  return process.env.EXPO_PUBLIC_API_URL ?? defaultServer;
 }
 
 export class ApiError extends Error {
