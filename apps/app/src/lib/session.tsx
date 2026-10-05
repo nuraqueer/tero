@@ -137,8 +137,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const openFull = useCallback(
-    async (phrase: string, join: Join | null = null, founder = false) => {
-      const seed = await phraseToSeed(phrase);
+    async (seed: Uint8Array, join: Join | null = null, founder = false) => {
       const identity = identityFromSeed(seed);
       const current = ++openCount.current;
       token.current = null;
@@ -177,8 +176,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const finishSetup = useCallback(
     async (phrase: string, passcode: string, decoyPasscode: string, founder = false) => {
       const join = state.status === 'new' ? state.join : null;
-      await vault.saveNewVault(phrase, passcode, decoyPasscode);
-      await openFull(phrase, join, founder && !join);
+      const seed = await phraseToSeed(phrase);
+      await vault.saveNewVault(phrase, seed, passcode, decoyPasscode);
+      await openFull(seed, join, founder && !join);
     },
     [openFull, state],
   );
@@ -194,7 +194,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     async (passcode: string) => {
       const result = await vault.unlock(passcode);
       if (result.ok) {
-        if (result.value.mode === 'full') await openFull(result.value.phrase);
+        if (result.value.mode === 'full') await openFull(result.value.seed);
         else openBasic();
       }
       return result;

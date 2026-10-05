@@ -3,6 +3,7 @@ import {
   bytesToBase64Url,
   createVault,
   openVault,
+  phraseToSeed,
   randomBytes,
   sealSlot,
 } from '@tero/crypto';
@@ -14,10 +15,14 @@ const keys = {
   failures: 'tero.failures',
 } as const;
 
-/** What each vault slot holds. The basic slot holds nothing personal. */
-type Payload = { v: 1; mode: 'full'; phrase: string } | { v: 1; mode: 'basic' };
+/**
+ * What each vault slot holds. The basic slot holds nothing personal. The full slot keeps
+ * the seed beside the phrase: making it from the phrase takes seconds on a phone.
+ * Vaults made before the seed was kept have none until their next unlock.
+ */
+type Payload = { v: 1; mode: 'full'; phrase: string; seed?: string } | { v: 1; mode: 'basic' };
 
-export type Unlocked = { mode: 'full'; phrase: string } | { mode: 'basic' };
+export type Unlocked = { mode: 'full'; phrase: string; seed: Uint8Array } | { mode: 'basic' };
 
 export type UnlockResult = { ok: true; value: Unlocked } | { ok: false; waitMs: number };
 
@@ -33,10 +38,15 @@ export async function hasVault(): Promise<boolean> {
 }
 
 /** Saves a new vault: the real slot holds the phrase, the decoy slot opens the basic view. */
-export async function saveNewVault(phrase: string, passcode: string, decoyPasscode: string) {
+export async function saveNewVault(
+  phrase: string,
+  seed: Uint8Array,
+  passcode: string,
+  decoyPasscode: string,
+) {
   if (passcode === decoyPasscode) throw new Error('decoy must differ from passcode');
   const device = randomBytes(32);
-  const full: Payload = { v: 1, mode: 'full', phrase };
+  const full: Payload = { v: 1, mode: 'full', phrase, seed: bytesToBase64Url(seed) };
   const basic: Payload = { v: 1, mode: 'basic' };
   const { vault, slot } = await createVault(passcode, JSON.stringify(full), device);
   const withDecoy = await sealSlot(
@@ -80,12 +90,23 @@ export async function unlock(passcode: string, now = Date.now()): Promise<Unlock
   const [vault, deviceText] = await Promise.all([getItem(keys.vault), getItem(keys.device)]);
   const device = deviceText ? base64UrlToBytes(deviceText) : null;
   const opened = vault && device ? await openVault(vault, passcode, device) : null;
-  if (!opened) return { ok: false, waitMs };
+  if (!opened || !vault || !device) return { ok: false, waitMs };
 
   await deleteItem(keys.failures);
   const payload = JSON.parse(opened.payload) as Payload;
-  return {
-    ok: true,
-    value: payload.mode === 'full' ? { mode: 'full', phrase: payload.phrase } : { mode: 'basic' },
-  };
+  if (payload.mode === 'basic') return { ok: true, value: { mode: 'basic' } };
+  const kept = payload.seed ? base64UrlToBytes(payload.seed) : null;
+  if (kept) return { ok: true, value: { mode: 'full', phrase: payload.phrase, seed: kept } };
+  // An older vault: make the seed once and keep it, so later unlocks are quick.
+  const seed = await phraseToSeed(payload.phrase);
+  const upgraded: Payload = { ...payload, seed: bytesToBase64Url(seed) };
+  try {
+    await setItem(
+      keys.vault,
+      await sealSlot(vault, opened.slot, passcode, JSON.stringify(upgraded), device),
+    );
+  } catch {
+    // Still opens; the seed is made again next time.
+  }
+  return { ok: true, value: { mode: 'full', phrase: payload.phrase, seed } };
 }

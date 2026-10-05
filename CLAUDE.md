@@ -50,7 +50,7 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   Phones talk to `EXPO_PUBLIC_API_URL`, defaulting to tero.pherus.org.
 - Mockups canvas: https://claude.ai/artifact/TpPoDJbAyYFAFGKgxdzqYd
 
-## Where we are (2026-10-05)
+## Where we are (2026-10-06)
 
 - M0 foundations, M1 identity and lock, M2 Tero cards: done and deployed.
 - Not for real members yet: nothing goes to real people before M7's security audit.
@@ -71,15 +71,21 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   `POST /api/founder` after setup becomes Sequence 0; then the seat is closed for good.
   `FOUNDER_DID` is optional and, if set, restricts who may take the seat.
 
+- Save the 12 words as a .txt file: "Save as a file" on the setup phrase screen and on
+  "Recovery words" (home), which asks for the passcode again; the decoy passcode there
+  switches to the plain view. File format `phraseFileText` (numbered lines, no digits in
+  the note) pastes straight into restore. Web: Blob download; phones: share sheet.
+- Card names: each Tero card draws a random Major Arcana (1–21) when made: never the
+  Fool (0, the founder's alone) and never the giver's own card. The newcomer takes it on
+  approval (`members.arcana`, `cards.arcana`; columns added on start for old rows). Names
+  are not unique across members. Swahili arcana names are still English.
+- Faster unlock on phones: the vault keeps the BIP-39 seed beside the phrase, so unlock
+  skips PBKDF2 (old vaults are upgraded on their next unlock). scrypt (2^14) still runs
+  in JS on Hermes, a few seconds; lowering it on phones is a founder decision.
+
 ## Next
 
-1. **Save the 12 words as a .txt file** (founder asked): a "Save as a file" button on the
-   setup phrase screen, and a "Recovery words" screen for signed-in members that asks
-   for the passcode again before showing or saving the words. Numbered lines
-   ("1. word") so the file pastes straight into restore. Show a clear warning: anyone
-   with the file can take the account; keep it off shared or cloud-synced storage.
-   Web: Blob download. Phones: `expo-file-system` + `expo-sharing` (add with
-   `EXPO_OFFLINE=1 bunx expo install`).
+1. **Design work** (founder: "start the actual designs", move fast).
 2. After app changes, republish Expo Go: temporary `runtimeVersion: exposdk:57.0.0` in
    `apps/app/app.json`, `npx eas-cli@latest update --branch preview --platform all
 --non-interactive`, then remove the runtimeVersion. Needs `EXPO_TOKEN` (robot of the
