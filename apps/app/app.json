@@ -31,6 +31,14 @@
       "expo-font",
       "expo-localization",
       [
+        "expo-camera",
+        {
+          "cameraPermission": "Tero uses the camera only to scan Tero cards.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "backgroundColor": "#FAF9F5",

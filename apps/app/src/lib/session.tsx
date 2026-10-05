@@ -9,44 +9,78 @@ import {
   type ReactNode,
 } from 'react';
 import { AppState } from 'react-native';
-import { identityFromSeed, phraseToSeed, type Identity } from '@tero/crypto';
-import { signIn } from './api';
+import {
+  cardCode,
+  createPhrase,
+  deriveSecret,
+  identityFromSeed,
+  phraseToSeed,
+  type Identity,
+} from '@tero/crypto';
+import { ApiError, authed, signIn, type Api } from './api';
 import * as vault from './vault';
 
 export type Connection = 'connecting' | 'connected' | 'offline';
 
+/** A card this phone has claimed, while the newcomer sets up and waits for approval. */
+export type Join = { phrase: string; cardId: string; code: string };
+
+export type FullSession = {
+  status: 'open';
+  mode: 'full';
+  identity: Identity;
+  /** Makes the tokens of this member's Tero cards. */
+  cardSecret: Uint8Array;
+  connection: Connection;
+  /** Null until the server has answered. */
+  member: boolean | null;
+  sequence: number | null;
+  join: Join | null;
+};
+
 export type SessionState =
   | { status: 'loading' }
   /** No vault on this phone yet. */
-  | { status: 'new' }
+  | { status: 'new'; join: Join | null }
   | { status: 'locked' }
-  | { status: 'open'; mode: 'full'; identity: Identity; connection: Connection }
+  | FullSession
   /** Opened with the decoy passcode. Holds nothing personal. */
   | { status: 'open'; mode: 'basic' };
 
+export type JoinResult = { ok: true } | { ok: false; error: ApiError['code'] };
+
 type SessionValue = {
   state: SessionState;
+  /** Claims a scanned card with new keys made on this phone. */
+  startJoin: (cardToken: string) => Promise<JoinResult>;
   finishSetup: (phrase: string, passcode: string, decoyPasscode: string) => Promise<void>;
   unlock: (passcode: string) => Promise<vault.UnlockResult>;
   lock: () => void;
+  /** The signed-in API, or null while offline or locked. */
+  api: () => Api | null;
+  /** Asks the server again whether this key is a member. */
+  refreshMember: () => Promise<void>;
 };
 
 const SessionContext = createContext<SessionValue | null>(null);
 
 export function SessionProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<SessionState>({ status: 'loading' });
-  // Each open gets a number, so a sign-in that finishes after the app locked is ignored.
+  // Each open gets a number, so an answer that arrives after the app locked is ignored.
   const openCount = useRef(0);
+  // The session token lives only in memory and is dropped on lock.
+  const token = useRef<string | null>(null);
 
   useEffect(() => {
     vault.hasVault().then(
-      (exists) => setState({ status: exists ? 'locked' : 'new' }),
-      () => setState({ status: 'new' }),
+      (exists) => setState(exists ? { status: 'locked' } : { status: 'new', join: null }),
+      () => setState({ status: 'new', join: null }),
     );
   }, []);
 
   const lock = useCallback(() => {
     openCount.current++;
+    token.current = null;
     setState((s) => (s.status === 'open' ? { status: 'locked' } : s));
   }, []);
 
@@ -58,25 +92,67 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     return () => sub.remove();
   }, [lock]);
 
-  const openFull = useCallback(async (phrase: string) => {
-    const identity = identityFromSeed(await phraseToSeed(phrase));
-    const current = ++openCount.current;
-    setState({ status: 'open', mode: 'full', identity, connection: 'connecting' });
-    signIn(identity).then(
-      () => current === openCount.current && setConnection('connected'),
-      () => current === openCount.current && setConnection('offline'),
-    );
+  const updateFull = (current: number, change: Partial<FullSession>) => {
+    if (current !== openCount.current) return;
+    setState((s) => (s.status === 'open' && s.mode === 'full' ? { ...s, ...change } : s));
+  };
+
+  const connect = useCallback(async (identity: Identity, current: number) => {
+    try {
+      const session = await signIn(identity);
+      if (current !== openCount.current) return;
+      token.current = session.token;
+      const me = await authed(session.token).me();
+      updateFull(current, { connection: 'connected', member: me.member, sequence: me.sequence });
+    } catch {
+      updateFull(current, { connection: 'offline' });
+    }
   }, []);
 
-  const setConnection = (connection: Connection) =>
-    setState((s) => (s.status === 'open' && s.mode === 'full' ? { ...s, connection } : s));
+  const openFull = useCallback(
+    async (phrase: string, join: Join | null = null) => {
+      const seed = await phraseToSeed(phrase);
+      const identity = identityFromSeed(seed);
+      const current = ++openCount.current;
+      token.current = null;
+      setState({
+        status: 'open',
+        mode: 'full',
+        identity,
+        cardSecret: deriveSecret(seed, 'cards'),
+        connection: 'connecting',
+        member: null,
+        sequence: null,
+        join,
+      });
+      void connect(identity, current);
+    },
+    [connect],
+  );
+
+  const startJoin = useCallback(async (cardToken: string): Promise<JoinResult> => {
+    const phrase = createPhrase();
+    const identity = identityFromSeed(await phraseToSeed(phrase));
+    try {
+      const session = await signIn(identity);
+      const { id } = await authed(session.token).claimCard(cardToken);
+      setState({
+        status: 'new',
+        join: { phrase, cardId: id, code: cardCode(id, identity.did) },
+      });
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e instanceof ApiError ? e.code : 'network' };
+    }
+  }, []);
 
   const finishSetup = useCallback(
     async (phrase: string, passcode: string, decoyPasscode: string) => {
+      const join = state.status === 'new' ? state.join : null;
       await vault.saveNewVault(phrase, passcode, decoyPasscode);
-      await openFull(phrase);
+      await openFull(phrase, join);
     },
-    [openFull],
+    [openFull, state],
   );
 
   const unlock = useCallback(
@@ -87,6 +163,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         else {
           // The silent duress alert (milestone M6) will be sent from here.
           openCount.current++;
+          token.current = null;
           setState({ status: 'open', mode: 'basic' });
         }
       }
@@ -95,9 +172,23 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     [openFull],
   );
 
+  const api = useCallback(() => (token.current ? authed(token.current) : null), []);
+
+  const refreshMember = useCallback(async () => {
+    const current = openCount.current;
+    const client = api();
+    if (!client) return;
+    try {
+      const me = await client.me();
+      updateFull(current, { connection: 'connected', member: me.member, sequence: me.sequence });
+    } catch {
+      updateFull(current, { connection: 'offline' });
+    }
+  }, [api]);
+
   const value = useMemo(
-    () => ({ state, finishSetup, unlock, lock }),
-    [state, finishSetup, unlock, lock],
+    () => ({ state, startJoin, finishSetup, unlock, lock, api, refreshMember }),
+    [state, startJoin, finishSetup, unlock, lock, api, refreshMember],
   );
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }
@@ -106,4 +197,14 @@ export function useSession(): SessionValue {
   const value = useContext(SessionContext);
   if (!value) throw new Error('useSession must be used inside SessionProvider');
   return value;
+}
+
+/**
+ * The open full session, for screens behind the full-mode guard. Null for the moment
+ * between the app locking and the screen going away; render nothing then.
+ */
+export function useFullSession(): (FullSession & Omit<SessionValue, 'state'>) | null {
+  const { state, ...rest } = useSession();
+  if (state.status !== 'open' || state.mode !== 'full') return null;
+  return { ...state, ...rest };
 }

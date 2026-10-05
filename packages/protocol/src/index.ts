@@ -27,7 +27,12 @@ export type SignInRequest = {
 
 export type SignInResponse = { token: string; expiresAt: number };
 
-export type MeResponse = { did: string };
+export type MeResponse = {
+  did: string;
+  member: boolean;
+  /** The trust level, 0 (the Fool) to 9 (new members). Null for non-members. */
+  sequence: number | null;
+};
 
 export type ApiErrorCode =
   | 'bad_request'
@@ -36,7 +41,12 @@ export type ApiErrorCode =
   | 'unauthorized'
   | 'not_found'
   | 'method_not_allowed'
-  | 'not_configured';
+  | 'not_configured'
+  | 'not_member'
+  | 'already_member'
+  | 'card_unavailable'
+  | 'card_limit'
+  | 'conflict';
 
 export type ApiError = { error: ApiErrorCode };
 
@@ -49,4 +59,89 @@ export function isSignInRequest(value: unknown): value is SignInRequest {
   return (
     isShortString(v.did, 128) && isShortString(v.challenge, 256) && isShortString(v.signature, 128)
   );
+}
+
+// Tero cards (invites). See docs/roles-and-sequences.md#tero-cards-invites.
+
+/** An unclaimed card expires after this long. */
+export const cardTtlMs = 7 * 24 * 60 * 60 * 1000;
+
+/** Once claimed, the inviter has this long to approve. */
+export const claimedCardTtlMs = 24 * 60 * 60 * 1000;
+
+/** Professional and council cards come later. */
+export type CardType = 'member';
+
+export type CardSummary = {
+  /** base64url of the hash of the card's token. */
+  id: string;
+  /** base64url; the inviter's phone makes the token from it. */
+  nonce: string;
+  type: CardType;
+  state: 'open' | 'claimed';
+  expiresAt: number;
+  /** The did:key that claimed the card, once claimed. */
+  claimer: string | null;
+};
+
+export type CreateCardRequest = { id: string; nonce: string; type: CardType };
+export type CardListResponse = { cards: CardSummary[] };
+
+/** The newcomer declares they are an adult where they live. */
+export type ClaimCardRequest = { token: string; adult: true };
+export type ClaimCardResponse = { id: string; expiresAt: number };
+
+/** The inviter confirms who they approve, and that the person is of legal age. */
+export type ApproveCardRequest = { claimer: string; adult: true };
+
+/**
+ * How many unclaimed or unapproved cards someone can have at once, by Sequence.
+ * A proposal for the council to settle.
+ */
+export function openCardLimit(sequence: number): number {
+  if (sequence <= 0) return 50;
+  if (sequence <= 3) return 10;
+  if (sequence <= 6) return 5;
+  if (sequence <= 8) return 3;
+  return 1;
+}
+
+/** The link in a card's QR code. */
+export function cardUrl(origin: string, token: string): string {
+  return `${origin}/c/${token}`;
+}
+
+const tokenPattern = /^[A-Za-z0-9_-]{22}$/;
+const idPattern = /^[A-Za-z0-9_-]{43}$/;
+
+export const isCardToken = (value: unknown): boolean =>
+  typeof value === 'string' && tokenPattern.test(value);
+
+export const isCardId = (value: unknown): boolean =>
+  typeof value === 'string' && idPattern.test(value);
+
+/** Finds the token in a scanned or pasted card link, or a bare token. */
+export function tokenFromCardLink(text: string): string | null {
+  const trimmed = text.trim();
+  if (isCardToken(trimmed)) return trimmed;
+  const match = trimmed.match(/\/c\/([A-Za-z0-9_-]{22})\/?(?:[?#].*)?$/);
+  return match ? match[1]! : null;
+}
+
+const asObject = (value: unknown) =>
+  typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : null;
+
+export function isCreateCardRequest(value: unknown): value is CreateCardRequest {
+  const v = asObject(value);
+  return !!v && isCardId(v.id) && isCardToken(v.nonce) && v.type === 'member';
+}
+
+export function isClaimCardRequest(value: unknown): value is ClaimCardRequest {
+  const v = asObject(value);
+  return !!v && isCardToken(v.token) && v.adult === true;
+}
+
+export function isApproveCardRequest(value: unknown): value is ApproveCardRequest {
+  const v = asObject(value);
+  return !!v && isShortString(v.claimer, 128) && v.adult === true;
 }

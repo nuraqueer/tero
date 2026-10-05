@@ -2,7 +2,15 @@ import { Platform } from 'react-native';
 import { bytesToBase64Url, sign, type Identity } from '@tero/crypto';
 import {
   signInMessage,
+  type ApiErrorCode,
+  type ApproveCardRequest,
+  type CardListResponse,
+  type CardSummary,
   type ChallengeResponse,
+  type ClaimCardRequest,
+  type ClaimCardResponse,
+  type CreateCardRequest,
+  type MeResponse,
   type SignInRequest,
   type SignInResponse,
 } from '@tero/protocol';
@@ -11,23 +19,74 @@ import {
 const base =
   process.env.EXPO_PUBLIC_API_URL ?? (Platform.OS === 'web' ? '' : 'https://tero.pherus.org');
 
-async function post<T>(path: string, body?: unknown): Promise<T> {
-  const res = await fetch(`${base}${path}`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error(`${path} answered ${res.status}`);
-  return (await res.json()) as T;
+/** Where card links point: this site on the web, tero.pherus.org from the phone apps. */
+export function publicOrigin(): string {
+  if (Platform.OS === 'web' && typeof window !== 'undefined') return window.location.origin;
+  return process.env.EXPO_PUBLIC_API_URL ?? 'https://tero.pherus.org';
+}
+
+export class ApiError extends Error {
+  constructor(
+    readonly status: number,
+    readonly code: ApiErrorCode | 'network',
+  ) {
+    super(`API error ${status} ${code}`);
+  }
+}
+
+async function request<T>(
+  path: string,
+  method: string,
+  token?: string,
+  body?: unknown,
+): Promise<T> {
+  let res: Response;
+  try {
+    res = await fetch(`${base}${path}`, {
+      method,
+      headers: {
+        ...(body === undefined ? {} : { 'content-type': 'application/json' }),
+        ...(token ? { authorization: `Bearer ${token}` } : {}),
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+  } catch {
+    throw new ApiError(0, 'network');
+  }
+  if (res.status === 204) return undefined as T;
+  const data = (await res.json().catch(() => ({}))) as { error?: ApiErrorCode };
+  if (!res.ok) throw new ApiError(res.status, data.error ?? 'bad_request');
+  return data as T;
 }
 
 /** Proves this phone holds the identity key and returns a session. Nothing secret is sent. */
 export async function signIn(identity: Identity): Promise<SignInResponse> {
-  const { challenge } = await post<ChallengeResponse>('/api/auth/challenge');
-  const request: SignInRequest = {
+  const { challenge } = await request<ChallengeResponse>('/api/auth/challenge', 'POST');
+  const body: SignInRequest = {
     did: identity.did,
     challenge,
     signature: bytesToBase64Url(sign(signInMessage(challenge), identity.secretKey)),
   };
-  return post<SignInResponse>('/api/auth/session', request);
+  return request<SignInResponse>('/api/auth/session', 'POST', undefined, body);
 }
+
+/** Calls that need a session token. */
+export function authed(token: string) {
+  return {
+    me: () => request<MeResponse>('/api/me', 'GET', token),
+    listCards: async () => (await request<CardListResponse>('/api/cards', 'GET', token)).cards,
+    createCard: (card: CreateCardRequest) =>
+      request<CardSummary>('/api/cards', 'POST', token, card),
+    claimCard: (cardToken: string) => {
+      const body: ClaimCardRequest = { token: cardToken, adult: true };
+      return request<ClaimCardResponse>('/api/cards/claim', 'POST', token, body);
+    },
+    approveCard: (id: string, claimer: string) => {
+      const body: ApproveCardRequest = { claimer, adult: true };
+      return request<{ sequence: number }>(`/api/cards/${id}/approve`, 'POST', token, body);
+    },
+    destroyCard: (id: string) => request<void>(`/api/cards/${id}`, 'DELETE', token),
+  };
+}
+
+export type Api = ReturnType<typeof authed>;

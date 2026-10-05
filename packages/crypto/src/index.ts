@@ -1,3 +1,4 @@
+export * from './cards';
 export * from './did';
 export * from './keys';
 export * from './sign';

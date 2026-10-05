@@ -58,6 +58,8 @@ function Screens() {
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.ivory } }}>
       <Stack.Protected guard={state.status === 'new'}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="scan" />
+        <Stack.Screen name="c/[token]" />
         <Stack.Screen name="setup" />
       </Stack.Protected>
       <Stack.Protected guard={state.status === 'locked'}>
@@ -65,6 +67,7 @@ function Screens() {
       </Stack.Protected>
       <Stack.Protected guard={full}>
         <Stack.Screen name="home" />
+        <Stack.Screen name="card/[id]" />
       </Stack.Protected>
       <Stack.Protected guard={basic}>
         <Stack.Screen name="basic" />

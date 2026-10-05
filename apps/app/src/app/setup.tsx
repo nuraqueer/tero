@@ -3,14 +3,14 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { createPhrase, normalizePhrase, randomBytes } from '@tero/crypto';
 import { colors, fonts, radii, space, touchTarget } from '@tero/ui';
 import { Button } from '@/components/Button';
+import { Code } from '@/components/Code';
 import { Page } from '@/components/Page';
 import { PasscodePad } from '@/components/PasscodePad';
 import { useLocale } from '@/lib/locale';
 import { useSession } from '@/lib/session';
 
-// The Tero card scan and in-person code (milestone M2) will come before these steps.
-
 type Step =
+  | { name: 'code' }
   | { name: 'phrase' }
   | { name: 'confirm' }
   | { name: 'passcode' }
@@ -31,10 +31,13 @@ function pickPlaces(): number[] {
 
 export default function Setup() {
   const { t } = useLocale();
-  const { finishSetup } = useSession();
-  const phrase = useMemo(createPhrase, []);
+  const { state, finishSetup } = useSession();
+  // Joining with a card: the keys were made when the card was claimed. Without a card
+  // (only the founder, before the first card exists) new keys are made here.
+  const join = state.status === 'new' ? state.join : null;
+  const phrase = useMemo(() => join?.phrase ?? createPhrase(), [join]);
   const words = phrase.split(' ');
-  const [step, setStep] = useState<Step>({ name: 'phrase' });
+  const [step, setStep] = useState<Step>(join ? { name: 'code' } : { name: 'phrase' });
   const [message, setMessage] = useState<string>();
   // Bumped to clear the keypad after a mismatch.
   const [resets, setResets] = useState(0);
@@ -55,6 +58,22 @@ export default function Setup() {
   };
 
   switch (step.name) {
+    case 'code':
+      return (
+        <Page center>
+          <Text style={styles.title} accessibilityRole="header">
+            {t('setup.code.title')}
+          </Text>
+          <Text style={styles.body}>{t('setup.code.body')}</Text>
+          <View style={styles.code}>
+            <Code code={join?.code ?? ''} />
+          </View>
+          <View style={styles.actions}>
+            <Button label={t('setup.continue')} onPress={() => go({ name: 'phrase' })} />
+          </View>
+        </Page>
+      );
+
     case 'phrase':
       return (
         <Page>
@@ -209,6 +228,7 @@ const styles = StyleSheet.create({
     marginTop: space.md,
   },
   centered: { marginTop: 0 },
+  code: { marginTop: space.xl },
   words: {
     flexDirection: 'row',
     flexWrap: 'wrap',

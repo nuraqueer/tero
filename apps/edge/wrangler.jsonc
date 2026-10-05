@@ -2,13 +2,17 @@
   // Tero's single Worker: the API and encrypted relay, plus the web app build.
   "$schema": "../../node_modules/wrangler/config-schema.json",
   "name": "tero",
-  "main": "src/index.ts",
+  "main": "src/worker.ts",
   "compatibility_date": "2026-10-01",
   "assets": {
     "directory": "../app/dist",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*"],
+    "run_worker_first": ["/api/*", "/c/*"],
   },
+  "durable_objects": {
+    "bindings": [{ "name": "REGISTRY", "class_name": "RegistryObject" }],
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["RegistryObject"] }],
   // The custom domain is added at the first deploy:
   // "routes": [{ "pattern": "tero.pherus.org", "custom_domain": true }]
 }

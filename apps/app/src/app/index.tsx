@@ -25,7 +25,7 @@ export default function Welcome() {
         <View style={styles.actions}>
           <Pressable
             accessibilityRole="button"
-            onPress={() => router.push('/setup')}
+            onPress={() => router.push('/scan')}
             style={[styles.button, styles.primary]}
           >
             <Text style={styles.primaryLabel}>{t('welcome.haveCard')}</Text>

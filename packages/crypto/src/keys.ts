@@ -32,7 +32,7 @@ export async function phraseToSeed(phrase: string): Promise<Uint8Array> {
  * public keys that they come from the same seed. Wallet keys will use the standard
  * BIP-32 paths for Celo instead, so other wallets can restore them.
  */
-export type KeyPurpose = 'identity' | 'messaging' | 'app';
+export type KeyPurpose = 'identity' | 'messaging' | 'cards' | 'app';
 
 const derivationSalt = utf8ToBytes('tero/key-derivation/v1');
 

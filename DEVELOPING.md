@@ -21,6 +21,11 @@ then `cd apps/edge && cp .dev.vars.example .dev.vars && bun run dev`. The Worker
 `AUTH_SECRET` (32 characters or more) to sign people in; in production set it with
 `bunx wrangler secret put AUTH_SECRET`.
 
+Members and Tero cards live in a SQLite Durable Object (`RegistryObject`). Someone has to
+issue the first card: open `/setup` directly to make the first keys, copy the Tero address
+from the home screen, and set it as `FOUNDER_DID` (in `.dev.vars`, or with
+`bunx wrangler secret put FOUNDER_DID`). That key becomes the Fool, at Sequence 0.
+
 The phone apps talk to `https://tero.pherus.org`. To point them at another Worker, set
 `EXPO_PUBLIC_API_URL`.
 

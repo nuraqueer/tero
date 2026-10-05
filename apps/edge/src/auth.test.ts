@@ -2,8 +2,12 @@ import { bytesToBase64Url, createPhrase, identityFromSeed, phraseToSeed, sign } 
 import { challengeTtlMs, sessionTtlMs, signInMessage } from '@tero/protocol';
 import { describe, expect, it } from 'vitest';
 import worker, { type Env } from './index';
+import { testRegistry } from './test-registry';
 
-const env: Env = { AUTH_SECRET: 'test-secret-0123456789abcdef0123456789' };
+const env: Env = {
+  AUTH_SECRET: 'test-secret-0123456789abcdef0123456789',
+  REGISTRY: testRegistry().REGISTRY,
+};
 
 const call = (path: string, init?: RequestInit, e: Env = env) =>
   worker.fetch(new Request(`https://tero.pherus.org${path}`, init), e);
@@ -31,7 +35,7 @@ describe('signing in', () => {
 
     const me = await call('/api/me', { headers: { authorization: `Bearer ${token}` } });
     expect(me.status).toBe(200);
-    expect(await me.json()).toEqual({ did: identity.did });
+    expect(await me.json()).toEqual({ did: identity.did, member: false, sequence: null });
   });
 
   it('refuses a signature from another key', async () => {
@@ -56,7 +60,7 @@ describe('signing in', () => {
 
   it('refuses a challenge made with another secret', async () => {
     const identity = await newIdentity();
-    const otherEnv: Env = { AUTH_SECRET: 'another-secret-0123456789abcdef01234' };
+    const otherEnv: Env = { ...env, AUTH_SECRET: 'another-secret-0123456789abcdef01234' };
     const { challenge } = (await (
       await post('/api/auth/challenge', undefined, otherEnv)
     ).json()) as {

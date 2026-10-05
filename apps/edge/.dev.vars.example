@@ -1,2 +1,4 @@
 # Copy to .dev.vars for `wrangler dev`. Any random string of 32 characters or more.
 AUTH_SECRET=dev-only-secret-change-me-0123456789abcdef
+# The first member (the Fool). Make keys at /setup, then paste the Tero address here.
+# FOUNDER_DID=did:key:z6Mk...
