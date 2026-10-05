@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { colors, fonts, space } from '@tero/ui';
 import { CardMark } from '@/components/CardMark';
 import { Page } from '@/components/Page';
@@ -38,7 +38,9 @@ export default function Lock() {
         <Text style={styles.wordmark} accessibilityRole="header">
           Tero
         </Text>
-        <Text style={styles.prompt}>{t('lock.enterPasscode')}</Text>
+        <Text style={styles.prompt}>
+          {Platform.OS === 'web' ? t('lock.passphrase.label') : t('lock.enterPasscode')}
+        </Text>
       </View>
       <PasscodePad onSubmit={submit} busy={busy} message={message} resetKey={tries} />
     </Page>

@@ -24,6 +24,10 @@ export const sw: Messages = {
   'setup.confirm.body': 'Andika maneno yaliyo katika nafasi hizi, kutoka kwenye karatasi yako.',
   'setup.confirm.word': 'Neno la {number}',
   'setup.confirm.wrong': 'Hailingani. Angalia karatasi yako tena.',
+  'lock.passphrase.label': 'Kaulisiri',
+  'lock.passphrase.hint': 'Angalau herufi {count}',
+  'setup.passcode.bodyWeb':
+    'Kwenye kivinjari, tumia kaulisiri ya angalau herufi 10, kama maneno machache unayoyajua wewe tu. Tero itaiomba kila unapoifungua.',
   'setup.passcode.title': 'Chagua nambari ya siri',
   'setup.passcode.body': 'Tarakimu sita. Tero itaiomba kila unapofungua programu.',
   'setup.passcode.repeat': 'Weka nambari yako ya siri tena',

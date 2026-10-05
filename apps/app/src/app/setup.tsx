@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import { createPhrase, normalizePhrase, randomBytes } from '@tero/crypto';
 import { colors, fonts, radii, space, touchTarget } from '@tero/ui';
 import { Button } from '@/components/Button';
@@ -132,9 +132,21 @@ export default function Setup() {
           <Text style={styles.body}>
             {repeat
               ? t(decoyStep ? 'setup.decoy.repeat' : 'setup.passcode.repeat')
-              : t(decoyStep ? 'setup.decoy.body' : 'setup.passcode.body')}
+              : t(
+                  decoyStep
+                    ? 'setup.decoy.body'
+                    : Platform.OS === 'web'
+                      ? 'setup.passcode.bodyWeb'
+                      : 'setup.passcode.body',
+                )}
           </Text>
-          <PasscodePad key={step.name} onSubmit={submit} message={message} resetKey={resets} />
+          <PasscodePad
+            key={step.name}
+            onSubmit={submit}
+            message={message}
+            resetKey={resets}
+            choosing={!repeat}
+          />
         </Page>
       );
     }

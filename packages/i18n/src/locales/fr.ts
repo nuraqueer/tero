@@ -25,6 +25,10 @@ export const fr: Messages = {
   'setup.confirm.body': 'Écris les mots à ces positions, en lisant ton papier.',
   'setup.confirm.word': 'Mot {number}',
   'setup.confirm.wrong': 'Ça ne correspond pas. Relis ton papier.',
+  'lock.passphrase.label': 'Phrase secrète',
+  'lock.passphrase.hint': 'Au moins {count} caractères',
+  'setup.passcode.bodyWeb':
+    "Dans un navigateur, utilise une phrase secrète d'au moins 10 caractères, par exemple quelques mots que toi seul·e connais. Tero la demande à chaque ouverture.",
   'setup.passcode.title': 'Choisis un code',
   'setup.passcode.body': "Six chiffres. Tero te le demande à chaque ouverture de l'application.",
   'setup.passcode.repeat': 'Saisis ton code à nouveau',

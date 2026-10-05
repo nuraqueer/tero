@@ -53,14 +53,13 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
 
 - M0 foundations, M1 identity and lock, M2 Tero cards: done and deployed.
 - Not for real members yet: nothing goes to real people before M7's security audit.
-- Known weak spot: on the **web**, the vault's device secret sits in local storage
-  beside the vault, so a copied browser profile can be brute-forced offline through
-  the six-digit passcode. Phones are protected by the Keychain / Keystore.
+- Web vault hardened: in a browser, new passcodes must be passphrases of 10+
+  characters (`PasscodePad.web.tsx`), because the device secret sits in local storage.
+  Unlocking accepts any length so older web vaults still open. Phones keep 6 digits.
 
 ## Next
 
-1. Harden the web vault (longer passphrase on web, or web limited to guides).
-2. M3: private chats. Start by comparing libsignal, vodozemac and OpenMLS
+1. M3: private chats. Start by comparing libsignal, vodozemac and OpenMLS
    ([docs/build-plan.md](docs/build-plan.md)).
-3. Open design items: pick a logo concept; match the You-screen tarot card to the
+2. Open design items: pick a logo concept; match the You-screen tarot card to the
    founder's reference image (Pinterest is blocked here; ask for it as an attachment).

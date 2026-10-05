@@ -24,6 +24,10 @@ export const zh: Messages = {
   'setup.confirm.body': '对照你的纸，输入这些位置上的单词。',
   'setup.confirm.word': '第 {number} 个单词',
   'setup.confirm.wrong': '不一致。请再看一下你的纸。',
+  'lock.passphrase.label': '密码短语',
+  'lock.passphrase.hint': '至少 {count} 个字符',
+  'setup.passcode.bodyWeb':
+    '在浏览器中，请使用至少 10 个字符的密码短语，例如几个只有你知道的词。每次打开 Tero 时都需要输入。',
   'setup.passcode.title': '设置密码',
   'setup.passcode.body': '六位数字。每次打开应用时，Tero 都会要求输入。',
   'setup.passcode.repeat': '再次输入密码',

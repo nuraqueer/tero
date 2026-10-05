@@ -13,6 +13,8 @@ type Props = {
   busy?: boolean;
   /** Change this to clear the digits, for example after a wrong passcode. */
   resetKey?: unknown;
+  /** Set when choosing a new passcode (the web version asks for a longer passphrase). */
+  choosing?: boolean;
 };
 
 const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', 'del'] as const;

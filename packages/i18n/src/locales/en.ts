@@ -22,6 +22,10 @@ export const en = {
   'setup.confirm.body': 'Type the words at these places, from your paper.',
   'setup.confirm.word': 'Word {number}',
   'setup.confirm.wrong': "That doesn't match. Look at your paper again.",
+  'lock.passphrase.label': 'Passphrase',
+  'lock.passphrase.hint': 'At least {count} characters',
+  'setup.passcode.bodyWeb':
+    'In a browser, use a passphrase of at least 10 characters, like a few words only you know. Tero asks for it every time you open it.',
   'setup.passcode.title': 'Choose a passcode',
   'setup.passcode.body': 'Six digits. Tero asks for it every time you open the app.',
   'setup.passcode.repeat': 'Enter your passcode again',
