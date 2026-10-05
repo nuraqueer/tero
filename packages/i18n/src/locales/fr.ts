@@ -228,4 +228,65 @@ export const fr: Messages = {
     'Seul le Mat peut nommer quelqu’un seul. Remets-lui une carte du conseil en personne ; la personne rejoint en Séquence 1 avec une carte qu’aucun autre membre du conseil ne détient.',
   'console.seatCard.make': 'Créer une carte du conseil',
   'console.councilCard': 'Carte du conseil',
+  'public.nav.guides': 'Guides',
+  'public.kicker': 'AU-DESSUS DU BROUILLARD GRIS',
+  'public.lead':
+    'Un lieu privé pour le soin, le travail, la sécurité et l’évolution. Lis les guides ouverts ici. Rejoins Tero quand quelqu’un qui te fait confiance te donne une carte Tero.',
+  'public.readGuides': 'Lire les guides',
+  'public.fact.languages': 'English · Kiswahili · 中文 · Français',
+  'public.fact.noName': 'Ni nom, ni e-mail, ni numéro de téléphone',
+  'public.fact.e2e': 'Chiffré de bout en bout',
+  'public.fact.open': 'Open source',
+  'public.suits.title': 'Quatre sortes d’aide',
+  'public.suit.cups':
+    'Cercles, Spaces en direct, discussions privées, quelqu’un à qui parler, et thérapeutes vérifiés.',
+  'public.suit.pentacles':
+    'Emplois proposés par des membres, commerces queer, logements sûrs et cagnottes que chacun peut vérifier.',
+  'public.suit.swords':
+    'Avocats, guides sur tes droits, testaments, et cliniques vérifiées par la communauté.',
+  'public.suit.wands':
+    'Nouvelles compétences, informations sur le THS, et préparation de chirurgies et de voyages, étape par étape.',
+  'public.guides.title': 'Guides ouverts',
+  'public.guides.note': 'Gratuits, sans compte',
+  'public.partners.kicker': 'PARTENAIRES TERO',
+  'public.partners.title': 'Une carte qui dit : tu es en sécurité ici.',
+  'public.partners.body':
+    'Cliniques, pharmacies et avocats peuvent devenir partenaires Tero. Un membre montre sa carte Tero, le partenaire montre la sienne, et les trois mêmes mots apparaissent sur les deux. Pas besoin d’explications.',
+  'public.partners.member': 'MEMBRE',
+  'public.partners.partner': 'PARTENAIRE',
+  'public.join.title': 'Comment rejoindre Tero',
+  'public.join.1.title': 'Recevoir une carte Tero',
+  'public.join.1.body':
+    'Un membre qui te fait confiance t’en donne une. Chaque carte ne sert qu’une fois.',
+  'public.join.2.title': 'Confirmer en personne',
+  'public.join.2.body': 'Scanne-la, puis vérifiez ensemble un code court, face à face.',
+  'public.join.3.title': 'Tu es dedans',
+  'public.join.3.body': 'Tes clés sont créées sur ton téléphone. Ni nom, ni e-mail, ni numéro.',
+  'public.safety.title': 'Conçu pour les endroits où il est dangereux d’être vu.',
+  'public.safety.body':
+    'Les messages sont chiffrés de bout en bout. Un code leurre ouvre une vue simple. Les serveurs de Tero ne gardent que des données qu’ils ne peuvent pas lire.',
+  'public.safety.read': 'Lire le guide de sécurité',
+  'public.footer.by': 'Tero, un projet Pherus',
+  'public.footer.source': 'Code source (AGPL-3.0)',
+  'guides.writing': 'En cours d’écriture',
+  'guides.writingBody':
+    'Ce guide est écrit avec des personnes qui connaissent bien le sujet. Il apparaîtra ici une fois vérifié.',
+  'guides.guide': 'Guide',
+  'guides.notFound': 'Il n’y a pas de guide ici.',
+  'guides.review':
+    'Vérifié pour la dernière fois en octobre 2026. Les traductions attendent une relecture native.',
+  'guide.online.title': 'Rester en sécurité en ligne',
+  'guide.online.summary':
+    'Protéger ton téléphone, tes comptes et les personnes avec qui tu parles.',
+  'guide.hrt.title': 'Le THS : les bases',
+  'guide.hrt.summary': 'Ce que c’est, à quoi s’attendre, et les questions à poser à un médecin.',
+  'guide.care.title': 'Trouver des soins bienveillants',
+  'guide.care.summary':
+    'Comment trouver des médecins et des cliniques qui te traiteront avec respect.',
+  'guide.rights.title': 'Connaître tes droits',
+  'guide.rights.summary': 'Des résumés simples de la loi, pays par pays.',
+  'guide.someone.title': 'Quand tu as besoin de quelqu’un',
+  'guide.someone.summary': 'Lignes d’écoute et soutien joignables aujourd’hui.',
+  'guide.courses.title': 'Cours gratuits',
+  'guide.courses.summary': 'Langues, code, design et métiers, ouverts à tous.',
 };

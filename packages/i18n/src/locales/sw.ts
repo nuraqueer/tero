@@ -228,4 +228,63 @@ export const sw: Messages = {
     'Ni Fool pekee anayeweza kumketisha mtu peke yake. Mpe kadi ya baraza ana kwa ana; atajiunga katika Daraja 1 akiwa na kadi ambayo hakuna mjumbe mwingine wa baraza anayo.',
   'console.seatCard.make': 'Tengeneza kadi ya baraza',
   'console.councilCard': 'Kadi ya baraza',
+  'public.nav.guides': 'Miongozo',
+  'public.kicker': 'JUU YA UKUNGU WA KIJIVU',
+  'public.lead':
+    'Nyumba ya faragha kwa huduma, kazi, usalama na ukuaji. Soma miongozo iliyo wazi hapa. Jiunge mtu anayekuamini atakapokupa kadi ya Tero.',
+  'public.readGuides': 'Soma miongozo',
+  'public.fact.languages': 'English · Kiswahili · 中文 · Français',
+  'public.fact.noName': 'Hakuna jina, barua pepe wala nambari ya simu',
+  'public.fact.e2e': 'Usimbaji fiche wa mwanzo hadi mwisho',
+  'public.fact.open': 'Programu huria',
+  'public.suits.title': 'Aina nne za msaada',
+  'public.suit.cups':
+    'Duara, Spaces za moja kwa moja, mazungumzo ya faragha, mtu wa kuzungumza naye, na wataalamu wa tiba waliothibitishwa.',
+  'public.suit.pentacles':
+    'Kazi kutoka kwa wanachama, biashara za LGBTQ+, makazi salama na michango ambayo kila mtu anaweza kuikagua.',
+  'public.suit.swords':
+    'Mawakili, miongozo ya haki zako, wosia, na kliniki zilizokaguliwa na jumuiya.',
+  'public.suit.wands':
+    'Ujuzi mpya, taarifa za HRT, na mipango ya upasuaji na safari, hatua kwa hatua.',
+  'public.guides.title': 'Miongozo iliyo wazi',
+  'public.guides.note': 'Bure kusoma, hakuna akaunti inayohitajika',
+  'public.partners.kicker': 'WASHIRIKA WA TERO',
+  'public.partners.title': 'Kadi inayosema: uko salama hapa.',
+  'public.partners.body':
+    'Kliniki, maduka ya dawa na mawakili wanaweza kuwa washirika wa Tero. Mwanachama anaonyesha kadi yake ya Tero, mshirika anaonyesha yake, na maneno matatu yaleyale yanaonekana kwenye zote mbili. Hakuna maelezo yanayohitajika.',
+  'public.partners.member': 'MWANACHAMA',
+  'public.partners.partner': 'MSHIRIKA',
+  'public.join.title': 'Jinsi ya kujiunga',
+  'public.join.1.title': 'Pata kadi ya Tero',
+  'public.join.1.body': 'Mwanachama anayekuamini anakupa moja. Kila kadi inafanya kazi mara moja.',
+  'public.join.2.title': 'Thibitisha ana kwa ana',
+  'public.join.2.body': 'Iskani, kisha mkague msimbo mfupi pamoja, uso kwa uso.',
+  'public.join.3.title': 'Umeingia',
+  'public.join.3.body':
+    'Funguo zako zinatengenezwa kwenye simu yako. Hakuna jina, barua pepe wala nambari ya simu.',
+  'public.safety.title': 'Imejengwa kwa maeneo ambayo si salama kuonekana.',
+  'public.safety.body':
+    'Ujumbe una usimbaji fiche wa mwanzo hadi mwisho. Nambari ya siri ya kudanganya inafungua mwonekano wa kawaida. Seva za Tero huhifadhi tu data zisizoweza kuisoma.',
+  'public.safety.read': 'Soma mwongozo wa usalama',
+  'public.footer.by': 'Tero, mradi wa Pherus',
+  'public.footer.source': 'Msimbo wa chanzo (AGPL-3.0)',
+  'guides.writing': 'Unaandikwa',
+  'guides.writingBody':
+    'Mwongozo huu unaandikwa pamoja na watu wanaoijua mada vizuri. Utaonekana hapa baada ya kukaguliwa.',
+  'guides.guide': 'Mwongozo',
+  'guides.notFound': 'Hakuna mwongozo hapa.',
+  'guides.review':
+    'Ulikaguliwa mara ya mwisho Oktoba 2026. Tafsiri zinasubiri ukaguzi wa wazungumzaji asilia.',
+  'guide.online.title': 'Kuwa salama mtandaoni',
+  'guide.online.summary': 'Kulinda simu yako, akaunti zako na watu unaozungumza nao.',
+  'guide.hrt.title': 'HRT: mambo ya msingi',
+  'guide.hrt.summary': 'Ni nini, nini cha kutarajia, na maswali ya kumuuliza daktari.',
+  'guide.care.title': 'Kupata huduma inayokuheshimu',
+  'guide.care.summary': 'Jinsi ya kupata madaktari na kliniki watakaokutendea kwa heshima.',
+  'guide.rights.title': 'Jua haki zako',
+  'guide.rights.summary': 'Muhtasari rahisi wa sheria, nchi kwa nchi.',
+  'guide.someone.title': 'Unapohitaji mtu',
+  'guide.someone.summary': 'Simu za dharura na msaada unaoweza kuupata leo.',
+  'guide.courses.title': 'Kozi za bure',
+  'guide.courses.summary': 'Lugha, uandishi wa programu, ubunifu na ufundi, wazi kwa kila mtu.',
 };

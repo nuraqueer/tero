@@ -115,8 +115,10 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   `console.tsx`, Tero cards, Votes/Verifications/Countries/Moderators/Log "Soon", Recovery
   words, Language, card avatar, Lock); role `member` sees "Tero lives on your phone".
   Phones keep the tabs. Suits are plain light cards (no tarot frames).
-- M5 public site in progress: guide content in `src/guides/` (online safety, HRT basics, in
-  four languages); landing page and guide screens not built yet. Other guides stay
+- M5 public site live: `PublicHome` at `/` on the web (hero, suits, guides, partners, joining,
+  safety, footer; founder long-press on the mark), `guides/` list and `guides/[slug]` pages
+  (public in every state). Guide content in `src/guides/` (online safety, HRT basics, in
+  four languages). Other guides stay
   "being written" until experts can write them.
 
 ## Next

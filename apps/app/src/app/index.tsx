@@ -1,9 +1,10 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { locales, localeNames } from '@tero/i18n';
 import { colors, fonts, radii, space, touchTarget } from '@tero/ui';
 import { CardMark } from '@/components/CardMark';
+import { PublicHome } from '@/components/PublicHome';
 import { Wordmark } from '@/components/Wordmark';
 import { founderSeatOpen } from '@/lib/api';
 import { useLocale } from '@/lib/locale';
@@ -18,6 +19,8 @@ async function openFounderSetup() {
 
 export default function Welcome() {
   const { locale, setLocale, t } = useLocale();
+  // On the web, the front door is the public site (D40); phones get the welcome screen.
+  if (Platform.OS === 'web') return <PublicHome onFounder={openFounderSetup} />;
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -54,8 +57,7 @@ export default function Welcome() {
           </Pressable>
           <Pressable
             accessibilityRole="button"
-            accessibilityState={{ disabled: true }}
-            disabled
+            onPress={() => router.push('/guides')}
             style={[styles.button, styles.secondary]}
           >
             <Text style={styles.secondaryLabel}>{t('welcome.readGuides')}</Text>

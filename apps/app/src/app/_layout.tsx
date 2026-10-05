@@ -89,6 +89,9 @@ function Screens() {
         />
         <Stack.Screen name="suit/[suit]" />
       </Stack.Protected>
+      {/* The open guides are public: readable in every state, decoy view included. */}
+      <Stack.Screen name="guides/index" />
+      <Stack.Screen name="guides/[slug]" />
       <Stack.Protected guard={basic}>
         <Stack.Screen name="basic" />
       </Stack.Protected>

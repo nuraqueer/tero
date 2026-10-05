@@ -220,6 +220,63 @@ export const en = {
     'Only the Fool can seat someone alone. Give them a council card in person; they join at Sequence 1 with a card nobody else on the council holds.',
   'console.seatCard.make': 'Make a council card',
   'console.councilCard': 'Council card',
+  'public.nav.guides': 'Guides',
+  'public.kicker': 'ABOVE THE GRAY FOG',
+  'public.lead':
+    'A private home for care, work, safety and growth. Read the open guides here. Join when someone who trusts you hands you a Tero card.',
+  'public.readGuides': 'Read the guides',
+  'public.fact.languages': 'English · Kiswahili · 中文 · Français',
+  'public.fact.noName': 'No name, email or phone number',
+  'public.fact.e2e': 'End-to-end encrypted',
+  'public.fact.open': 'Open source',
+  'public.suits.title': 'Four kinds of help',
+  'public.suit.cups':
+    'Circles, live Spaces, private chats, someone to talk to, and verified therapists.',
+  'public.suit.pentacles':
+    'Jobs from members, queer-owned businesses, safe housing and fundraisers anyone can check.',
+  'public.suit.swords':
+    'Lawyers, know-your-rights guides, wills, and clinics checked by the community.',
+  'public.suit.wands':
+    'New skills, HRT information, and surgery and travel planning, step by step.',
+  'public.guides.title': 'Open guides',
+  'public.guides.note': 'Free to read, no account needed',
+  'public.partners.kicker': 'TERO PARTNERS',
+  'public.partners.title': "A card that says: you're safe here.",
+  'public.partners.body':
+    'Clinics, pharmacies and lawyers can become Tero partners. A member shows their Tero card, the partner shows theirs back, and the same three words appear on both. No explanations needed.',
+  'public.partners.member': 'MEMBER',
+  'public.partners.partner': 'PARTNER',
+  'public.join.title': 'How joining works',
+  'public.join.1.title': 'Get a Tero card',
+  'public.join.1.body': 'A member who trusts you gives you one. Each card works once.',
+  'public.join.2.title': 'Confirm in person',
+  'public.join.2.body': 'Scan it, then check a short code together, face to face.',
+  'public.join.3.title': "You're in",
+  'public.join.3.body': 'Your keys are made on your phone. No name, email or phone number.',
+  'public.safety.title': "Built for places where it isn't safe to be seen.",
+  'public.safety.body':
+    "Messages are end-to-end encrypted. A decoy passcode opens a plain view. Tero's servers only ever hold data they can't read.",
+  'public.safety.read': 'Read the safety guide',
+  'public.footer.by': 'Tero, a Pherus project',
+  'public.footer.source': 'Source code (AGPL-3.0)',
+  'guides.writing': 'Being written',
+  'guides.writingBody':
+    'This guide is being written with people who know the subject well. It will appear here when it has been checked.',
+  'guides.guide': 'Guide',
+  'guides.notFound': 'There is no guide here.',
+  'guides.review': 'Last checked October 2026. Translations are waiting for native review.',
+  'guide.online.title': 'Staying safe online',
+  'guide.online.summary': 'Protecting your phone, your accounts and the people you talk to.',
+  'guide.hrt.title': 'HRT: the basics',
+  'guide.hrt.summary': 'What it is, what to expect, and questions to ask a doctor.',
+  'guide.care.title': 'Finding affirming care',
+  'guide.care.summary': 'How to find doctors and clinics that will treat you with respect.',
+  'guide.rights.title': 'Know your rights',
+  'guide.rights.summary': 'Plain summaries of the law, country by country.',
+  'guide.someone.title': 'When you need someone',
+  'guide.someone.summary': 'Crisis lines and support you can reach today.',
+  'guide.courses.title': 'Free courses',
+  'guide.courses.summary': 'Languages, coding, design and trades, open to everyone.',
 } as const;
 
 export type MessageKey = keyof typeof en;
