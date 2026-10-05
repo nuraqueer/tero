@@ -31,6 +31,20 @@ The phone apps talk to `https://tero.pherus.org`. To point them at another Worke
 
 Add app packages with `bunx expo install <name>` so the versions match the Expo SDK.
 
+## Trying the app on a phone (Expo Go)
+
+The app is linked to the Expo project `@phe-rus/tero`. To publish a preview that opens in
+Expo Go, run this in `apps/app` (or in an EAS sandbox):
+
+```sh
+npx eas-cli@latest update --branch preview --platform ios --message "what changed"
+```
+
+Expo Go only opens updates marked with its SDK, so set `"runtimeVersion": "exposdk:57.0.0"` in
+`app.json` for that run (and remove any `runtimeVersion` under `ios` or `android`). Don't commit
+it: real builds need their own runtime version. Then open the update in Expo Go with
+`exp://u.expo.dev/update/<iOS update ID>`.
+
 ## Cryptography
 
 All cryptography comes from the audited `@noble` and `@scure` libraries; `packages/crypto`
