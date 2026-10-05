@@ -4,7 +4,6 @@ import { router, useFocusEffect } from 'expo-router';
 import { bytesToBase64Url, cardIdFromToken, cardToken, randomBytes } from '@tero/crypto';
 import { openCardLimit, type CardSummary } from '@tero/protocol';
 import { colors, fonts, radii, space } from '@tero/ui';
-import { AppHeader } from '@/components/AppHeader';
 import { Button } from '@/components/Button';
 import { Code } from '@/components/Code';
 import { MemberCard } from '@/components/MemberCard';
@@ -15,7 +14,7 @@ import { timeLeft } from '@/lib/time';
 
 const pollMs = 4000;
 
-export default function Home() {
+export default function You() {
   const { t } = useLocale();
   const session = useFullSession();
   const [cards, setCards] = useState<CardSummary[] | null>(null);
@@ -82,11 +81,16 @@ export default function Home() {
   };
 
   return (
-    <Page>
-      <AppHeader />
+    <Page tabs>
+      <View style={styles.top}>
+        <Text style={styles.pageTitle} accessibilityRole="header">
+          {t('tabs.you')}
+        </Text>
+        <Button label={t('home.lock')} onPress={session.lock} kind="secondary" />
+      </View>
       {member && session.arcana !== null && (
         <View style={styles.memberCard}>
-          <MemberCard arcana={session.arcana} />
+          <MemberCard arcana={session.arcana} sequence={session.sequence} />
         </View>
       )}
       <View style={styles.panel}>
@@ -149,15 +153,43 @@ export default function Home() {
         </View>
       )}
 
-      <View style={styles.section}>
-        <Button label={t('words.open')} onPress={() => router.push('/words')} kind="secondary" />
+      <View style={styles.list}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.push('/words')}
+          style={({ pressed }) => [styles.listRow, pressed && styles.pressed]}
+        >
+          <Text style={styles.cardRowText}>{t('words.open')}</Text>
+          <Text style={styles.chevron}>›</Text>
+        </Pressable>
       </View>
     </Page>
   );
 }
 
 const styles = StyleSheet.create({
+  top: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: space.md,
+  },
+  pageTitle: { fontFamily: fonts.display, fontSize: 36, lineHeight: 42, color: colors.slate },
   memberCard: { marginBottom: space.xl },
+  list: {
+    marginTop: space.xl,
+    borderRadius: radii.md,
+    backgroundColor: colors.paper,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.hairline,
+    overflow: 'hidden',
+  },
+  listRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minHeight: 52,
+    paddingHorizontal: space.md,
+  },
   panel: {
     backgroundColor: colors.paper,
     borderRadius: radii.lg,

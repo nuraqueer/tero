@@ -137,4 +137,15 @@ export const sw: Messages = {
   'arcana.19': 'The Sun',
   'arcana.20': 'Judgement',
   'arcana.21': 'The World',
+  'tabs.gathering': 'Mkusanyiko',
+  'tabs.circles': 'Duara',
+  'tabs.messages': 'Ujumbe',
+  'tabs.suits': 'Suti',
+  'tabs.you': 'Wewe',
+  'soon.gathering':
+    'Machapisho, Spaces za moja kwa moja na habari kutoka Duara zako zitakusanyika hapa.',
+  'soon.circles': 'Jumuiya ndogo unazoshiriki, kila moja ikiwa mazungumzo tulivu.',
+  'soon.messages': 'Mazungumzo ya faragha ambayo wewe na mtu mwingine tu mnaweza kusoma.',
+  'soon.suits': 'Msaada, rasilimali, kazi na safari salama, zimepangwa kwa suti.',
+  'soon.note': 'Inajengwa sasa.',
 };

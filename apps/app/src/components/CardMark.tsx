@@ -1,35 +1,31 @@
-import { StyleSheet, Text, View } from 'react-native';
+import Svg, { Path, Rect } from 'react-native-svg';
 import { colors } from '@tero/ui';
 
 /** The small tarot-card mark that sits beside the word "Tero". */
 export function CardMark({ height = 64 }: { height?: number }) {
-  const width = Math.round(height * 0.65);
   return (
-    <View
+    <Svg
+      width={(height * 34) / 52}
+      height={height}
+      viewBox="0 0 34 52"
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-      style={[styles.outer, { width, height, borderRadius: height * 0.09 }]}
     >
-      <View style={[styles.inner, { borderRadius: height * 0.06 }]}>
-        <Text style={[styles.star, { fontSize: height * 0.32 }]}>✦</Text>
-      </View>
-    </View>
+      <Rect x={1} y={1} width={32} height={50} rx={5} fill={colors.slate} />
+      <Rect
+        x={4.5}
+        y={4.5}
+        width={25}
+        height={43}
+        rx={3}
+        fill="none"
+        stroke={colors.gold}
+        strokeWidth={1}
+      />
+      <Path
+        d="M17 19L18.54 24.46L24 26L18.54 27.54L17 33L15.46 27.54L10 26L15.46 24.46Z"
+        fill={colors.goldLight}
+      />
+    </Svg>
   );
 }
-
-const styles = StyleSheet.create({
-  outer: {
-    backgroundColor: colors.slate,
-    padding: 4,
-  },
-  inner: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: colors.gold,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  star: {
-    color: colors.goldLight,
-  },
-});

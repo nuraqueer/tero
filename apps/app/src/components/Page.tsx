@@ -4,11 +4,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, space } from '@tero/ui';
 
 /** A scrolling page with the standard margins and width. */
-export function Page({ children, center = false }: { children: ReactNode; center?: boolean }) {
+export function Page({
+  children,
+  center = false,
+  tabs = false,
+}: {
+  children: ReactNode;
+  center?: boolean;
+  /** Leaves room at the bottom for the floating tab bar. */
+  tabs?: boolean;
+}) {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView
-        contentContainerStyle={[styles.page, center && styles.center]}
+        contentContainerStyle={[styles.page, center && styles.center, tabs && styles.tabs]}
         keyboardShouldPersistTaps="handled"
       >
         {children}
@@ -28,4 +37,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   center: { justifyContent: 'center' },
+  tabs: { paddingBottom: 128 },
 });

@@ -138,4 +138,15 @@ export const fr: Messages = {
   'arcana.19': 'Le Soleil',
   'arcana.20': 'Le Jugement',
   'arcana.21': 'Le Monde',
+  'tabs.gathering': 'Rassemblement',
+  'tabs.circles': 'Cercles',
+  'tabs.messages': 'Messages',
+  'tabs.suits': 'Couleurs',
+  'tabs.you': 'Toi',
+  'soon.gathering':
+    'Les publications, les Spaces en direct et les nouvelles de tes Cercles se retrouveront ici.',
+  'soon.circles': 'Les petites communautés dont tu fais partie, chacune une conversation calme.',
+  'soon.messages': 'Des discussions privées que seuls toi et l’autre personne pouvez lire.',
+  'soon.suits': 'Soutien, ressources, travail et trajets sûrs, classés par couleur.',
+  'soon.note': 'En cours de construction.',
 };

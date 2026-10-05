@@ -1,6 +1,7 @@
-import { StyleSheet, Text } from 'react-native';
-import { colors, fonts } from '@tero/ui';
+import { StyleSheet, Text, View } from 'react-native';
+import Svg, { Circle, Path } from 'react-native-svg';
 import type { MessageKey } from '@tero/i18n';
+import { colors, fonts } from '@tero/ui';
 import { useLocale } from '@/lib/locale';
 import { TeroCard } from './TeroCard';
 
@@ -33,26 +34,83 @@ export function useCardTitle(arcana: number): string {
   return t(`arcana.${arcana}` as MessageKey);
 }
 
-/** The member's own tarot card, numbered as in the deck. */
-export function MemberCard({ arcana }: { arcana: number }) {
-  const title = useCardTitle(arcana);
+const star = (x: number, y: number, r: number) => {
+  const k = r * 0.28;
+  return `M${x} ${y - r}L${x + k} ${y - k}L${x + r} ${y}L${x + k} ${y + k}L${x} ${y + r}L${x - k} ${y + k}L${x - r} ${y}L${x - k} ${y - k}Z`;
+};
+
+/** Tero's own card art, shared by every card: a sun ringed by rays over the gray fog. */
+function SunArt({ width }: { width: number }) {
   return (
-    <TeroCard width={200}>
+    <Svg width={width} height={(width * 190) / 150} viewBox="0 0 150 190">
+      <Circle cx={75} cy={88} r={44} fill="none" stroke={colors.gold} strokeWidth={1} />
+      <Circle cx={75} cy={88} r={30} fill="none" stroke={colors.gold} strokeWidth={1} />
+      <Path
+        d="M75 30v10M75 136v10M17 88h10M123 88h10M34 47l7 7M109 122l7 7M34 129l7-7M109 54l7-7M75 22v4M75 150v4M9 88h4M137 88h4"
+        stroke={colors.gold}
+        strokeWidth={1}
+        strokeLinecap="round"
+      />
+      <Path
+        d="M88 66a24 24 0 1 0 0 44 19 19 0 0 1 0-44z"
+        fill={colors.gold}
+        fillOpacity={0.12}
+        stroke={colors.gold}
+        strokeWidth={1}
+      />
+      <Path d={star(75, 88, 8)} fill={colors.goldLight} />
+      <Path d={star(30, 24.5, 4.5)} fill={colors.gold} />
+      <Path d={star(122, 154.5, 4.5)} fill={colors.gold} />
+      <Circle cx={124} cy={24} r={1.4} fill={colors.gold} />
+      <Circle cx={24} cy={156} r={1.4} fill={colors.gold} />
+      <Path
+        d="M40 176c10-6 20-6 35 0s25 6 35 0"
+        fill="none"
+        stroke={colors.gold}
+        strokeWidth={1}
+        strokeLinecap="round"
+      />
+    </Svg>
+  );
+}
+
+/** The member's own tarot card: number, art, name and Sequence. */
+export function MemberCard({ arcana, sequence }: { arcana: number; sequence: number | null }) {
+  const { t } = useLocale();
+  const title = useCardTitle(arcana);
+  const width = 200;
+  return (
+    <TeroCard width={width} bare>
       <Text style={styles.numeral}>{toRoman(arcana)}</Text>
-      <Text style={styles.title} accessibilityRole="header">
-        {title.toUpperCase()}
-      </Text>
+      <SunArt width={width * 0.72} />
+      <View style={styles.foot}>
+        <Text style={styles.title} accessibilityRole="header">
+          {title.toUpperCase()}
+        </Text>
+        {sequence !== null && (
+          <Text style={styles.sequence}>{t('home.sequence', { sequence }).toUpperCase()}</Text>
+        )}
+      </View>
     </TeroCard>
   );
 }
 
 const styles = StyleSheet.create({
-  numeral: { fontFamily: fonts.card, fontSize: 40, color: colors.goldLight },
+  numeral: { fontFamily: fonts.card, fontSize: 17, letterSpacing: 2, color: colors.goldLight },
+  foot: {
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    gap: 2,
+    paddingTop: 8,
+    borderTopWidth: 0.5,
+    borderTopColor: 'rgba(201,162,126,0.55)',
+  },
   title: {
     fontFamily: fonts.card,
-    fontSize: 17,
+    fontSize: 14,
     letterSpacing: 3,
     color: colors.oatLight,
     textAlign: 'center',
   },
+  sequence: { fontFamily: fonts.body, fontSize: 9, letterSpacing: 1.6, color: colors.gold },
 });

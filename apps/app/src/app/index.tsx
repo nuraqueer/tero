@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { locales, localeNames } from '@tero/i18n';
 import { colors, fonts, radii, space, touchTarget } from '@tero/ui';
 import { CardMark } from '@/components/CardMark';
+import { Wordmark } from '@/components/Wordmark';
 import { founderSeatOpen } from '@/lib/api';
 import { useLocale } from '@/lib/locale';
 
@@ -28,9 +29,9 @@ export default function Welcome() {
           <Pressable onLongPress={openFounderSetup} delayLongPress={1500}>
             <CardMark height={68} />
           </Pressable>
-          <Text style={styles.wordmark} accessibilityRole="header">
-            Tero
-          </Text>
+          <View accessibilityRole="header">
+            <Wordmark height={34} />
+          </View>
         </View>
 
         <Text style={styles.tagline}>{t('app.tagline')}</Text>
@@ -97,7 +98,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   brand: { alignItems: 'center', gap: space.md, marginBottom: space.xl },
-  wordmark: { fontFamily: fonts.mark, fontSize: 44, color: colors.slate },
   tagline: {
     fontFamily: fonts.display,
     fontSize: 30,

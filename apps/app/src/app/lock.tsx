@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { colors, fonts, space } from '@tero/ui';
 import { CardMark } from '@/components/CardMark';
+import { Wordmark } from '@/components/Wordmark';
 import { Page } from '@/components/Page';
 import { PasscodePad } from '@/components/PasscodePad';
 import { Button } from '@/components/Button';
@@ -37,9 +38,9 @@ export default function Lock() {
     <Page>
       <View style={styles.brand}>
         <CardMark height={68} />
-        <Text style={styles.wordmark} accessibilityRole="header">
-          Tero
-        </Text>
+        <View accessibilityRole="header">
+          <Wordmark height={34} />
+        </View>
         <Text style={styles.prompt}>
           {Platform.OS === 'web' ? t('lock.passphrase.label') : t('lock.enterPasscode')}
         </Text>
@@ -54,7 +55,6 @@ export default function Lock() {
 
 const styles = StyleSheet.create({
   brand: { alignItems: 'center', gap: 14, marginTop: space.xl },
-  wordmark: { fontFamily: fonts.mark, fontSize: 44, color: colors.slate, letterSpacing: 0.9 },
   forgot: { marginTop: space.lg, alignItems: 'center' },
   prompt: { fontFamily: fonts.body, fontSize: 16, color: colors.textSecondary },
 });

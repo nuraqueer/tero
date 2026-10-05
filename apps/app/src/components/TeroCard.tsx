@@ -3,16 +3,27 @@ import { StyleSheet, Text, View } from 'react-native';
 import { colors, space } from '@tero/ui';
 
 /** The tarot-card frame from the design: dark card, gold double border, a star on top. */
-export function TeroCard({ children, width = 260 }: { children: ReactNode; width?: number }) {
+export function TeroCard({
+  children,
+  width = 260,
+  bare = false,
+}: {
+  children: ReactNode;
+  width?: number;
+  /** Leave out the star and bottom space, for cards that draw their own art. */
+  bare?: boolean;
+}) {
   return (
     <View style={[styles.card, { width, height: Math.round(width * 1.55) }]}>
       <View style={styles.outer}>
-        <View style={styles.inner}>
-          <Text style={styles.star} accessibilityElementsHidden importantForAccessibility="no">
-            ✦
-          </Text>
+        <View style={[styles.inner, bare && styles.bare]}>
+          {!bare && (
+            <Text style={styles.star} accessibilityElementsHidden importantForAccessibility="no">
+              ✦
+            </Text>
+          )}
           {children}
-          <View style={styles.spacer} />
+          {!bare && <View style={styles.spacer} />}
         </View>
       </View>
     </View>
@@ -42,6 +53,7 @@ const styles = StyleSheet.create({
     paddingVertical: space.lg,
     paddingHorizontal: space.sm + 2,
   },
+  bare: { paddingTop: 12, paddingBottom: 10, paddingHorizontal: 8 },
   star: { fontSize: 30, color: colors.goldLight },
   spacer: { height: 30 },
 });

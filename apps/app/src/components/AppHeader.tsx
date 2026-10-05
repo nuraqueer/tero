@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { colors, fonts, space } from '@tero/ui';
 import { Button } from '@/components/Button';
 import { CardMark } from '@/components/CardMark';
+import { Wordmark } from '@/components/Wordmark';
 import { useLocale } from '@/lib/locale';
 import { useSession } from '@/lib/session';
 
@@ -13,7 +14,7 @@ export function AppHeader() {
     <View style={styles.header}>
       <View style={styles.brand}>
         <CardMark height={30} />
-        <Text style={styles.wordmark}>Tero</Text>
+        <Wordmark height={18} />
       </View>
       <Button label={t('home.lock')} onPress={lock} kind="secondary" />
     </View>
@@ -28,5 +29,4 @@ const styles = StyleSheet.create({
     marginBottom: space.xl,
   },
   brand: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
-  wordmark: { fontFamily: fonts.mark, fontSize: 22, color: colors.slate },
 });

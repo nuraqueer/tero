@@ -133,6 +133,16 @@ export const en = {
   'arcana.19': 'The Sun',
   'arcana.20': 'Judgement',
   'arcana.21': 'The World',
+  'tabs.gathering': 'Gathering',
+  'tabs.circles': 'Circles',
+  'tabs.messages': 'Messages',
+  'tabs.suits': 'Suits',
+  'tabs.you': 'You',
+  'soon.gathering': 'Posts, live Spaces and news from your Circles will gather here.',
+  'soon.circles': 'Small communities you belong to, each one a calm conversation.',
+  'soon.messages': 'Private chats that only you and the other person can read.',
+  'soon.suits': 'Support, resources, work and safe journeys, sorted by suit.',
+  'soon.note': 'Being built now.',
 } as const;
 
 export type MessageKey = keyof typeof en;
