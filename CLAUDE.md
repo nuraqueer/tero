@@ -132,9 +132,14 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   founder disliked the monospace and the hand-drawn letters). Web lock is a split screen
   (dark card-back panel + white form, nothing identifying). Console: centred, 288px
   sidebar, System status panel (`GET /api/status`, Fool/council only: counts, never
-  who), "Who can see what" page (`roles.tsx`). my-card on ivory. Next: rebuild Suits after
-  the founder's Transspace structure (Health, Safety, Get involved, Grow; resources
-  directory, map, mutual aid, stories, jobs, skills).
+  who), "Who can see what" page (`roles.tsx`). my-card on ivory. Suits rebuilt after the
+  founder's Transspace structure: `lib/suits.ts` maps each suit to parts (Cups: mental
+  health & HIV, someone to talk to, communities, stories; Pentacles: jobs, mutual aid,
+  fundraisers; Swords: safe spaces & housing, legal & immigration, travel & mobility, show
+  my Tero card; Wands: providers, gender-affirming care, general health, skills, journeys).
+  `part/[part]` renders by kind (directory with trust filters, mutual aid, jobs, stories,
+  skills, show card, journeys). Crisis support (`crisis.tsx`) and Map (`map.tsx`, areas
+  only) sit at the top of Suits.
 
 ## Next
 

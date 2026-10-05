@@ -1,54 +1,187 @@
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import type { MessageKey } from '@tero/i18n';
 import { colors, fonts, radii, space } from '@tero/ui';
+import { Button } from '@/components/Button';
 import { Page } from '@/components/Page';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { Bone, BoneRow } from '@/components/Skeleton';
 import { SoonNote } from '@/components/SoonNote';
 import { useLocale } from '@/lib/locale';
-
-export const parts = [
-  'support',
-  'listen',
-  'opportunities',
-  'aid',
-  'resources',
-  'showCard',
-  'journeys',
-  'courses',
-] as const;
-type Part = (typeof parts)[number];
+import { allParts, partKind } from '@/lib/suits';
 
 export function generateStaticParams() {
-  return parts.map((part) => ({ part }));
+  return allParts.map((part) => ({ part }));
 }
 
-/** One part of a suit. Each keeps its own layout from the mockups, with placeholders inside. */
+/** One part of a suit, laid out for what it holds, with placeholders until it's built. */
 export default function PartScreen() {
   const { t } = useLocale();
   const { part: param } = useLocalSearchParams<{ part: string }>();
-  const part: Part = parts.find((p) => p === param) ?? 'support';
+  const part = allParts.find((p) => p === param) ?? allParts[0]!;
+  const kind = partKind[part] ?? 'list';
   return (
     <Page>
       <ScreenHeader title={t(`suit.part.${part}` as MessageKey)} />
       <Text style={styles.lead}>{t(`suit.part.${part}.body` as MessageKey)}</Text>
-      {part === 'showCard' ? (
-        <ShowCard />
-      ) : part === 'journeys' ? (
-        <Journey />
-      ) : part === 'resources' ? (
-        <Resources />
-      ) : (
-        <View style={styles.list}>
-          {Array.from({ length: 5 }, (_, i) => (
-            <BoneRow key={i} />
-          ))}
-        </View>
-      )}
+      {kind === 'directory' && <Directory part={part} />}
+      {kind === 'aid' && <MutualAid />}
+      {kind === 'jobs' && <Jobs />}
+      {kind === 'stories' && <Stories />}
+      {kind === 'skills' && <Skills />}
+      {kind === 'showCard' && <ShowCard />}
+      {kind === 'journeys' && <Journey />}
+      {kind === 'list' && <BoneList />}
       <SoonNote text={t('part.soon')} />
     </Page>
+  );
+}
+
+function Search({ placeholder }: { placeholder: string }) {
+  return (
+    <View style={styles.search} accessibilityState={{ disabled: true }}>
+      <Text style={styles.searchText}>{placeholder}</Text>
+    </View>
+  );
+}
+
+function Pills({ keys }: { keys: MessageKey[] }) {
+  const { t } = useLocale();
+  const [on, setOn] = useState(0);
+  return (
+    <View style={styles.pills}>
+      {keys.map((key, i) => (
+        <Pressable
+          key={key}
+          accessibilityRole="radio"
+          accessibilityState={{ selected: i === on }}
+          onPress={() => setOn(i)}
+          style={[styles.pill, i === on && styles.pillOn]}
+        >
+          <Text style={[styles.pillText, i === on && styles.pillTextOn]}>{t(key)}</Text>
+        </Pressable>
+      ))}
+    </View>
+  );
+}
+
+function Toggles({ keys }: { keys: MessageKey[] }) {
+  const { t } = useLocale();
+  const [on, setOn] = useState<boolean[]>(keys.map(() => false));
+  return (
+    <View style={styles.toggles}>
+      {keys.map((key, i) => (
+        <Pressable
+          key={key}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: on[i] }}
+          onPress={() => setOn((all) => all.map((v, j) => (j === i ? !v : v)))}
+          style={[styles.toggle, on[i] && styles.toggleOn]}
+        >
+          <Text style={[styles.toggleText, on[i] && styles.toggleTextOn]}>
+            {on[i] ? '✓ ' : ''}
+            {t(key)}
+          </Text>
+        </Pressable>
+      ))}
+    </View>
+  );
+}
+
+function BoneList({ rows = 4 }: { rows?: number }) {
+  return (
+    <View style={styles.list}>
+      {Array.from({ length: rows }, (_, i) => (
+        <BoneRow key={i} />
+      ))}
+    </View>
+  );
+}
+
+/** A directory of places, as in a resource map: search, trust signals, community review. */
+function Directory({ part }: { part: string }) {
+  const { t } = useLocale();
+  return (
+    <>
+      <Search placeholder={t('dir.search')} />
+      <Text style={styles.label}>{t('dir.trust')}</Text>
+      <Toggles keys={['dir.verified', 'dir.free', 'dir.international']} />
+      <Text style={styles.count}>{t('dir.count', { count: 0 })}</Text>
+      <View style={styles.empty}>
+        <Text style={styles.emptyText}>{t(`dir.empty.${part}` as MessageKey)}</Text>
+      </View>
+      <Text style={styles.note}>{t('dir.addressNote')}</Text>
+      <View style={styles.actions}>
+        <Button label={t('dir.submit')} onPress={() => undefined} kind="secondary" disabled />
+      </View>
+    </>
+  );
+}
+
+function MutualAid() {
+  const { t } = useLocale();
+  return (
+    <>
+      <View style={styles.twoButtons}>
+        <View style={styles.flex}>
+          <Button label={t('aid.request')} onPress={() => undefined} disabled />
+        </View>
+        <View style={styles.flex}>
+          <Button label={t('aid.offer')} onPress={() => undefined} kind="secondary" disabled />
+        </View>
+      </View>
+      <Pills keys={['aid.all', 'aid.requests', 'aid.offers']} />
+      <BoneList />
+      <Text style={styles.note}>{t('aid.privacy')}</Text>
+    </>
+  );
+}
+
+function Jobs() {
+  const { t } = useLocale();
+  return (
+    <>
+      <Search placeholder={t('jobs.search')} />
+      <Toggles keys={['jobs.remote', 'dir.verified']} />
+      <BoneList />
+      <View style={styles.actions}>
+        <Button label={t('jobs.post')} onPress={() => undefined} kind="secondary" disabled />
+      </View>
+    </>
+  );
+}
+
+function Stories() {
+  const { t } = useLocale();
+  return (
+    <>
+      <View style={styles.callout}>
+        <Text style={styles.calloutText}>{t('stories.note')}</Text>
+      </View>
+      <BoneList rows={3} />
+      <View style={styles.actions}>
+        <Button label={t('stories.share')} onPress={() => undefined} kind="secondary" disabled />
+      </View>
+    </>
+  );
+}
+
+function Skills() {
+  const { t } = useLocale();
+  return (
+    <>
+      <View style={styles.actions}>
+        <Button label={t('skills.readGuides')} onPress={() => router.push('/guides')} />
+        <Button
+          label={t('skills.contribute')}
+          onPress={() => undefined}
+          kind="secondary"
+          disabled
+        />
+      </View>
+      <BoneList rows={3} />
+    </>
   );
 }
 
@@ -72,7 +205,7 @@ function ShowCard() {
         <Text style={styles.wordLabel}>TERO</Text>
       </View>
       <Text style={styles.changes}>{t('card.changesIn', { seconds: left })}</Text>
-      <Text style={styles.hint}>{t('part.showCard.hint')}</Text>
+      <Text style={styles.note}>{t('part.showCard.hint')}</Text>
     </View>
   );
 }
@@ -95,43 +228,84 @@ function Journey() {
   );
 }
 
-function Resources() {
-  const { t } = useLocale();
-  const [kind, setKind] = useState(0);
-  const kinds: MessageKey[] = [
-    'part.resources.all',
-    'part.resources.partners',
-    'part.resources.unaware',
-  ];
-  return (
-    <>
-      <View style={styles.pills}>
-        {kinds.map((key, i) => (
-          <Pressable
-            key={key}
-            accessibilityRole="radio"
-            accessibilityState={{ selected: i === kind }}
-            onPress={() => setKind(i)}
-            style={[styles.pill, i === kind && styles.pillOn]}
-          >
-            <Text style={[styles.pillText, i === kind && styles.pillTextOn]}>{t(key)}</Text>
-          </Pressable>
-        ))}
-      </View>
-      <View style={styles.list}>
-        {Array.from({ length: 4 }, (_, i) => (
-          <BoneRow key={i} />
-        ))}
-      </View>
-      <Text style={styles.hint}>{t('part.resources.unawareNote')}</Text>
-    </>
-  );
-}
-
 const styles = StyleSheet.create({
   lead: { fontFamily: fonts.body, fontSize: 16, lineHeight: 24, color: colors.textSecondary },
-  list: {
+  search: {
     marginTop: space.lg,
+    minHeight: 46,
+    justifyContent: 'center',
+    paddingHorizontal: space.md,
+    borderRadius: radii.pill,
+    backgroundColor: colors.paper,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.hairline,
+  },
+  searchText: { fontFamily: fonts.body, fontSize: 15, color: colors.textMuted },
+  label: {
+    fontFamily: fonts.bodySemibold,
+    fontSize: 12,
+    letterSpacing: 0.6,
+    color: colors.textSecondary,
+    textTransform: 'uppercase',
+    marginTop: space.lg,
+  },
+  toggles: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: space.sm },
+  toggle: {
+    paddingVertical: 7,
+    paddingHorizontal: 12,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: 'rgba(31,30,29,0.15)',
+  },
+  toggleOn: { backgroundColor: colors.oatLight, borderColor: colors.clayText },
+  toggleText: { fontFamily: fonts.bodyMedium, fontSize: 13, color: colors.slate },
+  toggleTextOn: { color: colors.clayText },
+  count: {
+    fontFamily: fonts.bodyMedium,
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginTop: space.lg,
+  },
+  empty: {
+    marginTop: space.sm,
+    padding: space.lg,
+    alignItems: 'center',
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: 'rgba(31,30,29,0.18)',
+  },
+  emptyText: {
+    fontFamily: fonts.body,
+    fontSize: 15,
+    color: colors.textSecondary,
+    textAlign: 'center',
+  },
+  note: {
+    fontFamily: fonts.body,
+    fontSize: 13,
+    lineHeight: 19,
+    color: colors.textSecondary,
+    marginTop: space.md,
+    textAlign: 'center',
+  },
+  actions: { gap: space.sm, marginTop: space.lg },
+  twoButtons: { flexDirection: 'row', gap: space.sm, marginTop: space.lg },
+  flex: { flex: 1 },
+  pills: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: space.lg },
+  pill: {
+    paddingVertical: 7,
+    paddingHorizontal: 14,
+    borderRadius: radii.pill,
+    backgroundColor: 'rgba(31,30,29,0.07)',
+    borderWidth: 1,
+    borderColor: 'rgba(31,30,29,0.12)',
+  },
+  pillOn: { backgroundColor: colors.slate, borderColor: colors.slate },
+  pillText: { fontFamily: fonts.bodyMedium, fontSize: 14, color: colors.slate },
+  pillTextOn: { color: colors.ivory },
+  list: {
+    marginTop: space.md,
     paddingHorizontal: space.md,
     paddingVertical: space.sm,
     borderRadius: radii.md,
@@ -139,6 +313,15 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.hairline,
   },
+  callout: {
+    marginTop: space.lg,
+    padding: space.md,
+    borderRadius: radii.md,
+    backgroundColor: colors.oatLight,
+    borderLeftWidth: 3,
+    borderLeftColor: colors.clay,
+  },
+  calloutText: { fontFamily: fonts.body, fontSize: 14, lineHeight: 21, color: colors.slate },
   cardWrap: { alignItems: 'center', marginTop: space.xl, gap: space.md },
   wordCard: {
     width: 220,
@@ -153,14 +336,6 @@ const styles = StyleSheet.create({
   wordLabel: { fontFamily: fonts.card, fontSize: 12, letterSpacing: 2, color: colors.gold },
   word: { fontFamily: fonts.card, fontSize: 22, letterSpacing: 3, color: colors.oatLight },
   changes: { fontFamily: fonts.bodyMedium, fontSize: 14, color: colors.textSecondary },
-  hint: {
-    fontFamily: fonts.body,
-    fontSize: 13,
-    lineHeight: 19,
-    color: colors.textSecondary,
-    textAlign: 'center',
-    marginTop: space.md,
-  },
   steps: { marginTop: space.lg, gap: space.md },
   step: { flexDirection: 'row', alignItems: 'center', gap: space.md },
   stepDot: {
@@ -176,16 +351,4 @@ const styles = StyleSheet.create({
   stepNumber: { fontFamily: fonts.bodySemibold, fontSize: 14, color: colors.slate },
   stepNumberOn: { color: colors.ivory },
   stepLines: { flex: 1, gap: space.sm },
-  pills: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: space.lg },
-  pill: {
-    paddingVertical: 7,
-    paddingHorizontal: 14,
-    borderRadius: radii.pill,
-    backgroundColor: 'rgba(31,30,29,0.07)',
-    borderWidth: 1,
-    borderColor: 'rgba(31,30,29,0.12)',
-  },
-  pillOn: { backgroundColor: colors.slate, borderColor: colors.slate },
-  pillText: { fontFamily: fonts.bodyMedium, fontSize: 14, color: colors.slate },
-  pillTextOn: { color: colors.ivory },
 });

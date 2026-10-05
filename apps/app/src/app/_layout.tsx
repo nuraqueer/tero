@@ -85,13 +85,14 @@ function Screens() {
         <Stack.Screen name="language" />
         <Stack.Screen name="my-card" options={{ animation: 'fade' }} />
         <Stack.Screen name="roles" />
-        <Stack.Screen name="suit/[suit]" />
         <Stack.Screen name="part/[part]" />
         <Stack.Screen name="compose" options={{ presentation: 'modal' }} />
         <Stack.Screen name="circle" />
         <Stack.Screen name="chat" />
         <Stack.Screen name="space" />
         <Stack.Screen name="moderation" />
+        <Stack.Screen name="crisis" />
+        <Stack.Screen name="map" />
       </Stack.Protected>
       {/* The open guides are public: readable in every state, decoy view included. */}
       <Stack.Screen name="guides/index" />
