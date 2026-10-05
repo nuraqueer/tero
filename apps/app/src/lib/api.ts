@@ -10,6 +10,7 @@ import {
   type ClaimCardRequest,
   type ClaimCardResponse,
   type CreateCardRequest,
+  type FounderSeatResponse,
   type MeResponse,
   type SignInRequest,
   type SignInResponse,
@@ -73,9 +74,15 @@ export async function signIn(identity: Identity): Promise<SignInResponse> {
 }
 
 /** Calls that need a session token. */
+/** Whether the Fool's seat is still open. True only until Tero has its first member. */
+export async function founderSeatOpen(): Promise<boolean> {
+  return (await request<FounderSeatResponse>('/api/founder', 'GET')).open;
+}
+
 export function authed(token: string) {
   return {
     me: () => request<MeResponse>('/api/me', 'GET', token),
+    claimFounder: () => request<{ sequence: number }>('/api/founder', 'POST', token),
     listCards: async () => (await request<CardListResponse>('/api/cards', 'GET', token)).cards,
     createCard: (card: CreateCardRequest) =>
       request<CardSummary>('/api/cards', 'POST', token, card),

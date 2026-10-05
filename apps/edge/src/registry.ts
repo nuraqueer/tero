@@ -94,6 +94,26 @@ export class Registry {
     return null;
   }
 
+  /** True only until the first member exists: the Fool's seat is still open. */
+  founderSeatOpen(): boolean {
+    const [{ count } = { count: 0 }] = this.rows<{ count: number }>(
+      'SELECT COUNT(*) AS count FROM members',
+    );
+    return count === 0;
+  }
+
+  /**
+   * The first person to claim the seat becomes the Fool (Sequence 0). It can happen
+   * only once: as soon as anyone is a member, the seat is closed for good. If
+   * FOUNDER_DID is set, only that address may take it.
+   */
+  claimFounder(did: string, now: number): Result<{ sequence: number }, 'founder_taken'> {
+    if (!this.founderSeatOpen()) return { ok: false, error: 'founder_taken' };
+    if (this.founder && did !== this.founder) return { ok: false, error: 'founder_taken' };
+    this.sql.exec('INSERT INTO members (did, sequence, joined_at) VALUES (?, 0, ?)', did, now);
+    return { ok: true, sequence: 0 };
+  }
+
   listCards(inviter: string, now: number): CardSummary[] {
     this.prune(now);
     return this.rows<CardRow>(

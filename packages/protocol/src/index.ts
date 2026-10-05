@@ -35,6 +35,7 @@ export type MeResponse = {
 };
 
 export type ApiErrorCode =
+  | 'founder_taken'
   | 'bad_request'
   | 'invalid_signature'
   | 'expired'
@@ -47,6 +48,9 @@ export type ApiErrorCode =
   | 'card_unavailable'
   | 'card_limit'
   | 'conflict';
+
+/** Whether the Fool's seat is still open: true only until the first member exists. */
+export type FounderSeatResponse = { open: boolean };
 
 export type ApiError = { error: ApiErrorCode };
 

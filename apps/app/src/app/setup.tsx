@@ -64,7 +64,7 @@ export function SetupFlow({ restorePhrase }: { restorePhrase?: string }) {
   const save = async (passcode: string, decoy: string) => {
     go({ name: 'saving' });
     try {
-      await finishSetup(phrase, passcode, decoy);
+      await finishSetup(phrase, passcode, decoy, !join && !restorePhrase);
     } catch {
       go({ name: 'passcode' }, t('setup.failed'));
     }

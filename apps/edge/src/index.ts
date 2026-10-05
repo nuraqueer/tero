@@ -6,6 +6,7 @@ import {
   isCreateCardRequest,
   isSignInRequest,
   type ApiErrorCode,
+  type FounderSeatResponse,
   type MeResponse,
 } from '@tero/protocol';
 import { createChallenge, sessionDid, signIn } from './auth';
@@ -32,7 +33,14 @@ type Async<T> = {
 export type RegistryApi = Async<
   Pick<
     RegistryObject,
-    'member' | 'listCards' | 'createCard' | 'claimCard' | 'approveCard' | 'destroyCard'
+    | 'member'
+    | 'founderSeatOpen'
+    | 'claimFounder'
+    | 'listCards'
+    | 'createCard'
+    | 'claimCard'
+    | 'approveCard'
+    | 'destroyCard'
   >
 >;
 
@@ -68,6 +76,7 @@ function json(data: unknown, status = 200): Response {
 const error = (code: ApiErrorCode, status: number) => json({ error: code }, status);
 
 const statusFor: Partial<Record<ApiErrorCode, number>> = {
+  founder_taken: 409,
   not_member: 403,
   already_member: 409,
   card_unavailable: 410,
@@ -116,6 +125,12 @@ async function handleSignedIn(
     const member = await reg.member(did);
     const me: MeResponse = { did, member: member !== null, sequence: member?.sequence ?? null };
     return json(me);
+  }
+
+  if (path === '/api/founder') {
+    if (method !== 'POST') return error('method_not_allowed', 405);
+    const result = await reg.claimFounder(did);
+    return result.ok ? json({ sequence: result.sequence }) : error(result.error, 409);
   }
 
   if (path === '/api/cards') {
@@ -170,13 +185,21 @@ async function handleApi(request: Request, path: string, env: Env): Promise<Resp
   }
 
   const known =
-    path.startsWith('/api/auth/') || path === '/api/me' || path.startsWith('/api/cards');
+    path.startsWith('/api/auth/') ||
+    path === '/api/me' ||
+    path === '/api/founder' ||
+    path.startsWith('/api/cards');
   if (!known) return error('not_found', 404);
 
   // A short secret would make tokens guessable; refuse to run with one.
   const secret = env.AUTH_SECRET;
   const reg = registry(env);
   if (!secret || secret.length < 32 || !reg) return error('not_configured', 503);
+
+  if (path === '/api/founder' && request.method === 'GET') {
+    const seat: FounderSeatResponse = { open: await reg.founderSeatOpen() };
+    return json(seat);
+  }
 
   if (path === '/api/auth/challenge' || path === '/api/auth/session') {
     return handleAuth(request, path, secret);
@@ -188,17 +211,9 @@ async function handleApi(request: Request, path: string, env: Env): Promise<Resp
   return handleSignedIn(request, path, did, reg);
 }
 
-/** Tero has one address. Everything else (the workers.dev preview address) forwards here. */
-export const canonicalOrigin = 'https://tero.pherus.org';
-
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
-    if (url.hostname.endsWith('.workers.dev')) {
-      return withSecurityHeaders(
-        Response.redirect(canonicalOrigin + url.pathname + url.search, 308),
-      );
-    }
     if (url.pathname.startsWith('/api/')) return handleApi(request, url.pathname, env);
     if (!env.ASSETS) return error('not_found', 404);
 

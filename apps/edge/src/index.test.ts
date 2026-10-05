@@ -36,14 +36,3 @@ describe('edge worker', () => {
     expect(res.headers.get('x-frame-options')).toBe('DENY');
   });
 });
-
-describe('one address', () => {
-  it('forwards the workers.dev address to tero.pherus.org, keeping the path', async () => {
-    const res = await worker.fetch(
-      new Request('https://tero.pherus.workers.dev/c/abc?x=1'),
-      {} as Env,
-    );
-    expect(res.status).toBe(308);
-    expect(res.headers.get('location')).toBe('https://tero.pherus.org/c/abc?x=1');
-  });
-});

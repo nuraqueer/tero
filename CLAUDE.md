@@ -38,12 +38,12 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
 
 ## Deployment
 
-- Worker `tero` on the Pherus Cloudflare account. **One address: `https://tero.pherus.org`.**
-  The workers.dev address only forwards there (308), and the phone app uses tero.pherus.org.
+- Worker `tero` on the Pherus Cloudflare account. **One address only: `https://tero.pherus.org`.**
+  workers.dev and preview URLs are disabled in `wrangler.jsonc`; smart placement is on.
 - Deploy: `cd apps/app && bunx expo export --platform web`, then
   `cd apps/edge && bunx wrangler deploy` (needs `CLOUDFLARE_API_TOKEN`).
-- Worker secrets/vars: `AUTH_SECRET` (signs challenges and sessions),
-  `FOUNDER_DID` (the Fool's address; makes the first member).
+- Worker secrets/vars: `AUTH_SECRET` (signs challenges and sessions); optional
+  `FOUNDER_DID` (restricts who may take the Fool's seat).
 - Members and cards live in the `RegistryObject` SQLite Durable Object.
 - Expo project id `f339bd48-af04-41e7-b1c6-5706f9f0680c`; EAS profiles in `apps/app/eas.json`.
   Phones talk to `EXPO_PUBLIC_API_URL`, defaulting to tero.pherus.org.
@@ -58,8 +58,10 @@ Mysteries_. Owner: the founder of Pherus ("the Fool"). Full picture:
   Unlocking accepts any length so older web vaults still open. Phones keep 6 digits.
 - Restore with the 12 words (`src/app/restore.tsx`): from the welcome screen (new
   device) or the lock screen ("Forgot it?"). Same words give the same address.
-- `FOUNDER_DID` is not set yet: once the founder has set up on tero.pherus.org, set it
-  to their address (`bunx wrangler secret put FOUNDER_DID` in `apps/edge`).
+- The Fool's seat: the hidden founder setup (long press on the welcome mark) opens only
+  while `GET /api/founder` says `{open: true}`, i.e. Tero has no members. The first
+  `POST /api/founder` after setup becomes Sequence 0; then the seat is closed for good.
+  `FOUNDER_DID` is optional and, if set, restricts who may take the seat.
 
 ## Next
 

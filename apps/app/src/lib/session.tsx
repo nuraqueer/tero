@@ -53,7 +53,13 @@ type SessionValue = {
   state: SessionState;
   /** Claims a scanned card with new keys made on this phone. */
   startJoin: (cardToken: string) => Promise<JoinResult>;
-  finishSetup: (phrase: string, passcode: string, decoyPasscode: string) => Promise<void>;
+  /** founder: claim the Fool's seat after setup (only works while Tero has no members). */
+  finishSetup: (
+    phrase: string,
+    passcode: string,
+    decoyPasscode: string,
+    founder?: boolean,
+  ) => Promise<void>;
   unlock: (passcode: string) => Promise<vault.UnlockResult>;
   lock: () => void;
   /** The signed-in API, or null while offline or locked. */
@@ -97,11 +103,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     setState((s) => (s.status === 'open' && s.mode === 'full' ? { ...s, ...change } : s));
   };
 
-  const connect = useCallback(async (identity: Identity, current: number) => {
+  const connect = useCallback(async (identity: Identity, current: number, founder = false) => {
     try {
       const session = await signIn(identity);
       if (current !== openCount.current) return;
       token.current = session.token;
+      if (founder) {
+        // The seat may already be taken; then this address simply isn't the Fool.
+        await authed(session.token)
+          .claimFounder()
+          .catch(() => undefined);
+      }
       const me = await authed(session.token).me();
       updateFull(current, { connection: 'connected', member: me.member, sequence: me.sequence });
     } catch {
@@ -110,7 +122,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const openFull = useCallback(
-    async (phrase: string, join: Join | null = null) => {
+    async (phrase: string, join: Join | null = null, founder = false) => {
       const seed = await phraseToSeed(phrase);
       const identity = identityFromSeed(seed);
       const current = ++openCount.current;
@@ -125,7 +137,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         sequence: null,
         join,
       });
-      void connect(identity, current);
+      void connect(identity, current, founder);
     },
     [connect],
   );
@@ -147,10 +159,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const finishSetup = useCallback(
-    async (phrase: string, passcode: string, decoyPasscode: string) => {
+    async (phrase: string, passcode: string, decoyPasscode: string, founder = false) => {
       const join = state.status === 'new' ? state.join : null;
       await vault.saveNewVault(phrase, passcode, decoyPasscode);
-      await openFull(phrase, join);
+      await openFull(phrase, join, founder && !join);
     },
     [openFull, state],
   );

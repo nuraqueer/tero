@@ -126,3 +126,30 @@ describe('registry', () => {
     expect(reg.createCard(newcomer, card(99), t0 + cardTtlMs).ok).toBe(true);
   });
 });
+
+describe('the Fool seat', () => {
+  it('is open until the first member, given once, then closed for good', () => {
+    const registry = new Registry(memorySql());
+    expect(registry.founderSeatOpen()).toBe(true);
+    expect(registry.claimFounder('did:key:first', 1)).toEqual({ ok: true, sequence: 0 });
+    expect(registry.member('did:key:first', 2)).toEqual({ sequence: 0 });
+    expect(registry.founderSeatOpen()).toBe(false);
+    expect(registry.claimFounder('did:key:second', 3)).toEqual({
+      ok: false,
+      error: 'founder_taken',
+    });
+    expect(registry.claimFounder('did:key:first', 4)).toEqual({
+      ok: false,
+      error: 'founder_taken',
+    });
+  });
+
+  it('only lets FOUNDER_DID take the seat when it is set', () => {
+    const registry = new Registry(memorySql(), 'did:key:fool');
+    expect(registry.claimFounder('did:key:someone', 1)).toEqual({
+      ok: false,
+      error: 'founder_taken',
+    });
+    expect(registry.claimFounder('did:key:fool', 2)).toEqual({ ok: true, sequence: 0 });
+  });
+});
