@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, Platform } from 'react-native';
+import Svg, { Path, Rect } from 'react-native-svg';
 import { router, useFocusEffect, type Href } from 'expo-router';
 import { localeNames } from '@tero/i18n';
 import { colors, fonts, radii, space } from '@tero/ui';
@@ -7,11 +8,16 @@ import { Button } from '@/components/Button';
 import { BiometricRow } from '@/components/BiometricRow';
 import { Code } from '@/components/Code';
 import { CardAvatar } from '@/components/CardAvatar';
+import { isTestingBuild } from '@/lib/testing-build';
 import { useCardTitle } from '@/components/MemberCard';
 import { Page } from '@/components/Page';
 import { TabHeader } from '@/components/TabHeader';
+import { ProfileEditor } from '@/components/ProfileEditor';
+import { MessageSettings } from '@/components/MessageSettings';
+import { TestDeviceReset } from '@/components/TestDeviceReset';
 import { useLocale } from '@/lib/locale';
 import { useFullSession } from '@/lib/session';
+import { useDiscovery } from '@/lib/discovery';
 
 const pollMs = 4000;
 
@@ -19,6 +25,7 @@ const pollMs = 4000;
 export default function You() {
   const { t, locale } = useLocale();
   const session = useFullSession();
+  const { self: profile } = useDiscovery();
   const [openCards, setOpenCards] = useState<number | null>(null);
   const cardTitle = useCardTitle(session?.arcana ?? 0);
 
@@ -53,7 +60,13 @@ export default function You() {
     offline: t('home.offline'),
   }[session.connection];
 
-  const rows: Array<{ label: string; value?: string; href: Href; show: boolean }> = [
+  const rows: { label: string; value?: string; href: Href; show: boolean }[] = [
+    { label: 'Tarot design study', href: '/card-designs' as Href, show: isTestingBuild },
+    {
+      label: 'Sefirah development',
+      href: '/sefirah' as Href,
+      show: process.env.EXPO_PUBLIC_SEFIRAH_EXPERIMENTAL === 'enabled',
+    },
     {
       label: t('home.cards.title'),
       value: openCards ? String(openCards) : undefined,
@@ -74,7 +87,39 @@ export default function You() {
     <Page tabs>
       <TabHeader
         title={t('tabs.you')}
-        right={<Button label={t('home.lock')} onPress={session.lock} kind="secondary" />}
+        right={
+          Platform.OS === 'android' ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('home.lock')}
+              onPress={session.lock}
+              hitSlop={4}
+              style={({ pressed }) => [styles.lock, pressed && styles.pressed]}
+            >
+              <Svg width={20} height={20} viewBox="0 0 24 24" accessibilityElementsHidden>
+                <Rect
+                  x={5}
+                  y={10}
+                  width={14}
+                  height={11}
+                  rx={3}
+                  fill="none"
+                  stroke={colors.slate}
+                  strokeWidth={1.6}
+                />
+                <Path
+                  d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"
+                  fill="none"
+                  stroke={colors.slate}
+                  strokeWidth={1.6}
+                  strokeLinecap="round"
+                />
+              </Svg>
+            </Pressable>
+          ) : (
+            <Button label={t('home.lock')} onPress={session.lock} kind="secondary" />
+          )
+        }
       />
 
       {member && session.arcana !== null && (
@@ -84,18 +129,27 @@ export default function You() {
           onPress={() => router.push('/my-card')}
           style={({ pressed }) => [styles.me, pressed && styles.pressed]}
         >
-          <CardAvatar size={64} />
+          <CardAvatar size={40} arcana={session.arcana} />
           <View style={styles.meText}>
-            <Text style={styles.meName}>{cardTitle}</Text>
+            <Text style={styles.meName}>{profile?.displayName ?? cardTitle}</Text>
             <Text style={styles.meSub}>
-              {session.sequence !== null &&
-                `${t('home.sequence', { sequence: session.sequence })} · `}
-              {t('myCard.reveal')}
+              {profile ? (
+                `@${profile.handle}`
+              ) : (
+                <>
+                  {session.sequence !== null &&
+                    `${t('home.sequence', { sequence: session.sequence })} · `}
+                  {t('myCard.reveal')}
+                </>
+              )}
             </Text>
           </View>
           <Text style={styles.chevron}>›</Text>
         </Pressable>
       )}
+
+      {member && <ProfileEditor />}
+      {member && <MessageSettings />}
 
       {member === false && session.join && (
         <View style={styles.section}>
@@ -133,6 +187,7 @@ export default function You() {
       </View>
 
       {Platform.OS !== 'web' && <BiometricRow />}
+      {Platform.OS !== 'web' && <TestDeviceReset />}
 
       <View style={styles.foot}>
         <View style={styles.status}>
@@ -150,20 +205,28 @@ export default function You() {
 }
 
 const styles = StyleSheet.create({
+  lock: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.oatLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   me: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.md,
-    padding: space.md,
+    padding: 12,
     borderRadius: radii.lg,
     backgroundColor: colors.paper,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.hairline,
   },
   meText: { flex: 1, gap: 2 },
-  meName: { fontFamily: fonts.display, fontSize: 24, lineHeight: 30, color: colors.slate },
-  meSub: { fontFamily: fonts.body, fontSize: 14, color: colors.textSecondary },
-  section: { marginTop: space.md, gap: space.sm + 4 },
+  meName: { fontFamily: fonts.display, fontSize: 20, lineHeight: 26, color: colors.slate },
+  meSub: { fontFamily: fonts.body, fontSize: 13, color: colors.textSecondary },
+  section: { marginTop: 12, gap: space.sm + 4 },
   heading: { fontFamily: fonts.display, fontSize: 26, lineHeight: 32, color: colors.slate },
   body: {
     fontFamily: fonts.body,
@@ -172,9 +235,9 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     marginTop: space.sm,
   },
-  code: { marginTop: space.md },
+  code: { marginTop: 12 },
   list: {
-    marginTop: space.lg,
+    marginTop: 12,
     borderRadius: radii.md,
     backgroundColor: colors.paper,
     borderWidth: StyleSheet.hairlineWidth,
@@ -185,7 +248,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.sm + 4,
-    minHeight: 50,
+    minHeight: 46,
+    paddingVertical: space.sm,
     paddingHorizontal: space.md,
   },
   divider: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: 'rgba(31,30,29,0.12)' },
@@ -193,7 +257,7 @@ const styles = StyleSheet.create({
   rowLabel: { flex: 1, fontFamily: fonts.body, fontSize: 16, color: colors.slate },
   rowValue: { fontFamily: fonts.body, fontSize: 14, color: colors.textSecondary },
   chevron: { fontFamily: fonts.body, fontSize: 22, color: '#9C9A92', marginTop: -2 },
-  foot: { marginTop: space.lg, gap: space.xs, paddingHorizontal: space.xs },
+  foot: { marginTop: 12, gap: space.xs, paddingHorizontal: space.xs },
   status: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
   light: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.oat },
   lightOn: { backgroundColor: colors.clay },

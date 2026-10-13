@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "185163147087",
+    "project_id": "tero-pherus-56e478f4",
+    "storage_bucket": "tero-pherus-56e478f4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:185163147087:android:9e3af595ad39b44cadc73a",
+        "android_client_info": {
+          "package_name": "org.pherus.tero.sefirahdev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz3iVYXlqtS4CseDBLMD4Jthsdp9R_MQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

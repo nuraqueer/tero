@@ -1,0 +1,6 @@
+[defaults.bindings.kotlin]
+package_name = "org.pherus.sefirah.mls.generated"
+cdylib_name = "sefirah_mls"
+
+[defaults.bindings.swift]
+module_name = "SefirahMls"

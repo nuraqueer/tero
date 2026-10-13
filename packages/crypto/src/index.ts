@@ -6,3 +6,8 @@ export * from './vault';
 export { bytesToBase64Url, base64UrlToBytes, randomBytes } from './bytes';
 export * from './pseudonym';
 export * from './box';
+export * from './sealed-post';
+export * from './peer-contact';
+export * from './directory';
+export * from './private-delivery';
+export * from './chat-presence';

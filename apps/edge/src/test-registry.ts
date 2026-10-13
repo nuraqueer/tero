@@ -19,6 +19,13 @@ export function memorySql(): Sql {
 export function testRegistry(founder?: string, clock = { now: Date.now() }) {
   const registry = new Registry(memorySql(), founder);
   const api: RegistryApi = {
+    discoveryPage: (did, cursor) => registry.discovery.page(did, cursor),
+    grantDirectory: (did, grant) => registry.discovery.grant(did, grant),
+    handleAvailable: (did, directory, handleTag) =>
+      registry.discovery.handleAvailable(did, directory, handleTag),
+    saveProfile: (did, profile) => registry.discovery.saveProfile(did, profile),
+    connections: (did) => registry.discovery.connections(did),
+    changeConnection: (did, peer, action) => registry.discovery.connect(did, peer, action),
     member: (did) => registry.member(did, clock.now),
     founderSeatOpen: () => registry.founderSeatOpen(),
     stats: () => registry.stats(clock.now),

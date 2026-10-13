@@ -1,0 +1,4 @@
+native/target/
+ios/Generated/
+android/build/
+android/src/main/jniLibs/

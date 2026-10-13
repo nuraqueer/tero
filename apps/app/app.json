@@ -16,6 +16,11 @@
       },
       "runtimeVersion": {
         "policy": "appVersion"
+      },
+      "icon": {
+        "light": "./assets/icon.png",
+        "dark": "./assets/icon-dark.png",
+        "tinted": "./assets/icon-tinted.png"
       }
     },
     "android": {
@@ -49,6 +54,14 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
+      [
+        "expo-notifications",
+        {
+          "defaultChannel": "messages",
+          "color": "#A75B4A",
+          "icon": "./assets/notification-icon.png"
+        }
+      ],
       "expo-router",
       "expo-font",
       "expo-localization",
@@ -75,9 +88,7 @@
           "photosPermission": false,
           "savePhotosPermission": "Tero saves your Tero card image to Photos only when you ask.",
           "isAccessMediaLocationEnabled": false,
-          "granularPermissions": [
-            "photo"
-          ]
+          "granularPermissions": ["photo"]
         }
       ],
       [

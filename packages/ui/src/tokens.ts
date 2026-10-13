@@ -49,3 +49,25 @@ export const space = {
 
 /** Minimum size for anything a person taps. */
 export const touchTarget = 44;
+
+/** Hino navigation: shared proportions and motion, with native glass rendering. */
+export const navigation = {
+  height: 52,
+  androidHeight: 48,
+  horizontalInset: 12,
+  bottomGap: 8,
+  androidBottomGap: 18,
+  innerInset: 3,
+  iconSize: 22,
+  spring: { damping: 26, stiffness: 300, mass: 0.8 },
+  collapseSpring: { damping: 26, stiffness: 240, mass: 1 },
+} as const;
+
+/** Tarot deck materials. Separate from the application's Hino interface colours. */
+export const tarot = {
+  ratio: 1.7,
+  paper: '#1F1E1D',
+  ink: '#E6C9A8',
+  line: '#C9A27E',
+  back: '#1F1E1D',
+} as const;

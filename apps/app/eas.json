@@ -4,6 +4,20 @@
     "appVersionSource": "remote"
   },
   "build": {
+    "testflight": {
+      "distribution": "store",
+      "developmentClient": false,
+      "autoIncrement": true,
+      "channel": "testflight",
+      "environment": "preview",
+      "env": {
+        "SEFIRAH_NATIVE_BUILD": "1",
+        "TERO_NATIVE_TESTING": "1",
+        "EXPO_PUBLIC_SEFIRAH_EXPERIMENTAL": "enabled",
+        "EXPO_PUBLIC_API_URL": "http://192.168.1.4:8794"
+      },
+      "ios": { "simulator": false }
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal",
@@ -19,6 +33,9 @@
     }
   },
   "submit": {
+    "testflight": {
+      "ios": { "ascAppId": "6822219523" }
+    },
     "production": {}
   }
 }

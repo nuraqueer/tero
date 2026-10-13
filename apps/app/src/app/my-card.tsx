@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import { router } from 'expo-router';
-import { colors, fonts, space } from '@tero/ui';
+import { colors, fonts, space, tarot } from '@tero/ui';
 import { CardBack } from '@/components/CardBack';
 import { MemberCard } from '@/components/MemberCard';
 import { useLocale } from '@/lib/locale';
@@ -48,7 +48,7 @@ export default function MyCard() {
 
   if (!session || session.arcana === null) return null;
 
-  const cardWidth = Math.min(width - 64, (height - 220) / 1.55, 320);
+  const cardWidth = Math.min(width - 64, (height - 220) / tarot.ratio, 320);
   const front = turn.interpolate({ inputRange: [0, 1], outputRange: ['180deg', '360deg'] });
   const back = turn.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
 
@@ -58,7 +58,7 @@ export default function MyCard() {
         accessibilityRole="button"
         accessibilityLabel={t('myCard.turn')}
         onPress={() => flip(!faceUp)}
-        style={{ width: cardWidth, height: cardWidth * 1.55 }}
+        style={{ width: cardWidth, height: cardWidth * tarot.ratio }}
       >
         <Animated.View
           style={[styles.face, { transform: [{ perspective: 1200 }, { rotateY: back }] }]}

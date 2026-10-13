@@ -49,6 +49,13 @@ export async function hasVault(): Promise<boolean> {
   return (await getItem(keys.vault)) !== null;
 }
 
+/** Remove this device's login, never its membership or server records. */
+export async function forgetVault(): Promise<void> {
+  await deleteItem(keys.vault);
+  await deleteItem(keys.device);
+  await deleteItem(keys.failures);
+}
+
 /** Saves a new vault: the real slot holds the phrase, the decoy slot opens the basic view. */
 export async function saveNewVault(
   phrase: string,

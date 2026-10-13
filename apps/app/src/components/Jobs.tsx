@@ -1,3 +1,4 @@
+import { prioritizePost } from '@/lib/help-activity';
 import { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { useFocusEffect } from 'expo-router';
@@ -12,7 +13,7 @@ import { useLocale } from '@/lib/locale';
 import { useFullSession } from '@/lib/session';
 
 /** Openings, freelance work and mentoring shared by members. */
-export function Jobs({ create = false }: { create?: boolean }) {
+export function Jobs({ create = false, focus }: { create?: boolean; focus?: string }) {
   const { t } = useLocale();
   const session = useFullSession();
   const connected = session?.connection === 'connected';
@@ -52,6 +53,8 @@ export function Jobs({ create = false }: { create?: boolean }) {
       return words.every((w) => text.includes(w));
     });
   }, [jobs, query, remoteOnly, type]);
+
+  const ordered = prioritizePost(shown, focus);
 
   if (!session) return <Text style={styles.note}>{t('dir.membersOnly')}</Text>;
 
@@ -99,7 +102,7 @@ export function Jobs({ create = false }: { create?: boolean }) {
       )}
       {shown.length > 0 && (
         <View style={styles.list}>
-          {shown.map((job, i) => (
+          {ordered.map((job, i) => (
             <View key={job.id} style={[styles.job, i > 0 && styles.divider]}>
               <Text style={styles.kind}>
                 {t(`jobs.type.${job.type}` as MessageKey)} · {job.remote ? t('jobs.remoteTag') : ''}

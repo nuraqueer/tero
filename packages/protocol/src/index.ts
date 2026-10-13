@@ -64,7 +64,9 @@ export type ApiErrorCode =
   | 'card_limit'
   | 'not_allowed'
   | 'conflict'
-  | 'rate_limited';
+  | 'rate_limited'
+  | 'capacity'
+  | 'unavailable';
 
 /** How Tero is doing, for the Fool and the council only. Counts, never who. */
 export type StatusResponse = {
@@ -74,6 +76,9 @@ export type StatusResponse = {
   /** Server time, to show the check is fresh. */
   checkedAt: number;
 };
+
+/** Membership size visible to members. Not a count of live transport peers. */
+export type NetworkSizeResponse = { members: number; checkedAt: number };
 
 /** Whether the Fool's seat is still open: true only until the first member exists. */
 export type FounderSeatResponse = { open: boolean };
@@ -565,3 +570,4 @@ export function isSaveJourneyBoxRequest(value: unknown): value is SaveJourneyBox
     (v.version as number) >= 0
   );
 }
+export * from './discovery';

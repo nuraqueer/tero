@@ -110,6 +110,13 @@ export async function disableBiometric(): Promise<void> {
   await SecureStore.deleteItemAsync(onKey, storeOptions).catch(() => undefined);
 }
 
+/** Account switching must fail visibly if a stored biometric seed cannot be removed. */
+export async function forgetBiometric(): Promise<void> {
+  await SecureStore.deleteItemAsync(seedKey, storeOptions);
+  await SecureStore.deleteItemAsync(onKey, storeOptions);
+  await SecureStore.deleteItemAsync(askedKey, storeOptions);
+}
+
 /**
  * The biometric check, then the seed. Null if cancelled or not recognised (the passcode
  * is the way in then); 'gone' if the seed is no longer there, which turns the option off.

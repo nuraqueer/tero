@@ -78,16 +78,24 @@ export function SmallButton({
   label,
   onPress,
   on = false,
+  disabled = false,
 }: {
   label: string;
   onPress: () => void;
   on?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      disabled={disabled}
       onPress={onPress}
-      style={({ pressed }) => [styles.small, on && styles.smallOn, pressed && styles.pressed]}
+      style={({ pressed }) => [
+        styles.small,
+        on && styles.smallOn,
+        (pressed || disabled) && styles.pressed,
+      ]}
     >
       <Text style={[styles.smallText, on && styles.smallTextOn]}>{label}</Text>
     </Pressable>

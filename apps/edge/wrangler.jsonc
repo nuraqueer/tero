@@ -10,9 +10,20 @@
     "run_worker_first": ["/api/*", "/c/*"],
   },
   "durable_objects": {
-    "bindings": [{ "name": "REGISTRY", "class_name": "RegistryObject" }],
+    "bindings": [
+      { "name": "REGISTRY", "class_name": "RegistryObject" },
+      { "name": "SEFIRAH_FALLBACK", "class_name": "FallbackObject" },
+      { "name": "CHAT_MAILBOX", "class_name": "ChatMailbox" },
+      { "name": "CHAT_PUSH", "class_name": "ChatPush" },
+    ],
   },
-  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["RegistryObject"] }],
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["RegistryObject"] },
+    { "tag": "v2", "new_sqlite_classes": ["FallbackObject"] },
+    { "tag": "v3", "new_sqlite_classes": ["ChatMailbox"] },
+    { "tag": "v4", "new_sqlite_classes": ["ChatPush"] },
+  ],
+  // SEFIRAH_EXPERIMENTAL is intentionally absent: the development API stays off.
   "routes": [{ "pattern": "tero.pherus.org", "custom_domain": true }],
   // One address only: tero.pherus.org. No workers.dev or preview addresses.
   "placement": { "mode": "smart" },

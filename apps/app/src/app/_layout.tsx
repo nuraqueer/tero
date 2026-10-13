@@ -17,6 +17,12 @@ import { colors } from '@tero/ui';
 import { LocaleProvider } from '@/lib/locale';
 import { SessionProvider, useSession } from '@/lib/session';
 import { WebShell } from '@/components/WebShell';
+import { DiscoveryProvider } from '@/lib/discovery';
+import { ChatPreparation } from '@/lib/chat-preparation';
+import { ChatActivityProvider } from '@/lib/chat-activity';
+import { MessageNotifications } from '@/lib/message-notifications';
+import { ChatPresenceProvider } from '@/lib/chat-presence';
+import { isTestingBuild } from '@/lib/testing-build';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -113,6 +119,14 @@ function Screens() {
         <Stack.Screen name="crisis" />
         <Stack.Screen name="map" />
       </Stack.Protected>
+      <Stack.Protected
+        guard={full && !web && process.env.EXPO_PUBLIC_SEFIRAH_EXPERIMENTAL === 'enabled'}
+      >
+        <Stack.Screen name="sefirah" />
+      </Stack.Protected>
+      <Stack.Protected guard={full && isTestingBuild}>
+        <Stack.Screen name="card-designs" />
+      </Stack.Protected>
       {/* Language and the open guides work in every state, decoy view included. */}
       <Stack.Screen name="language" />
       <Stack.Screen name="guides/index" />
@@ -124,5 +138,18 @@ function Screens() {
   );
   // The public pages never sit inside the console's sidebar.
   const publicPage = pathname === '/' || pathname.startsWith('/guides');
-  return full && web && !publicPage ? <WebShell>{stack}</WebShell> : stack;
+  const screens = full && web && !publicPage ? <WebShell>{stack}</WebShell> : stack;
+  return full ? (
+    <DiscoveryProvider key={state.identity.did}>
+      <ChatActivityProvider>
+        <ChatPresenceProvider>
+          <MessageNotifications>
+            <ChatPreparation>{screens}</ChatPreparation>
+          </MessageNotifications>
+        </ChatPresenceProvider>
+      </ChatActivityProvider>
+    </DiscoveryProvider>
+  ) : (
+    screens
+  );
 }

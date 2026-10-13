@@ -1,0 +1,28 @@
+name: Native MLS foundation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/app/modules/sefirah-mls/native/**'
+      - '.github/workflows/native-mls.yml'
+  pull_request:
+    paths:
+      - 'apps/app/modules/sefirah-mls/native/**'
+      - '.github/workflows/native-mls.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/app/modules/sefirah-mls/native
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup toolchain install stable --profile minimal --component rustfmt --component clippy
+      - run: cargo +stable fmt -- --check
+      - run: cargo +stable clippy --all-targets --locked -- -D warnings
+      - run: cargo +stable test --locked

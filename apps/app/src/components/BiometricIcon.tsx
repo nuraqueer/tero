@@ -15,7 +15,7 @@ export function BiometricIcon({
   const line = {
     fill: 'none',
     stroke: color,
-    strokeWidth: 1.6,
+    strokeWidth: 1.4,
     strokeLinecap: 'round',
     strokeLinejoin: 'round',
   } as const;
@@ -32,12 +32,18 @@ export function BiometricIcon({
         </>
       ) : (
         <>
-          <Path d="M6.5 7.5A7 7 0 0 1 19 12v1.5M5 11.5V12c0 3 .8 5.5 2.2 7.5" {...line} />
           <Path
-            d="M8.5 12a3.5 3.5 0 0 1 7 0c0 3.5-.6 6-1.8 8.5M12 12c0 3.2-.5 6-1.8 8.5"
+            d="M5.2 5.8a9.6 9.6 0 0 1 13.6 0M3.4 10.3A8.8 8.8 0 0 1 12 3.5a8.8 8.8 0 0 1 8.8 8.8v2"
             {...line}
           />
-          <Path d="M9 4.2A9 9 0 0 1 20.6 8" {...line} />
+          <Path
+            d="M3.2 14c.1 2.2.5 4.2 1.4 6M6.5 17.8A18 18 0 0 1 6 12.3a6 6 0 0 1 12 0c0 3.7-.5 6.6-1.7 9"
+            {...line}
+          />
+          <Path
+            d="M8 21c1.1-2.6 1.3-5.4 1.1-8.7a2.9 2.9 0 0 1 5.8 0c0 3.3-.3 6.6-1.3 9.2M12 12.3c.2 2.5 0 5.2-.6 7.3"
+            {...line}
+          />
         </>
       )}
     </Svg>

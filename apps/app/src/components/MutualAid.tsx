@@ -1,3 +1,4 @@
+import { prioritizePost } from '@/lib/help-activity';
 import { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from 'expo-router';
@@ -20,7 +21,7 @@ import { useFullSession } from '@/lib/session';
 type Show = 'all' | 'request' | 'offer' | 'mine';
 
 /** Asking for help and offering it. Replies go only to the person who posted. */
-export function MutualAid({ create }: { create?: AidKind }) {
+export function MutualAid({ create, focus }: { create?: AidKind; focus?: string }) {
   const { t } = useLocale();
   const session = useFullSession();
   const connected = session?.connection === 'connected';
@@ -52,11 +53,13 @@ export function MutualAid({ create }: { create?: AidKind }) {
     () =>
       (posts ?? []).filter((p) => {
         if (show === 'mine') return p.mine;
-        if (!p.open) return false;
+        if (!p.open) return p.mine && p.id === focus;
         return show === 'all' || p.kind === show;
       }),
-    [posts, show],
+    [posts, show, focus],
   );
+
+  const ordered = prioritizePost(shown, focus);
 
   if (!session) return <Text style={styles.note}>{t('dir.membersOnly')}</Text>;
 
@@ -64,12 +67,14 @@ export function MutualAid({ create }: { create?: AidKind }) {
     try {
       await run();
       load();
+      return true;
     } catch {
       setProblem(t('dir.failed'));
+      return false;
     }
   };
 
-  const filters: Array<[Show, MessageKey]> = [
+  const filters: [Show, MessageKey][] = [
     ['all', 'aid.all'],
     ['request', 'aid.requests'],
     ['offer', 'aid.offers'],
@@ -130,7 +135,7 @@ export function MutualAid({ create }: { create?: AidKind }) {
       )}
       {shown.length > 0 && (
         <View style={styles.list}>
-          {shown.map((post, i) => (
+          {ordered.map((post, i) => (
             <AidRow
               key={post.id}
               post={post}
@@ -159,7 +164,7 @@ function AidRow({
   post: AidPost;
   first: boolean;
   canRemove: boolean;
-  onReply: (note: string) => Promise<void>;
+  onReply: (note: string) => Promise<boolean>;
   onClose: () => void;
   onRemove: () => void;
 }) {
@@ -168,14 +173,40 @@ function AidRow({
   const [replying, setReplying] = useState(false);
   const [note, setNote] = useState('');
   const [replies, setReplies] = useState<AidReply[] | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [replyProblem, setReplyProblem] = useState(false);
+  const connected = session?.connection === 'connected';
 
   const showReplies = async () => {
+    if (busy) return;
     if (replies) return setReplies(null);
-    const list = await session
-      ?.api()
-      ?.aidReplies(post.id)
-      .catch(() => null);
-    setReplies(list ?? []);
+    const client = session?.api();
+    if (!client) return;
+    setBusy(true);
+    setReplyProblem(false);
+    try {
+      setReplies(await client.aidReplies(post.id));
+    } catch {
+      setReplyProblem(true);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const sendReply = async () => {
+    if (busy || !connected || !note.trim()) return;
+    setBusy(true);
+    setReplyProblem(false);
+    try {
+      if (await onReply(note.trim())) {
+        setReplying(false);
+        setNote('');
+      } else setReplyProblem(true);
+    } catch {
+      setReplyProblem(true);
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -202,6 +233,11 @@ function AidRow({
         </View>
       )}
 
+      {replyProblem && (
+        <Text accessibilityLiveRegion="polite" style={styles.problem}>
+          {t('dir.failed')}
+        </Text>
+      )}
       {replying && (
         <View style={styles.replyForm}>
           <Field
@@ -217,12 +253,14 @@ function AidRow({
             <SmallButton
               label={t('aid.send')}
               on
-              onPress={() => {
-                if (note.trim() === '') return;
-                void onReply(note.trim()).then(() => setReplying(false));
-              }}
+              disabled={busy || !connected || !note.trim()}
+              onPress={() => void sendReply()}
             />
-            <SmallButton label={t('dir.form.cancel')} onPress={() => setReplying(false)} />
+            <SmallButton
+              label={t('dir.form.cancel')}
+              disabled={busy}
+              onPress={() => setReplying(false)}
+            />
           </View>
         </View>
       )}
@@ -236,6 +274,7 @@ function AidRow({
             {post.replies > 0 && (
               <SmallButton
                 label={replies ? t('aid.hideReplies') : t('aid.readReplies')}
+                disabled={busy || !connected}
                 onPress={() => void showReplies()}
               />
             )}
@@ -244,9 +283,11 @@ function AidRow({
         ) : post.replied ? (
           <Text style={styles.count}>✓ {t('aid.replied')}</Text>
         ) : (
+          post.open &&
           !replying && (
             <SmallButton
               label={t(post.kind === 'request' ? 'aid.canHelp' : 'aid.wouldLike')}
+              disabled={!connected}
               onPress={() => setReplying(true)}
             />
           )

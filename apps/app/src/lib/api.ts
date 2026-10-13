@@ -1,6 +1,16 @@
 import { Platform } from 'react-native';
-import { bytesToBase64Url, sign, type Identity } from '@tero/crypto';
+import { fetch as expoFetch } from 'expo/fetch';
 import {
+  bytesToBase64Url,
+  sign,
+  type Identity,
+  type DirectoryGrant,
+  type ProfileEnvelope,
+} from '@tero/crypto';
+import {
+  type DiscoveryPage,
+  type ConnectionSummary,
+  type ConnectionAction,
   signInMessage,
   type ApiErrorCode,
   type ApproveCardRequest,
@@ -28,7 +38,11 @@ import {
   type SignInRequest,
   type SignInResponse,
   type StatusResponse,
+  type NetworkSizeResponse,
 } from '@tero/protocol';
+import { chatApi } from './chat-api';
+import { isTestingBuild } from './testing-build';
+import { sefirahFallback } from './sefirah-fallback';
 
 /** The Worker phones talk to: Tero's one address. */
 const defaultServer = 'https://tero.pherus.org';
@@ -57,23 +71,32 @@ async function request<T>(
   token?: string,
   body?: unknown,
 ): Promise<T> {
-  let res: Response;
+  const controller = new AbortController();
+  const deadline = setTimeout(() => controller.abort(), 30000);
   try {
-    res = await fetch(`${base}${path}`, {
+    const res = await fetch(`${base}${path}`, {
       method,
       headers: {
         ...(body === undefined ? {} : { 'content-type': 'application/json' }),
         ...(token ? { authorization: `Bearer ${token}` } : {}),
       },
       body: body === undefined ? undefined : JSON.stringify(body),
+      signal: controller.signal,
+      redirect: 'error',
+      credentials: 'omit',
+      cache: 'no-store',
     });
-  } catch {
+    if (res.status === 204) return undefined as T;
+    const data = (await res.json()) as { error?: ApiErrorCode };
+    if (!data || typeof data !== 'object') throw new ApiError(res.status, 'bad_request');
+    if (!res.ok) throw new ApiError(res.status, data.error ?? 'bad_request');
+    return data as T;
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
     throw new ApiError(0, 'network');
+  } finally {
+    clearTimeout(deadline);
   }
-  if (res.status === 204) return undefined as T;
-  const data = (await res.json().catch(() => ({}))) as { error?: ApiErrorCode };
-  if (!res.ok) throw new ApiError(res.status, data.error ?? 'bad_request');
-  return data as T;
 }
 
 /** Proves this phone holds the identity key and returns a session. Nothing secret is sent. */
@@ -95,8 +118,51 @@ export async function founderSeatOpen(): Promise<boolean> {
 /** Calls that need a session token. */
 export function authed(token: string) {
   return {
+    chatPresence: (peer: string) =>
+      request<{ presence: unknown }>(
+        `/api/chat/${encodeURIComponent(peer)}/presence`,
+        'GET',
+        token,
+      ),
+    setChatPresence: (peer: string, value: import('@tero/crypto').ChatPresence) =>
+      request<void>(`/api/chat/${encodeURIComponent(peer)}/presence`, 'PUT', token, value),
+    registerPush: (tokenValue: string) =>
+      request<void>('/api/push/device', 'PUT', token, { token: tokenValue }),
+    unregisterPush: (tokenValue: string) =>
+      request<void>('/api/push/device', 'DELETE', token, { token: tokenValue }),
+    openPush: (route: string) =>
+      request<{ peer: string }>('/api/push/open', 'POST', token, { route }),
+    chat: () =>
+      process.env.EXPO_PUBLIC_SEFIRAH_EXPERIMENTAL === 'enabled'
+        ? chatApi(base, token, expoFetch, isTestingBuild)
+        : null,
+    /** Explicit development fallback; no route selection or automatic uploads. */
+    sefirahFallback: () =>
+      process.env.EXPO_PUBLIC_SEFIRAH_EXPERIMENTAL === 'enabled'
+        ? sefirahFallback(base, token, expoFetch)
+        : null,
+    discoveryPage: (cursor = '') =>
+      request<DiscoveryPage>(
+        `/api/discovery/members?cursor=${encodeURIComponent(cursor)}`,
+        'GET',
+        token,
+      ),
+    grantDirectory: (grant: DirectoryGrant) =>
+      request<void>('/api/discovery/grant', 'PUT', token, grant),
+    handleAvailable: (directory: string, handleTag: string) =>
+      request<{ available: boolean }>('/api/discovery/handle', 'PUT', token, {
+        directory,
+        handleTag,
+      }),
+    saveProfile: (profile: ProfileEnvelope) =>
+      request<void>('/api/discovery/profile', 'PUT', token, profile),
+    connections: () =>
+      request<{ connections: ConnectionSummary[] }>('/api/discovery/connections', 'GET', token),
+    connect: (peer: string, action: ConnectionAction) =>
+      request<void>('/api/discovery/connections', 'PUT', token, { peer, action }),
     me: () => request<MeResponse>('/api/me', 'GET', token),
     status: () => request<StatusResponse>('/api/status', 'GET', token),
+    networkSize: () => request<NetworkSizeResponse>('/api/network/size', 'GET', token),
     claimFounder: () => request<{ sequence: number }>('/api/founder', 'POST', token),
     listCards: async () => (await request<CardListResponse>('/api/cards', 'GET', token)).cards,
     createCard: (card: CreateCardRequest) =>

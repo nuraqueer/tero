@@ -19,6 +19,7 @@ export const enableBiometric = async (
   _cancel: string,
 ): Promise<'on' | 'cancelled' | 'failed'> => 'failed';
 export const disableBiometric = async () => undefined;
+export const forgetBiometric = async () => undefined;
 export const readBiometricSeed = async (
   _prompt: string,
   _cancel: string,

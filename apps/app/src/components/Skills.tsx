@@ -1,3 +1,4 @@
+import { prioritizePost } from '@/lib/help-activity';
 import { useCallback, useMemo, useState } from 'react';
 import { Linking, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
@@ -21,7 +22,7 @@ import { useLocale } from '@/lib/locale';
 import { useFullSession } from '@/lib/session';
 
 /** Teaching, wanting to learn, and resources worth sharing. */
-export function Skills({ create = false }: { create?: boolean }) {
+export function Skills({ create = false, focus }: { create?: boolean; focus?: string }) {
   const { t } = useLocale();
   const session = useFullSession();
   const connected = session?.connection === 'connected';
@@ -60,14 +61,18 @@ export function Skills({ create = false }: { create?: boolean }) {
       <Button label={t('skills.readGuides')} onPress={() => router.push('/guides')} />
     </View>
   );
+  const ordered = prioritizePost(shown, focus);
+
   if (!session) return guides;
 
   const act = async (run: () => Promise<unknown>) => {
     try {
       await run();
       load();
+      return true;
     } catch {
       setProblem(t('dir.failed'));
+      return false;
     }
   };
 
@@ -126,7 +131,7 @@ export function Skills({ create = false }: { create?: boolean }) {
       )}
       {shown.length > 0 && (
         <View style={styles.list}>
-          {shown.map((skill, i) => (
+          {ordered.map((skill, i) => (
             <SkillRow
               key={skill.id}
               skill={skill}
@@ -153,7 +158,7 @@ function SkillRow({
   skill: Skill;
   first: boolean;
   canRemove: boolean;
-  onReply: (note: string) => Promise<void>;
+  onReply: (note: string) => Promise<boolean>;
   onRemove: () => void;
 }) {
   const { t } = useLocale();
@@ -161,14 +166,40 @@ function SkillRow({
   const [replying, setReplying] = useState(false);
   const [note, setNote] = useState('');
   const [replies, setReplies] = useState<AidReply[] | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [replyProblem, setReplyProblem] = useState(false);
+  const connected = session?.connection === 'connected';
 
   const showReplies = async () => {
+    if (busy) return;
     if (replies) return setReplies(null);
-    const list = await session
-      ?.api()
-      ?.skillReplies(skill.id)
-      .catch(() => null);
-    setReplies(list ?? []);
+    const client = session?.api();
+    if (!client) return;
+    setBusy(true);
+    setReplyProblem(false);
+    try {
+      setReplies(await client.skillReplies(skill.id));
+    } catch {
+      setReplyProblem(true);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const sendReply = async () => {
+    if (busy || !connected || !note.trim()) return;
+    setBusy(true);
+    setReplyProblem(false);
+    try {
+      if (await onReply(note.trim())) {
+        setReplying(false);
+        setNote('');
+      } else setReplyProblem(true);
+    } catch {
+      setReplyProblem(true);
+    } finally {
+      setBusy(false);
+    }
   };
 
   const where = [skill.online ? t('skills.online') : '', skill.country].filter(Boolean).join(' · ');
@@ -204,6 +235,11 @@ function SkillRow({
         </View>
       )}
 
+      {replyProblem && (
+        <Text accessibilityLiveRegion="polite" style={styles.problem}>
+          {t('dir.failed')}
+        </Text>
+      )}
       {replying && (
         <View style={styles.replyForm}>
           <Field
@@ -219,12 +255,14 @@ function SkillRow({
             <SmallButton
               label={t('aid.send')}
               on
-              onPress={() => {
-                if (note.trim() === '') return;
-                void onReply(note.trim()).then(() => setReplying(false));
-              }}
+              disabled={busy || !connected || !note.trim()}
+              onPress={() => void sendReply()}
             />
-            <SmallButton label={t('dir.form.cancel')} onPress={() => setReplying(false)} />
+            <SmallButton
+              label={t('dir.form.cancel')}
+              disabled={busy}
+              onPress={() => setReplying(false)}
+            />
           </View>
         </View>
       )}
@@ -239,6 +277,7 @@ function SkillRow({
             {skill.replies > 0 && (
               <SmallButton
                 label={replies ? t('aid.hideReplies') : t('aid.readReplies')}
+                disabled={busy || !connected}
                 onPress={() => void showReplies()}
               />
             )}
@@ -250,6 +289,7 @@ function SkillRow({
           !replying && (
             <SmallButton
               label={t(skill.kind === 'teach' ? 'skills.wantToLearn' : 'skills.canTeach')}
+              disabled={!connected}
               onPress={() => setReplying(true)}
             />
           )

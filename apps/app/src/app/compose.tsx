@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import type { MessageKey } from '@tero/i18n';
@@ -24,7 +25,14 @@ export default function Compose() {
             key={name}
             accessibilityRole="radio"
             accessibilityState={{ selected: name === type }}
-            onPress={() => setType(name)}
+            onPress={() => {
+              if (name === 'ask' || name === 'offer')
+                router.push({
+                  pathname: '/part/[part]',
+                  params: { part: 'aid', create: name === 'ask' ? 'request' : 'offer' },
+                });
+              else setType(name);
+            }}
             style={[styles.pill, name === type && styles.pillOn]}
           >
             <Text style={[styles.pillText, name === type && styles.pillTextOn]}>

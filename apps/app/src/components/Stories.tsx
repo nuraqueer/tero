@@ -1,3 +1,4 @@
+import { prioritizePost } from '@/lib/help-activity';
 import { useCallback, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from 'expo-router';
@@ -14,7 +15,7 @@ import { useFullSession } from '@/lib/session';
 const excerpt = 280;
 
 /** Firsthand experiences, shared without a name. Personal, not advice. */
-export function Stories({ create = false }: { create?: boolean }) {
+export function Stories({ create = false, focus }: { create?: boolean; focus?: string }) {
   const { t } = useLocale();
   const session = useFullSession();
   const connected = session?.connection === 'connected';
@@ -46,6 +47,8 @@ export function Stories({ create = false }: { create?: boolean }) {
     () => (stories ?? []).filter((s) => !topic || s.topic === topic),
     [stories, topic],
   );
+
+  const ordered = prioritizePost(shown, focus);
 
   if (!session) return <Text style={styles.note}>{t('dir.membersOnly')}</Text>;
 
@@ -104,7 +107,7 @@ export function Stories({ create = false }: { create?: boolean }) {
           </Text>
         </View>
       )}
-      {shown.map((story) => (
+      {ordered.map((story) => (
         <StoryCard
           key={story.id}
           story={story}

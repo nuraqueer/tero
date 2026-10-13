@@ -1,0 +1,2 @@
+-keep class org.pherus.sefirah.mls.generated.** { *; }
+-keep class com.sun.jna.** { *; }

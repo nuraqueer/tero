@@ -104,7 +104,7 @@ export async function offerBiometric(
 }
 
 const styles = StyleSheet.create({
-  wrap: { marginTop: space.lg },
+  wrap: { marginTop: 12 },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

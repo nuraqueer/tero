@@ -2,3 +2,6 @@
 // without the Workers runtime.
 export { default } from './index';
 export { RegistryObject } from './registry-object';
+export { FallbackObject } from './fallback-object';
+export { ChatMailbox } from './chat-mailbox';
+export { ChatPush } from './chat-push';

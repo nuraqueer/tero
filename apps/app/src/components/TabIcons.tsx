@@ -3,7 +3,15 @@ import Svg, { Circle, Path, Rect } from 'react-native-svg';
 export type TabName = 'gathering' | 'circles' | 'messages' | 'help' | 'you';
 
 /** The tab bar icons from the mockups: thin lines that take the tab's colour. */
-export function TabIcon({ name, color }: { name: TabName; color: string }) {
+export function TabIcon({
+  name,
+  color,
+  size = 24,
+}: {
+  name: TabName;
+  color: string;
+  size?: number;
+}) {
   const line = {
     fill: 'none',
     stroke: color,
@@ -12,19 +20,20 @@ export function TabIcon({ name, color }: { name: TabName; color: string }) {
     strokeLinejoin: 'round',
   } as const;
   return (
-    <Svg width={24} height={24} viewBox="0 0 24 24" accessibilityElementsHidden>
+    <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityElementsHidden>
       {name === 'gathering' && (
         <>
-          <Circle cx={12} cy={12} r={9} {...line} />
-          <Circle cx={12} cy={8.5} r={1.6} {...line} />
-          <Circle cx={8.6} cy={14.2} r={1.6} {...line} />
-          <Circle cx={15.4} cy={14.2} r={1.6} {...line} />
+          <Circle cx={12} cy={7.5} r={2.5} {...line} />
+          <Path
+            d="M7 20v-2a5 5 0 0 1 10 0v2M4 9a2 2 0 0 0 0 4M20 9a2 2 0 0 1 0 4M2 20v-2a4 4 0 0 1 3-3.9M22 20v-2a4 4 0 0 0-3-3.9"
+            {...line}
+          />
         </>
       )}
       {name === 'circles' && (
         <>
-          <Circle cx={9} cy={12} r={6} {...line} />
-          <Circle cx={15} cy={12} r={6} {...line} />
+          <Circle cx={12} cy={12} r={9} {...line} />
+          <Circle cx={12} cy={12} r={4} {...line} />
         </>
       )}
       {name === 'messages' && (
@@ -40,11 +49,9 @@ export function TabIcon({ name, color }: { name: TabName; color: string }) {
       )}
       {name === 'you' && (
         <>
-          <Rect x={6} y={3} width={12} height={18} rx={2} {...line} />
-          <Path
-            d="M12 8.5l1.1 2.3 2.5.3-1.8 1.7.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.7 2.5-.3z"
-            {...line}
-          />
+          <Circle cx={12} cy={12} r={9} {...line} />
+          <Circle cx={12} cy={9} r={2.5} {...line} />
+          <Path d="M6 18.5a6 6 0 0 1 12 0" {...line} />
         </>
       )}
     </Svg>

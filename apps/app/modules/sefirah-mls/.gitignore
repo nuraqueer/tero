@@ -1,0 +1,5 @@
+native/target/
+bindings/
+ios/Generated/
+android/src/main/jniLibs/
+android/build/

@@ -1,3 +1,5 @@
+import type { DirectoryGrant, ProfileEnvelope } from '@tero/crypto';
+import type { ConnectionAction } from '@tero/protocol';
 import { DurableObject } from 'cloudflare:workers';
 import type {
   CreateCardRequest,
@@ -17,9 +19,33 @@ export class RegistryObject extends DurableObject<Env> {
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
-    this.registry = new Registry(ctx.storage.sql, env.FOUNDER_DID, undefined, env.AUTH_SECRET);
+    this.registry = new Registry(
+      ctx.storage.sql,
+      env.FOUNDER_DID,
+      undefined,
+      env.AUTH_SECRET,
+      (operation) => ctx.storage.transactionSync(operation),
+    );
   }
 
+  discoveryPage(did: string, cursor: string) {
+    return this.registry.discovery.page(did, cursor);
+  }
+  grantDirectory(did: string, grant: DirectoryGrant) {
+    return this.registry.discovery.grant(did, grant);
+  }
+  handleAvailable(did: string, directory: string, handleTag: string) {
+    return this.registry.discovery.handleAvailable(did, directory, handleTag);
+  }
+  saveProfile(did: string, profile: ProfileEnvelope) {
+    return this.registry.discovery.saveProfile(did, profile);
+  }
+  connections(did: string) {
+    return this.registry.discovery.connections(did);
+  }
+  changeConnection(did: string, peer: string, action: ConnectionAction) {
+    return this.registry.discovery.connect(did, peer, action);
+  }
   member(did: string) {
     return this.registry.member(did, Date.now());
   }

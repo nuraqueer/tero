@@ -2,6 +2,7 @@ import { bytesToBase64Url, pseudonym, randomBytes } from '@tero/crypto';
 import { AidBoard, aidSchema } from './aid';
 import { JobBoard, jobSchema } from './jobs';
 import { JourneyStore, journeySchema } from './journeys';
+import { DiscoveryRegistry, discoverySchema } from './discovery';
 import { SkillBoard, skillSchema } from './skills';
 import { StoryBoard, storySchema } from './stories';
 import {
@@ -154,6 +155,7 @@ export class Registry {
   readonly skills: SkillBoard;
   /** Each member's sealed journeys. */
   readonly journeys: JourneyStore;
+  readonly discovery: DiscoveryRegistry;
 
   constructor(
     private readonly sql: Sql,
@@ -162,6 +164,7 @@ export class Registry {
     private readonly random: () => number = secureRandom,
     /** Keys the pseudonyms that stand in for members in stored rows. */
     private readonly secret = 'tero-local',
+    private readonly atomic: <T>(operation: () => T) => T = (operation) => operation(),
   ) {
     for (const statement of [
       ...schema,
@@ -170,6 +173,7 @@ export class Registry {
       ...storySchema,
       ...skillSchema,
       ...journeySchema,
+      ...discoverySchema,
     ])
       sql.exec(statement);
     const member = (did: string) => this.member(did, Date.now());
@@ -178,6 +182,7 @@ export class Registry {
     this.stories = new StoryBoard(sql, member, secret);
     this.skills = new SkillBoard(sql, member, secret);
     this.journeys = new JourneyStore(sql, member, secret);
+    this.discovery = new DiscoveryRegistry(sql, member, this.atomic);
     for (const [table, column, type, fill] of additions) {
       const columns = this.rows<{ name: string }>(`PRAGMA table_info(${table})`);
       if (columns.some((c) => c.name === column)) continue;

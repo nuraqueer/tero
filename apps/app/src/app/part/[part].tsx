@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import type { MessageKey } from '@tero/i18n';
-import { isDirectoryPart } from '@tero/protocol';
+import { isDirectoryPart, isPostId } from '@tero/protocol';
 import { colors, fonts, radii, space } from '@tero/ui';
 import { Page } from '@/components/Page';
 import { ScreenHeader } from '@/components/ScreenHeader';
@@ -27,9 +27,14 @@ export function generateStaticParams() {
 /** One part of an area of help, laid out for what it holds. Parts not built yet show placeholders. */
 export default function PartScreen() {
   const { t } = useLocale();
-  const { part: param, create } = useLocalSearchParams<{ part: string; create?: string }>();
+  const {
+    part: param,
+    create,
+    focus,
+  } = useLocalSearchParams<{ part: string; create?: string; focus?: string }>();
   // Opened from Help's "Share or ask": go straight to the form.
   const creating = create !== undefined;
+  const focusId = typeof focus === 'string' && isPostId(focus) ? focus : undefined;
   const part = allParts.find((p) => p === param) ?? allParts[0]!;
   const kind = partKind[part] ?? 'list';
   return (
@@ -38,11 +43,14 @@ export default function PartScreen() {
       <Text style={styles.lead}>{t(`part.${part}.body` as MessageKey)}</Text>
       {isDirectoryPart(part) && <Directory part={part} create={creating} />}
       {kind === 'aid' && (
-        <MutualAid create={create === 'offer' ? 'offer' : creating ? 'request' : undefined} />
+        <MutualAid
+          focus={focusId}
+          create={create === 'offer' ? 'offer' : creating ? 'request' : undefined}
+        />
       )}
-      {kind === 'jobs' && <Jobs create={creating} />}
-      {kind === 'stories' && <Stories create={creating} />}
-      {kind === 'skills' && <Skills create={creating} />}
+      {kind === 'jobs' && <Jobs focus={focusId} create={creating} />}
+      {kind === 'stories' && <Stories focus={focusId} create={creating} />}
+      {kind === 'skills' && <Skills focus={focusId} create={creating} />}
       {kind === 'showCard' && <ShowCard />}
       {kind === 'journeys' && <Journeys create={creating} />}
       {kind === 'list' && <BoneList />}

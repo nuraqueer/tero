@@ -183,6 +183,24 @@ describe('Tero cards over the API', () => {
 });
 
 describe('status', () => {
+  it('shares only membership size with admitted members', async () => {
+    const { fool, session, makeCard, call } = await world();
+    const asFool = await session(fool);
+    expect((await call('/api/network/size')).status).toBe(401);
+    const newcomer = await person();
+    const asNew = await session(newcomer);
+    expect((await asNew('/api/network/size')).status).toBe(403);
+    const { token, id } = await makeCard(asFool, fool);
+    await asNew('/api/cards/claim', 'POST', { token, adult: true });
+    await asFool(`/api/cards/${id}/approve`, 'POST', { claimer: newcomer.did, adult: true });
+    const response = await asNew('/api/network/size');
+    const size = await response.json();
+    expect(size).toEqual({ members: 2, checkedAt: expect.any(Number) });
+    expect(response.headers.get('cache-control')).toBe('no-store');
+    expect((await asNew('/api/network/size', 'POST')).status).toBe(405);
+    expect((await asNew('/api/status')).status).toBe(403);
+  });
+
   it('gives counts to the Fool and nobody else', async () => {
     const { fool, session } = await world();
     const asFool = await session(fool);

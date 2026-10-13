@@ -19,10 +19,17 @@ import {
   type FounderSeatResponse,
   type MeResponse,
   type StatusResponse,
+  type NetworkSizeResponse,
   webRoles,
 } from '@tero/protocol';
 import { createChallenge, sessionDid, signIn } from './auth';
 import type { RegistryObject } from './registry-object';
+import type { FallbackObject } from './fallback-object';
+import { handleFallback } from './fallback-api';
+import { handleChat } from './chat-api';
+import type { ChatMailbox } from './chat-mailbox';
+import { handleDiscovery } from './discovery-api';
+import { handlePush, type ChatPush } from './chat-push';
 
 export interface Env {
   /** The exported web app (apps/app/dist). Absent in unit tests. */
@@ -33,6 +40,13 @@ export interface Env {
   REGISTRY?: DurableObjectNamespace<RegistryObject>;
   /** The Fool's did:key, so the first member can issue the first cards. */
   FOUNDER_DID?: string;
+  /** Disabled unless explicitly set to "enabled". Not used by current app screens. */
+  SEFIRAH_EXPERIMENTAL?: string;
+  /** Bounded encrypted development fallback, separate from the central registry. */
+  SEFIRAH_FALLBACK?: DurableObjectNamespace<FallbackObject>;
+  CHAT_MAILBOX?: DurableObjectNamespace<ChatMailbox>;
+  CHAT_PUSH?: DurableObjectNamespace<ChatPush>;
+  EXPO_PUSH_ACCESS_TOKEN?: string;
 }
 
 type Async<T> = {
@@ -45,6 +59,12 @@ type Async<T> = {
 export type RegistryApi = Async<
   Pick<
     RegistryObject,
+    | 'discoveryPage'
+    | 'grantDirectory'
+    | 'handleAvailable'
+    | 'saveProfile'
+    | 'connections'
+    | 'changeConnection'
     | 'member'
     | 'founderSeatOpen'
     | 'stats'
@@ -161,6 +181,9 @@ async function handleSignedIn(
 ): Promise<Response> {
   const method = request.method;
 
+  if (path.startsWith('/api/discovery/'))
+    return withSecurityHeaders(await handleDiscovery(request, path, did, reg));
+
   if (path === '/api/me') {
     if (method !== 'GET') return error('method_not_allowed', 405);
     const member = await reg.member(did);
@@ -172,6 +195,14 @@ async function handleSignedIn(
       role: member?.role ?? null,
     };
     return json(me);
+  }
+
+  if (path === '/api/network/size') {
+    if (method !== 'GET') return error('method_not_allowed', 405);
+    if (!(await reg.member(did))) return error('not_member', 403);
+    const { members } = await reg.stats();
+    const size: NetworkSizeResponse = { members, checkedAt: Date.now() };
+    return json(size);
   }
 
   if (path === '/api/status') {
@@ -421,6 +452,8 @@ async function handleApi(request: Request, path: string, env: Env): Promise<Resp
     path.startsWith('/api/auth/') ||
     path === '/api/me' ||
     path === '/api/status' ||
+    path === '/api/network/size' ||
+    path.startsWith('/api/discovery/') ||
     path === '/api/founder' ||
     path.startsWith('/api/cards') ||
     path.startsWith('/api/places') ||
@@ -428,6 +461,9 @@ async function handleApi(request: Request, path: string, env: Env): Promise<Resp
     path.startsWith('/api/jobs') ||
     path.startsWith('/api/stories') ||
     path.startsWith('/api/skills') ||
+    path.startsWith('/api/sefirah/') ||
+    path.startsWith('/api/chat/') ||
+    path === '/api/push/device' ||
     path === '/api/journeys';
   if (!known) return error('not_found', 404);
 
@@ -448,6 +484,13 @@ async function handleApi(request: Request, path: string, env: Env): Promise<Resp
   const token = request.headers.get('authorization')?.match(/^Bearer (\S+)$/)?.[1];
   const did = token ? await sessionDid(secret, token) : null;
   if (!did) return error('unauthorized', 401);
+  if (path === '/api/push/device' || path === '/api/push/open')
+    return withSecurityHeaders(await handlePush(request, did, env, reg));
+  if (path.startsWith('/api/chat/'))
+    return withSecurityHeaders(await handleChat(request, path, did, env, reg));
+  if (path.startsWith('/api/sefirah/')) {
+    return withSecurityHeaders(await handleFallback(request, path, did, env, reg));
+  }
   return handleSignedIn(request, path, did, reg);
 }
 

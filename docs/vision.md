@@ -31,6 +31,7 @@ Plain names, no tarot suits (D41).
 - **Circles**: communities, each one calm conversation with topics and live Spaces (see [design.md](design.md)).
 - **Spaces**: end-to-end encrypted live audio rooms like X Spaces, for communities, groups, skills and learning. Up to 6 speakers, everyone else listens. Voice disguise. Not recorded by default.
 - **Voice with professionals**: private, end-to-end encrypted calls for consultations and enquiries.
+- **Private audio calls**: normally between two people, with up to four participants in a group call. Spaces keep their separate six-speaker limit with additional listeners. Primary and fallback routes use the same limits.
 - **Someone to talk to**: anonymous, random matching for emotional relief. Neither person knows who the other is. Only vouched members, with reporting.
 - **Verified professionals**: doctors, therapists, lawyers and others, checked per country.
 - **Tero partners**: clinics, pharmacies and lawyers who know what a Tero card means. A member shows their card and the partner shows the same three words back. Places that don't know Tero are clearly marked, so nobody shows their card there by mistake.
