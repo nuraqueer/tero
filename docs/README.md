@@ -1,4 +1,11 @@
-# Tero design docs
+# Tero project documentation
+
+Current assessment, **20 October 2026**: start with the
+[project audit](status-audit-2026-10-20.md), [roadmap and effort estimates](roadmap.md),
+and [current threat model](threat-model.md). Tero has working phone test apps and
+owner confirmed native text chat. The full Sefirah network and governance remain
+unfinished. Older decisions and dated implementation evidence below are history,
+not proof that every described service is available.
 
 Tero is a global, invite-only platform where queer people help each other:
 community, verified professionals, health and HRT, travel and surgery
@@ -8,6 +15,8 @@ These documents record the product direction and decisions as development procee
 
 | Doc | What it covers |
 |---|---|
+| [status-audit-2026-10-20.md](status-audit-2026-10-20.md) | Current feature inventory, service purpose, security review, evidence and potential impact |
+| [roadmap.md](roadmap.md) | Remaining milestones, dependencies, completion criteria and estimated effort |
 | [continuation.md](continuation.md) | Current terminal Codex handoff, device state, unfinished chat work and TestFlight direction |
 | [development.md](development.md) | Restart the local servers, reconnect Android and iPhone, and distinguish development from standalone app use |
 | [tarot-design.md](tarot-design.md) | First ten Major Arcana, palette, proportions, symbols and shared design structure |

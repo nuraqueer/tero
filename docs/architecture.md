@@ -1,5 +1,36 @@
 # Architecture
 
+## Implementation checkpoint, 20 October 2026
+
+Use the [current audit](status-audit-2026-10-20.md) for the service inventory and
+security boundaries, and the [roadmap](roadmap.md) for remaining work. This
+checkpoint supersedes older implementation status statements below, while
+preserving their architectural intent and historical evidence.
+
+Native Android and Swift MLS and Arti bridges now exist. The app has encrypted
+native chat state, recipient sealed delivery, Tor attempt/fallback routing logic,
+and actual text chat confirmed by the owner on 14 October. Signed encrypted member
+profiles, central connection coordination, unread/activity indicators and push
+integration also exist. Both updated phone apps were confirmed working on 16 October.
+Independent primary route behavior and phone lifecycle edges still need evidence;
+neither the synthetic Tor probes nor that confirmation proves the whole network.
+
+Current admission, handle uniqueness, boards and connection coordination remain
+central. The backend uses direct Worker routing and SQLite Durable Objects for
+registry, mailbox and push. The installed test apps use a separate hosted test
+Worker at `https://tero.pherus.org/_test`, preserving their existing accounts. The
+public site has its own registry. There are no D1/R2 application bindings or
+Hono/Drizzle implementation. Help content and service metadata remain readable
+to the service; messages, journeys and directory profiles have distinct client
+encryption boundaries. See [the threat model](threat-model.md).
+
+Independent membership credentials, autonomous discovery, durable replication,
+community node operation, organisation isolation, Bluetooth/LAN discovery and
+nearby synchronization remain unbuilt. Voice transport is not selected. The old
+disabled object experiment remains separate from the newer real chat mailbox.
+Older claims below that all native transport or app chat integration is absent
+are historical and must not be used as the current implementation inventory.
+
 ## Sefirah, the Q2Q network beneath Tero
 
 The founder clarified this direction on 12 October 2026. Sefirah is Tero's queer to queer network. Tero is the application that uses it. The earlier central relay design below has been replaced as the intended direction.

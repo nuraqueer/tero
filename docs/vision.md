@@ -1,5 +1,13 @@
 # Vision
 
+Status note, **20 October 2026**: this document describes the intended product.
+The [current audit](status-audit-2026-10-20.md) identifies what exists and what is
+planned; the [roadmap](roadmap.md) gives estimated milestones. Identity, invitations,
+resource boards, private planning, discovery/contacts and native text chat exist.
+Group Circles, Spaces, professional verification, social recovery and the complete
+Sefirah network remain future work. Access levels and phases below describe the
+target, not a complete set of enforced permissions or the actual build order.
+
 Queer to queer. Tero is where queer people anywhere find each other, get
 real help from people they can trust, and lift each other up: socially,
 medically, legally and financially.

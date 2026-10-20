@@ -1,5 +1,31 @@
 # Build plan: phase 1
 
+## Current status, 20 October 2026
+
+This is the original milestone framework, retained as planning history. Use the
+[current audit](status-audit-2026-10-20.md) and [roadmap](roadmap.md) for actual
+implementation, remaining work and effort ranges. Later founder decisions and
+the [continuation](continuation.md) supersede older contracts below.
+
+M0, M1, M2 and M5 have substantial implementations. M3 now includes native
+encrypted text chat, owner confirmed on 14 October. M4 has real Help posts in
+Gathering and member discovery/contacts, but no group community protocol. M6 has
+local decoy and phrase recovery foundations; incident/social recovery work remains.
+M7's independent audit has not been demonstrated.
+
+The current backend is direct Worker routing with SQLite Durable Objects, without
+D1, R2, Hono or Drizzle. Native chat stores encrypted snapshots in SQLite. Native
+secure storage protects device secrets, but the app uses keys in process memory.
+TestFlight/device test builds bundle JavaScript and do not rely on Metro. The
+installed test apps target the hosted test service; the public registry is separate.
+Journeys already exists as an encrypted planner, despite the older phase ordering.
+
+The later chat rule is seven days unread, shortened to 24 hours after both read
+times, with cleanup on native operations. Mutual keep and screenshot protections
+in the original M3 wording below are not current completed features. Lock behavior
+includes a 30 minute background grace, not immediate lock on every app switch.
+The technology and milestone tables below record the initial proposal.
+
 How we go from designs to a first working Tero. Phase 1 is the foundation:
 identity, Tero cards, private chats, Circles, the public site and the core
 safety features. Spaces (voice), the wallet, partners and journeys come in
