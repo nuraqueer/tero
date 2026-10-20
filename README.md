@@ -1,11 +1,42 @@
-# Tero
+<div align="center">
 
-**Queer knowledge, resources, community, and support.**
+<img src="design/assets/app-icon-light.svg" alt="Tero sun card icon" width="80" height="80">
+
+<h1>Tero</h1>
+
+<p><strong>Queer knowledge, resources, community, and support.</strong></p>
+
+<p>A place to find help, share what you know, and build trusted connections.</p>
+
+<p>
+  <a href="https://tero.pherus.org">Website</a> ·
+  <a href="docs/status-audit-2026-10-20.md">Project overview</a> ·
+  <a href="docs/roadmap.md">Roadmap</a> ·
+  <a href="docs/threat-model.md">Privacy &amp; security</a>
+</p>
+
+</div>
+
+<p align="center">
+  <img src="docs/screens/hero.png" alt="Early Tero design mockups showing the lock screen, Gathering feed, a live audio Space, private chat, and a member card" width="100%">
+</p>
+
+<p align="center">
+  <sub>Early design preview, not current app screenshots. Spaces, wallets, and some controls shown remain planned; labels and layouts have since evolved.</sub>
+</p>
+
+---
+
+## A community built around helping
 
 Tero is an invite only platform by [Pherus](https://pherus.org) where queer people
 can find useful resources, help one another, and build trusted connections. It is
 being developed with particular attention to people for whom disclosure can be
 dangerous. Its purpose is practical support across care, work, safety, and health.
+
+| Find support                                                         | Connect privately                                                           | Plan your next steps                                           |
+| -------------------------------------------------------------------- | --------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Explore member shared places, jobs, mutual aid, stories, and skills. | Find people, accept a connection, and continue through encrypted text chat. | Keep personal journeys and checklists in an encrypted planner. |
 
 ## Current state
 
@@ -73,6 +104,9 @@ operation by other organisations remain future work.
 
 ## Development
 
+<details>
+<summary><strong>Explore the codebase and development setup</strong></summary>
+
 Bun workspaces contain Expo/React Native and TypeScript, Cloudflare Workers with
 SQLite Durable Objects, and Rust native MLS and Tor modules. The backend uses
 direct routing and SQL. Hono, Drizzle, D1, and R2 are not current application services.
@@ -99,6 +133,8 @@ Expo Go cannot validate the custom native chat and Tor modules.
 | `packages/ui`       | Shared visual tokens                                            |
 | `docs`              | Vision, decisions, evidence, roadmap and specifications         |
 
+</details>
+
 ## Direction and participation
 
 Next come focused phone delivery evidence, reliability, reporting and blocking,
@@ -113,4 +149,11 @@ Contribution intake and professional verification are not established services
 yet. See the [contributor agreement](CLA.md).
 
 The name and tarot inspiration come from the Tarot Club in _Lord of the Mysteries_.
-Tero is a [Pherus](https://pherus.org) project, open source under [AGPL-3.0](LICENSE).
+
+---
+
+<p align="center">
+  A <a href="https://pherus.org">Pherus</a> project ·
+  Open source under <a href="LICENSE">AGPL-3.0</a><br>
+  <sub>Built around care, dignity, and community.</sub>
+</p>
