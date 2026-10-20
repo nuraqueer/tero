@@ -175,6 +175,23 @@ External references checked for this assessment:
 
 These sources explain distinctions; they do not certify Tero's implementation.
 
+### Dependency alert discovered during documentation push
+
+GitHub reported one open moderate alert on the default branch. A read only
+Dependabot API check confirmed [alert 1](https://github.com/phe-rus/tero/security/dependabot/1)
+for the root Vitest development dependency, advisory
+[GHSA-82fw-gwwq-j7x9](https://github.com/advisories/GHSA-82fw-gwwq-j7x9)
+(CVE-2026-84373). The reported affected range is `>= 2.1.0, < 4.1.11`; the root
+manifest currently specifies `^3.2.4`. The alert identifies 4.1.11 as the first
+patched version, so remediation requires a compatibility reviewed major upgrade.
+
+The advisory concerns local file disclosure through a mocker development server
+under specific reachability and registration conditions. It is not evidence that
+Tero's deployed Worker or phone chat is remotely compromised. Determine actual
+test server exposure and upgrade compatibility in a focused follow up. No exploit
+was attempted and no dependency or lockfile was changed in this documentation task.
+This single alert check is not a complete dependency audit.
+
 ## Impact: demonstrated and potential
 
 Demonstrated progress is technical: implemented resource workflows, owner
