@@ -1,22 +1,24 @@
 import { en } from './locales/en';
 import { fr } from './locales/fr';
+import { ko } from './locales/ko';
 import { sw } from './locales/sw';
 import { zh } from './locales/zh';
 import type { MessageKey, Messages } from './types';
 
 export type { MessageKey, Messages };
 
-export const locales = ['en', 'sw', 'zh', 'fr'] as const;
+export const locales = ['en', 'fr', 'ko', 'sw', 'zh'] as const;
 export type Locale = (typeof locales)[number];
 
-export const messages: Record<Locale, Messages> = { en, sw, zh, fr };
+export const messages: Record<Locale, Messages> = { en, fr, ko, sw, zh };
 
 /** Each language's name, written in that language. */
 export const localeNames: Record<Locale, string> = {
   en: 'English',
+  fr: 'Français',
+  ko: '한국어',
   sw: 'Kiswahili',
   zh: '中文',
-  fr: 'Français',
 };
 
 export const defaultLocale: Locale = 'en';
