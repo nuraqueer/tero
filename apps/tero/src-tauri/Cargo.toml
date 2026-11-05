@@ -12,6 +12,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri = { version = "2", features = [] }
 serde = { version = "1", features = ["derive"] }
 sefirah-mls = { path = "../../../packages/sefirah-mls" }
+sefirah-tor = { path = "../../../packages/sefirah-tor" }
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }

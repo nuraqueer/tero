@@ -6,6 +6,7 @@ on:
     paths:
       - 'apps/tero/**'
       - 'packages/sefirah-mls/**'
+      - 'packages/sefirah-tor/**'
       - 'Cargo.toml'
       - 'Cargo.lock'
       - 'bun.lock'
