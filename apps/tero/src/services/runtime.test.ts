@@ -38,4 +38,28 @@ describe('runtime capability boundary', () => {
     await expect(getRuntimeCapabilities()).rejects.toThrow('Native bridge unavailable');
     expect(native.invoke).toHaveBeenCalledWith('runtime_capabilities');
   });
+
+  it('rejects malformed native responses instead of enabling unavailable services', async () => {
+    vi.stubGlobal('window', {});
+    native.isTauri.mockReturnValue(true);
+    native.invoke.mockResolvedValueOnce({ native: true, identityVaultReady: 'yes' });
+    await expect(getRuntimeCapabilities()).rejects.toThrow('Invalid native runtime capabilities');
+  });
+
+  it('preserves disabled native capabilities without assuming the cloud is available', async () => {
+    vi.stubGlobal('window', {});
+    native.isTauri.mockReturnValue(true);
+    native.invoke.mockResolvedValueOnce({
+      native: true,
+      identityVaultReady: false,
+      peerTransportReady: false,
+      cloudFallbackEnabled: false,
+    });
+    expect(await getRuntimeCapabilities()).toEqual({
+      native: true,
+      identityVaultReady: false,
+      peerTransportReady: false,
+      cloudFallbackEnabled: false,
+    });
+  });
 });
