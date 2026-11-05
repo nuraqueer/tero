@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="design/branding/tero-mark-v2.png" width="104" alt="Tero peacock, with small blue and pink feather details">
+<img src="design/assets/app-icon-light.svg" width="104" alt="Tero tarot card symbol">
 
 # Tero
 
@@ -12,7 +12,7 @@ real risks.
 
 [Vision](docs/vision.md) · [Roadmap](docs/roadmap.md) · [Safety](docs/threat-model.md) · [Contribute](#help-build-tero)
 
-<img src="design/branding/tero-social-preview-v2.png" width="100%" alt="Tero, a place to belong. The pale peacock on a dark background.">
+<img src="design/branding/tero-social-preview-v3.png" width="100%" alt="Tero, a place to belong. The tarot card symbol on a dark background.">
 
 </div>
 
