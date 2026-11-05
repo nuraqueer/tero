@@ -1,3 +1,3 @@
 [workspace]
-members = ["apps/tero/src-tauri", "packages/sefirah-mls", "packages/sefirah-tor"]
+members = ["apps/tero/src-tauri", "packages/sefirah-mls", "packages/sefirah-tor", "packages/sefirah-routing"]
 resolver = "2"
