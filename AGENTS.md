@@ -1,5 +1,22 @@
 # Tero agent entry point
 
+## Current target direction (5 November 2026)
+
+The founder approved a Tero 2 architecture redesign. Read
+[`docs/architecture/tero-2.md`](docs/architecture/tero-2.md),
+[`docs/development/migration.md`](docs/development/migration.md) and
+[`docs/development/conventions.md`](docs/development/conventions.md) before
+new Tauri, TanStack, Rust, UI or infrastructure work. These files describe the
+**target**, not implemented code. Existing Expo/Worker instructions below remain
+valid for the current product until each migration is verified.
+For current file ownership and the explicit unverified boundaries, read
+[`docs/architecture/source-inventory.md`](docs/architecture/source-inventory.md).
+
+Preserve the existing Tero mobile UX, use the external PassUI library, write
+page markup directly inside TanStack `RouteComponent`, and retain the single
+deployed Worker named `tero` at `tero.pherus.org`. Do not rename live Durable
+Object bindings or delete device/server data during restructuring.
+
 Read [docs/continuation.md](docs/continuation.md) first. It is the current handoff
 for desktop and terminal Codex, including the next task and unfinished work.
 Then read [CLAUDE.md](CLAUDE.md) for existing project conventions and product
