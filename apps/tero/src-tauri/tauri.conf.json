@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "identifier": "org.pherus.tero",
   "build": {
-    "beforeDevCommand": "bun run dev:web",
+    "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:3000",
-    "beforeBuildCommand": "bun run build:web",
+    "beforeBuildCommand": "bun run build",
     "frontendDist": "../dist/client"
   },
   "app": {
