@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'apps/tero/**'
+      - 'packages/sefirah-mls/**'
       - 'Cargo.toml'
       - 'Cargo.lock'
       - 'bun.lock'
@@ -33,5 +34,7 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev patchelf
       - run: bun install --frozen-lockfile
       - run: bun run build:web
-      - name: Check Tauri Rust project
-        run: cargo check --manifest-path apps/tero/src-tauri/Cargo.toml
+      - name: Check Tauri Rust workspace
+        run: cargo check --workspace
+      - name: Test encrypted messaging engine
+        run: cargo test -p sefirah-mls --lib
