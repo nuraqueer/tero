@@ -18,6 +18,6 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": ["../apps/app/assets/icon.png"]
+    "icon": ["icons/icon.png"]
   }
 }
