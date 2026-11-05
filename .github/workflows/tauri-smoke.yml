@@ -39,3 +39,5 @@ jobs:
         run: cargo check --workspace
       - name: Test encrypted messaging engine
         run: cargo test -p sefirah-mls --lib
+      - name: Test private peer transport
+        run: cargo test -p sefirah-tor --lib
