@@ -7,10 +7,12 @@
     "dev": "vite dev --port 3000",
     "build": "vite build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
     "dev:tauri": "tauri dev",
     "build:tauri": "tauri build"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2.10.0",
     "@passui/react": "^0.1.23",
     "@passui/tanstack": "^0.2.6",
     "@tanstack/react-query": "^5.104.0",
