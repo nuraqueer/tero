@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" role="img" aria-labelledby="title description">
+  <title id="title">Tero</title>
+  <desc id="description">Tero, a place to belong. A restrained charcoal cover featuring the pale peacock symbol with subtle Pride colours.</desc>
+  <rect width="1280" height="640" fill="#17212B"/>
+  <rect x="82" y="82" width="1116" height="476" rx="4" fill="none" stroke="#34434E" stroke-width="1"/>
+  <text x="146" y="326" fill="#F5F6F2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="134" font-weight="600" letter-spacing="-9">tero</text>
+  <text x="151" y="390" fill="#B6C4CB" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="27" letter-spacing="0.2">A place to belong.</text>
+  <g transform="translate(742 91) scale(0.86)">
+    <g fill="#8BAABD">
+      <ellipse cx="256" cy="178" rx="49" ry="139"/>
+      <ellipse cx="256" cy="178" rx="49" ry="139" transform="rotate(-26 256 294)"/>
+      <ellipse cx="256" cy="178" rx="49" ry="139" transform="rotate(26 256 294)"/>
+      <ellipse cx="256" cy="178" rx="49" ry="139" transform="rotate(-52 256 294)"/>
+      <ellipse cx="256" cy="178" rx="49" ry="139" transform="rotate(52 256 294)"/>
+      <ellipse cx="256" cy="178" rx="49" ry="139" transform="rotate(-76 256 294)"/>
+      <ellipse cx="256" cy="178" rx="49" ry="139" transform="rotate(76 256 294)"/>
+    </g>
+    <g fill="#E8F0F2">
+      <ellipse cx="256" cy="120" rx="20" ry="29"/>
+      <ellipse cx="256" cy="120" rx="20" ry="29" transform="rotate(-26 256 294)"/>
+      <ellipse cx="256" cy="120" rx="20" ry="29" transform="rotate(26 256 294)"/>
+      <ellipse cx="256" cy="120" rx="20" ry="29" transform="rotate(-52 256 294)"/>
+      <ellipse cx="256" cy="120" rx="20" ry="29" transform="rotate(52 256 294)"/>
+      <ellipse cx="256" cy="120" rx="20" ry="29" transform="rotate(-76 256 294)"/>
+      <ellipse cx="256" cy="120" rx="20" ry="29" transform="rotate(76 256 294)"/>
+    </g>
+    <g fill="#B0D7E8"><ellipse cx="256" cy="120" rx="11" ry="17" transform="rotate(-52 256 294)"/><ellipse cx="256" cy="120" rx="11" ry="17" transform="rotate(52 256 294)"/></g>
+    <g fill="#E7B6C9"><ellipse cx="256" cy="120" rx="11" ry="17" transform="rotate(-26 256 294)"/><ellipse cx="256" cy="120" rx="11" ry="17" transform="rotate(26 256 294)"/></g>
+    <g fill="#738EA6"><ellipse cx="256" cy="120" rx="11" ry="17" transform="rotate(-76 256 294)"/><ellipse cx="256" cy="120" rx="11" ry="17" transform="rotate(76 256 294)"/></g>
+    <g fill="#F8F9F7"><path d="M256 312c-60 0-98 46-98 105 0 59 41 96 98 96s98-37 98-96c0-59-38-105-98-105Z"/><path d="M197 331c0-52 25-85 59-85s59 33 59 85v60H197Z"/><circle cx="256" cy="258" r="53"/></g>
+    <circle cx="236" cy="258" r="5.7" fill="#252B35"/><circle cx="276" cy="258" r="5.7" fill="#252B35"/>
+    <path d="m245 277 11-9 11 9-11 9Z" fill="#D99C75"/><path d="m250 204 6-15 6 15" stroke="#F8F9F7" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <path d="M217 502v20m78-20v20" stroke="#D99C75" stroke-width="8" stroke-linecap="round"/>
+  </g>
+</svg>
