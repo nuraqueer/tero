@@ -8,6 +8,7 @@ on:
       - 'packages/sefirah-mls/**'
       - 'packages/sefirah-tor/**'
       - 'packages/sefirah-routing/**'
+      - 'packages/sefirah-identity/**'
       - 'Cargo.toml'
       - 'Cargo.lock'
       - 'bun.lock'
@@ -44,3 +45,5 @@ jobs:
         run: cargo test -p sefirah-tor --lib
       - name: Test peer-first delivery policy
         run: cargo test -p sefirah-routing
+      - name: Test legacy vault format compatibility
+        run: cargo test -p sefirah-identity
