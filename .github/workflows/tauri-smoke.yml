@@ -4,8 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'src-tauri/**'
-      - 'src/**'
+      - 'apps/tero/**'
       - 'Cargo.toml'
       - 'Cargo.lock'
       - 'bun.lock'
@@ -35,4 +34,4 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run build:web
       - name: Check Tauri Rust project
-        run: cargo check --manifest-path src-tauri/Cargo.toml
+        run: cargo check --manifest-path apps/tero/src-tauri/Cargo.toml

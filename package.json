@@ -1,5 +1,5 @@
 {
-  "name": "tero",
+  "name": "tero-workspace",
   "private": true,
   "type": "module",
   "license": "AGPL-3.0-only",
@@ -8,11 +8,11 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev:web": "vite dev --port 3000",
-    "build:web": "vite build",
-    "typecheck:web": "tsc --noEmit -p tsconfig.web.json",
-    "dev:tauri": "tauri dev",
-    "build:tauri": "tauri build",
+    "dev:web": "bun run --cwd apps/tero dev",
+    "build:web": "bun run --cwd apps/tero build",
+    "typecheck:web": "bun run --cwd apps/tero typecheck",
+    "dev:tauri": "bun run --cwd apps/tero dev:tauri",
+    "build:tauri": "bun run --cwd apps/tero build:tauri",
     "turbo:check": "turbo run typecheck test",
     "typecheck": "bun run --filter '*' typecheck",
     "test": "bun run --filter '*' test",
@@ -20,31 +20,19 @@
     "format:check": "prettier --check apps packages",
     "check": "bun run format:check && bun run typecheck && bun run test"
   },
+  "dependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-devtools": "^0.10.13",
     "@tanstack/react-query-devtools": "^5.104.0",
     "@tanstack/react-router-devtools": "^1.167.2",
-    "@tauri-apps/cli": "^2.12.4",
     "@types/bun": "^1.4.3",
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
-    "@vitejs/plugin-react": "^6.1.1",
     "prettier": "^3.6.2",
     "turbo": "^2.11.10",
     "typescript": "~6.0.3",
-    "vite": "^8.3.5",
     "vitest": "^3.2.4"
-  },
-  "dependencies": {
-    "@passui/react": "^0.1.23",
-    "@passui/tanstack": "^0.2.6",
-    "@tanstack/react-query": "^5.104.0",
-    "@tanstack/react-router": "^1.170.39",
-    "@tanstack/react-start": "^1.169.4",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
-    "tailwindcss": "^4.3.3"
   },
   "workspaces": [
     "apps/*",

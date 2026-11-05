@@ -5,6 +5,10 @@ import { defineConfig } from 'vite';
 import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
-  resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
+  resolve: {
+    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
+    dedupe: ['react', 'react-dom'],
+  },
+  ssr: { external: ['react', 'react-dom'] },
   plugins: [tailwindcss(), tanstackStart({ spa: { enabled: true } }), react()],
 });
