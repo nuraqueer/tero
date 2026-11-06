@@ -9,7 +9,7 @@
 A private, community-led space for LGBTQIA+ people to connect, find practical
 support and share what helps, especially where being visible carries risk.
 
-[Vision](docs/vision.md) · [Roadmap](docs/roadmap.md) · [Safety](docs/threat-model.md) · [Support](SUPPORT.md)
+[Vision](docs/vision.md) · [Progress](https://github.com/phe-rus/tero/issues/10) · [Safety](docs/threat-model.md) · [Support](SUPPORT.md)
 
 </div>
 
@@ -21,6 +21,10 @@ community knowledge and mutual help into one considered experience.
 
 The app is organised around **Gathering, Circles, Messages, Help and You**. Its
 tarot-inspired identity remains intact across the web and native apps.
+
+<p align="center"><img src="docs/screens/hero.png" width="760" alt="Tero interface concepts showing the existing visual identity and experience"></p>
+
+<p align="center"><sub>Early UI/UX concept artwork. Some features pictured are still planned.</sub></p>
 
 ## In development
 
@@ -49,6 +53,9 @@ Support can help fund independent audits, localisation, mobile releases and
 community stewardship. We have not yet measured public impact.
 
 **[Support Tero](SUPPORT.md)** · **[Get in touch](mailto:pherus@pherus.org)**
+
+See [project stages and open work](https://github.com/phe-rus/tero/issues/10) or
+[propose an improvement](../../issues/new/choose).
 
 <details>
 <summary><strong>Development</strong></summary>
