@@ -8,15 +8,27 @@ export const publicGuides = [
     slug: 'staying-safe-online',
     title: 'Staying safe online',
     summary: 'Practical steps for protecting your device and your privacy.',
-    content: onlineSafety.en,
+    content: onlineSafety,
   },
   {
     slug: 'hrt-basics',
     title: 'HRT basics',
     summary: 'An introduction to gender-affirming hormone care.',
-    content: hrtBasics.en,
+    content: hrtBasics,
   },
 ] as const;
+
+export type GuideLocale = 'en' | 'sw' | 'fr' | 'zh';
+export const guideLanguages: ReadonlyArray<{ code: GuideLocale; label: string }> = [
+  { code: 'en', label: 'English' },
+  { code: 'sw', label: 'Kiswahili' },
+  { code: 'fr', label: 'Français' },
+  { code: 'zh', label: '中文' },
+];
+
+export function isGuideLocale(value: unknown): value is GuideLocale {
+  return guideLanguages.some((language) => language.code === value);
+}
 
 export function publicGuide(slug: string) {
   return publicGuides.find((guide) => guide.slug === slug);
