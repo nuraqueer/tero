@@ -51,6 +51,13 @@ Keystore entries. A verified, consent-based transfer or recovery flow is needed
 before Tauri can open native MLS sessions. Do not copy raw device secrets to JS,
 delete the old installation, or replace a vault as part of setup.
 
+The native identity state now holds verified full-account recovery seeds in
+zeroizing Rust memory and explicitly revokes all native MLS chat handles on
+relock. The JavaScript bridge can only check lock state or request relock. It
+cannot submit a seed, phrase, device secret or passcode to the native registry.
+The trusted mobile secure-storage unlock entry point is **not connected yet**;
+`identity_vault_ready` must remain false until device restoration succeeds.
+
 The current Worker configuration already uses name `tero`, one custom domain,
 and four Durable Object classes. Its registry, journals, notification state and
 mailboxes may contain live test data. Never clear, drop, rename or rebind them as

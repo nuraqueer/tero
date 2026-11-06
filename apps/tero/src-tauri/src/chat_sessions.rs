@@ -58,6 +58,23 @@ impl ChatSessions {
         self.sessions.lock().map_err(|_| "Chat registry unavailable")?
             .remove(handle).ok_or("Native chat session unavailable")
     }
+
+    /// Relocking an identity must invalidate every previously issued JS handle.
+    /// Drain the registry before stopping chats so an individual shutdown
+    /// failure cannot leave a session accessible from the UI.
+    pub(crate) fn close_all(&self) -> Result<(), &'static str> {
+        let sessions = {
+            let mut registry = self.sessions.lock().map_err(|_| "Chat registry unavailable")?;
+            std::mem::take(&mut *registry)
+        };
+        let mut failed = false;
+        for (_, chat) in sessions {
+            if chat.shutdown().is_err() {
+                failed = true;
+            }
+        }
+        if failed { Err("Some chat sessions failed to shut down") } else { Ok(()) }
+    }
 }
 
 #[tauri::command]

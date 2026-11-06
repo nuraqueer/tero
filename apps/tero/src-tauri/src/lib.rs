@@ -1,5 +1,6 @@
 use tauri::Manager;
 mod chat_sessions;
+mod native_identity;
 
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -41,6 +42,20 @@ fn runtime_capabilities() -> RuntimeCapabilities {
     }
 }
 
+/// Relock is safe to request from UI: it never accepts or returns secrets.
+#[tauri::command]
+fn identity_lock(
+    identity: tauri::State<'_, native_identity::NativeIdentity>,
+    sessions: tauri::State<'_, chat_sessions::ChatSessions>,
+) -> Result<(), &'static str> {
+    identity.lock(&sessions)
+}
+
+#[tauri::command]
+fn identity_is_unlocked(identity: tauri::State<'_, native_identity::NativeIdentity>) -> Result<bool, &'static str> {
+    identity.is_unlocked()
+}
+
 /// Invoke the existing Tor engine without exposing arbitrary filesystem paths.
 /// Transport readiness remains false until authenticated physical-device tests.
 #[tauri::command]
@@ -76,9 +91,12 @@ async fn sefirah_transport_call(
 pub fn run() {
     tauri::Builder::default()
         .manage(chat_sessions::ChatSessions::default())
+        .manage(native_identity::NativeIdentity::default())
         .invoke_handler(tauri::generate_handler![
             runtime_capabilities,
             inspect_legacy_vault,
+            identity_lock,
+            identity_is_unlocked,
             sefirah_transport_call,
             chat_sessions::chat_session_state,
             chat_sessions::chat_pending,
