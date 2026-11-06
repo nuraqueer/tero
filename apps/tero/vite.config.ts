@@ -10,5 +10,10 @@ export default defineConfig({
     dedupe: ['react', 'react-dom'],
   },
   ssr: { external: ['react', 'react-dom'] },
-  plugins: [tailwindcss(), tanstackStart({ spa: { enabled: true } }), react()],
+  // Tauri serves index.html directly; TanStack Start otherwise emits _shell.html.
+  plugins: [
+    tailwindcss(),
+    tanstackStart({ spa: { enabled: true, prerender: { outputPath: '/index.html' } } }),
+    react(),
+  ],
 });

@@ -29,6 +29,8 @@ jobs:
           bun-version: 1.4.2
       - run: bun install --frozen-lockfile
       - run: bun run build:web
+      - name: Verify Tauri web entry point exists
+        run: test -s apps/tero/dist/client/index.html
       - name: Install browser test runtime
         run: bunx playwright@1.64.1 install --with-deps chromium
       - name: Capture public routes at desktop and mobile sizes
@@ -91,6 +93,7 @@ jobs:
           cd apps/tero
           CI=true bunx tauri android init
           bunx tauri android build --debug --apk --target x86_64
+          test -s dist/client/index.html
       - name: Boot emulator, install and capture Tero
         shell: bash
         timeout-minutes: 24
@@ -154,6 +157,7 @@ jobs:
           cd apps/tero
           CI=true bunx tauri ios init
           CODE_SIGNING_ALLOWED=NO bunx tauri ios build --debug --target aarch64-sim
+          test -s dist/client/index.html
           APP="$(find src-tauri/gen/apple -type d -name 'Tero.app' -print -quit)"
           test -n "$APP"
           xcrun simctl install "$DEVICE" "$APP"
