@@ -60,6 +60,21 @@ pub(crate) fn chat_received(registry: State<'_, ChatSessions>, handle: String) -
 }
 
 #[tauri::command]
+pub(crate) fn chat_key_package(registry: State<'_, ChatSessions>, handle: String) -> Result<Vec<u8>, &'static str> {
+    registry.get(&handle)?.key_package().map_err(|_| "Key package unavailable")
+}
+
+#[tauri::command]
+pub(crate) fn chat_initiate(registry: State<'_, ChatSessions>, handle: String, package: Vec<u8>) -> Result<Vec<u8>, &'static str> {
+    registry.get(&handle)?.initiate(package).map_err(|_| "MLS initiation failed")
+}
+
+#[tauri::command]
+pub(crate) fn chat_join(registry: State<'_, ChatSessions>, handle: String, welcome: Vec<u8>) -> Result<(), &'static str> {
+    registry.get(&handle)?.join(welcome).map_err(|_| "MLS join failed")
+}
+
+#[tauri::command]
 pub(crate) fn chat_encrypt(registry: State<'_, ChatSessions>, handle: String, text: String) -> Result<Vec<u8>, &'static str> {
     registry.get(&handle)?.encrypt(text).map_err(|_| "Message encryption unavailable")
 }

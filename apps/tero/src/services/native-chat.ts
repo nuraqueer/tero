@@ -12,6 +12,19 @@ async function nativeChatInvoke(command: string, args: Record<string, unknown>):
   return invoke<unknown>(command, args);
 }
 
+function checkedWire(value: unknown): Uint8Array {
+  if (!Array.isArray(value) || value.length === 0 || value.length > 65536 ||
+      !value.every((byte) => Number.isInteger(byte) && byte >= 0 && byte <= 255)) {
+    throw new Error('Invalid native MLS wire');
+  }
+  return new Uint8Array(value);
+}
+
+function wireInput(wire: Uint8Array): number[] {
+  if (wire.length === 0 || wire.length > 65536) throw new Error('Invalid MLS wire');
+  return Array.from(wire);
+}
+
 export class NativeChatSession {
   constructor(private readonly handle: string) {
     if (!/^[A-Za-z0-9_-]{43}$/.test(handle)) throw new Error('Invalid native chat handle');
@@ -30,16 +43,26 @@ export class NativeChatSession {
       throw new Error('Invalid message length');
     }
     const value = await nativeChatInvoke('chat_encrypt', { handle: this.handle, text });
-    if (!Array.isArray(value) || value.length > 65536 ||
-        !value.every((byte) => Number.isInteger(byte) && byte >= 0 && byte <= 255)) {
-      throw new Error('Invalid encrypted message');
-    }
-    return new Uint8Array(value);
+    return checkedWire(value);
+  }
+
+  async keyPackage(): Promise<Uint8Array> {
+    return checkedWire(await nativeChatInvoke('chat_key_package', { handle: this.handle }));
+  }
+
+  async initiate(packageWire: Uint8Array): Promise<Uint8Array> {
+    return checkedWire(await nativeChatInvoke('chat_initiate', {
+      handle: this.handle,
+      package: wireInput(packageWire),
+    }));
+  }
+
+  async join(welcome: Uint8Array): Promise<void> {
+    await nativeChatInvoke('chat_join', { handle: this.handle, welcome: wireInput(welcome) });
   }
 
   async decrypt(wire: Uint8Array): Promise<string> {
-    if (wire.length === 0 || wire.length > 65536) throw new Error('Invalid encrypted message');
-    const value = await nativeChatInvoke('chat_decrypt', { handle: this.handle, wire: Array.from(wire) });
+    const value = await nativeChatInvoke('chat_decrypt', { handle: this.handle, wire: wireInput(wire) });
     if (typeof value !== 'string' || !value || new TextEncoder().encode(value).length > 4096) {
       throw new Error('Invalid decrypted message');
     }
