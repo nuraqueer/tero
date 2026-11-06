@@ -55,6 +55,9 @@ function RouteComponent() {
           </ContentView.Section>
         </ContentView>
       </div>
+      <Link to="/guides" className="pb-8 underline underline-offset-4">
+        Read the public guides
+      </Link>
     </main>
   );
 }
