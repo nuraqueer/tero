@@ -15,6 +15,14 @@ pub enum RouteError {
     NoPendingAttempt,
     WrongAttempt,
     PeerRoutesNotExhausted,
+    FallbackConsentRequired,
+}
+
+/// An explicit decision made for this delivery, not a stored global preference.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum FallbackConsent {
+    Approved,
+    Denied,
 }
 
 /// Exactly one delivery attempt may be active. Cloudflare is never selected by default.
@@ -62,10 +70,14 @@ impl DeliveryPlan {
         Ok(())
     }
 
-    /// Can only be called after every peer route has failed, never pre-authorized.
-    pub fn authorize_last_resort(&mut self) -> Result<(), RouteError> {
+    /// Can only be called after every peer route has failed and explicit consent
+    /// has been given for this one delivery. This does not send any data.
+    pub fn authorize_last_resort(&mut self, consent: FallbackConsent) -> Result<(), RouteError> {
         if self.delivered || self.pending.is_some() || self.next != PEER_ROUTES.len() {
             return Err(RouteError::PeerRoutesNotExhausted);
+        }
+        if consent != FallbackConsent::Approved {
+            return Err(RouteError::FallbackConsentRequired);
         }
         self.cloud_authorized = true;
         Ok(())
@@ -78,14 +90,14 @@ impl DeliveryPlan {
 
 #[cfg(test)]
 mod tests {
-    use super::{DeliveryPlan, Route, RouteError};
+    use super::{DeliveryPlan, FallbackConsent, Route, RouteError};
 
     #[test]
     fn peer_routes_precede_cloud_and_cloud_is_disabled_by_default() {
         let mut plan = DeliveryPlan::new();
         assert_eq!(plan.next_route(), Some(Route::Sefirah));
         assert_eq!(plan.next_route(), None);
-        assert_eq!(plan.authorize_last_resort(), Err(RouteError::PeerRoutesNotExhausted));
+        assert_eq!(plan.authorize_last_resort(FallbackConsent::Approved), Err(RouteError::PeerRoutesNotExhausted));
         plan.acknowledge(Route::Sefirah, false).unwrap();
         assert_eq!(plan.next_route(), Some(Route::Nearby));
         plan.acknowledge(Route::Nearby, false).unwrap();
@@ -101,7 +113,9 @@ mod tests {
             assert_eq!(plan.next_route(), Some(route));
             plan.acknowledge(route, false).unwrap();
         }
-        plan.authorize_last_resort().unwrap();
+        assert_eq!(plan.authorize_last_resort(FallbackConsent::Denied), Err(RouteError::FallbackConsentRequired));
+        assert_eq!(plan.next_route(), None);
+        plan.authorize_last_resort(FallbackConsent::Approved).unwrap();
         assert_eq!(plan.next_route(), Some(Route::Cloudflare));
         plan.acknowledge(Route::Cloudflare, false).unwrap();
         assert_eq!(plan.next_route(), None);
@@ -114,7 +128,7 @@ mod tests {
         plan.acknowledge(Route::Sefirah, true).unwrap();
         assert!(plan.delivered());
         assert_eq!(plan.next_route(), None);
-        assert_eq!(plan.authorize_last_resort(), Err(RouteError::PeerRoutesNotExhausted));
+        assert_eq!(plan.authorize_last_resort(FallbackConsent::Approved), Err(RouteError::PeerRoutesNotExhausted));
     }
 
     #[test]
