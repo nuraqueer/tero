@@ -1,0 +1,87 @@
+//! The Tauri UI can operate only on native-opened MLS sessions.
+//! There is deliberately no command that accepts an account seed, storage key,
+//! recovery phrase, or arbitrary database path from JavaScript.
+
+use std::{collections::HashMap, sync::{Arc, Mutex}};
+use sefirah_mls::{HandshakeState, PrivateChat};
+use tauri::State;
+
+#[derive(Default)]
+pub(crate) struct ChatSessions {
+    sessions: Mutex<HashMap<String, Arc<PrivateChat>>>,
+}
+
+impl ChatSessions {
+    /// Only native secure-identity restoration may register a chat. The caller
+    /// must first validate the peer, derive native keys and choose no-backup storage.
+    #[allow(dead_code)]
+    pub(crate) fn insert_native(&self, handle: String, chat: Arc<PrivateChat>) -> Result<(), &'static str> {
+        if handle.len() != 43 || !handle.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_') {
+            return Err("Invalid chat handle");
+        }
+        let mut sessions = self.sessions.lock().map_err(|_| "Chat registry unavailable")?;
+        if sessions.len() >= 32 || sessions.contains_key(&handle) {
+            return Err("Chat registry capacity reached");
+        }
+        sessions.insert(handle, chat);
+        Ok(())
+    }
+
+    fn get(&self, handle: &str) -> Result<Arc<PrivateChat>, &'static str> {
+        self.sessions.lock().map_err(|_| "Chat registry unavailable")?
+            .get(handle).cloned().ok_or("Native chat session unavailable")
+    }
+
+    fn remove(&self, handle: &str) -> Result<Arc<PrivateChat>, &'static str> {
+        self.sessions.lock().map_err(|_| "Chat registry unavailable")?
+            .remove(handle).ok_or("Native chat session unavailable")
+    }
+}
+
+#[tauri::command]
+pub(crate) fn chat_session_state(registry: State<'_, ChatSessions>, handle: String) -> Result<&'static str, &'static str> {
+    match registry.get(&handle)?.handshake_state().map_err(|_| "Chat state unavailable")? {
+        HandshakeState::Fresh => Ok("fresh"),
+        HandshakeState::Offered => Ok("offered"),
+        HandshakeState::Established => Ok("established"),
+    }
+}
+
+#[tauri::command]
+pub(crate) fn chat_pending(registry: State<'_, ChatSessions>, handle: String) -> Result<serde_json::Value, &'static str> {
+    let items = registry.get(&handle)?.pending().map_err(|_| "Pending messages unavailable")?;
+    serde_json::to_value(items).map_err(|_| "Pending messages unavailable")
+}
+
+#[tauri::command]
+pub(crate) fn chat_received(registry: State<'_, ChatSessions>, handle: String) -> Result<serde_json::Value, &'static str> {
+    let items = registry.get(&handle)?.received().map_err(|_| "Received messages unavailable")?;
+    serde_json::to_value(items).map_err(|_| "Received messages unavailable")
+}
+
+#[tauri::command]
+pub(crate) fn chat_encrypt(registry: State<'_, ChatSessions>, handle: String, text: String) -> Result<Vec<u8>, &'static str> {
+    registry.get(&handle)?.encrypt(text).map_err(|_| "Message encryption unavailable")
+}
+
+#[tauri::command]
+pub(crate) fn chat_decrypt(registry: State<'_, ChatSessions>, handle: String, wire: Vec<u8>) -> Result<String, &'static str> {
+    registry.get(&handle)?.decrypt(wire).map_err(|_| "Message decryption unavailable")
+}
+
+#[tauri::command]
+pub(crate) fn chat_close(registry: State<'_, ChatSessions>, handle: String) -> Result<(), &'static str> {
+    registry.remove(&handle)?.shutdown().map_err(|_| "Chat shutdown failed")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn unknown_sessions_fail_closed() {
+        let registry = ChatSessions::default();
+        assert!(registry.get("unknown").is_err());
+        assert!(registry.remove("unknown").is_err());
+    }
+}
