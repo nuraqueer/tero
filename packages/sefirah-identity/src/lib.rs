@@ -4,10 +4,12 @@
 //! replace its ciphertext until a separate, tested recovery path exists.
 
 use base64::{Engine as _, engine::general_purpose::{STANDARD, URL_SAFE_NO_PAD}};
+use bip39::{Language, Mnemonic};
 use chacha20poly1305::{XChaCha20Poly1305, XNonce, aead::{Aead, KeyInit, Payload}};
 use hkdf::Hkdf;
 use scrypt::{Params, scrypt};
 use sha2::Sha256;
+use subtle::ConstantTimeEq;
 use zeroize::Zeroizing;
 
 const VERSION: u8 = 1;
@@ -101,6 +103,32 @@ pub fn parse_legacy_slot(payload: &str) -> Result<LegacyAccountPayload, VaultFor
             Ok(LegacyAccountPayload::Full { phrase: Zeroizing::new(phrase), seed })
         }
         _ => Err(VaultFormatError::InvalidPayload),
+    }
+}
+
+/// Recover the same 64-byte BIP39 seed as legacy `phraseToSeed`.
+/// A basic/decoy slot deliberately yields no identity. Re-deriving also checks
+/// cached seeds against the phrase so a mismatched record cannot open a new DID.
+/// This is native-only and must never be exposed as a Tauri IPC command.
+pub fn recover_legacy_seed(payload: LegacyAccountPayload) -> Result<Option<Zeroizing<[u8; 64]>>, VaultFormatError> {
+    match payload {
+        LegacyAccountPayload::Basic => Ok(None),
+        LegacyAccountPayload::Full { phrase, seed } => {
+            // Legacy normalizePhrase: trim, lowercase, collapse whitespace.
+            let normalized = Zeroizing::new(phrase.split_whitespace()
+                .map(str::to_lowercase)
+                .collect::<Vec<_>>()
+                .join(" "));
+            let mnemonic = Mnemonic::parse_in(Language::English, normalized.as_str())
+                .map_err(|_| VaultFormatError::InvalidPayload)?;
+            let derived = Zeroizing::new(mnemonic.to_seed(""));
+            if let Some(cached) = seed {
+                if !bool::from(derived[..].ct_eq(&cached[..])) {
+                    return Err(VaultFormatError::InvalidPayload);
+                }
+            }
+            Ok(Some(derived))
+        }
     }
 }
 
