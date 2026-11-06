@@ -7,6 +7,23 @@ use sefirah_mls::{HandshakeState, PrivateChat};
 use tauri::State;
 use zeroize::Zeroizing;
 
+const MAX_CHAT_TEXT_BYTES: usize = 4096;
+const MAX_CHAT_WIRE_BYTES: usize = 65536;
+
+fn valid_wire(bytes: &[u8]) -> Result<(), &'static str> {
+    if bytes.is_empty() || bytes.len() > MAX_CHAT_WIRE_BYTES {
+        return Err("Invalid MLS wire length");
+    }
+    Ok(())
+}
+
+fn valid_text(text: &str) -> Result<(), &'static str> {
+    if text.is_empty() || text.len() > MAX_CHAT_TEXT_BYTES {
+        return Err("Invalid chat message length");
+    }
+    Ok(())
+}
+
 #[derive(Default)]
 pub(crate) struct ChatSessions {
     sessions: Mutex<HashMap<String, Arc<PrivateChat>>>,
@@ -105,21 +122,25 @@ pub(crate) fn chat_key_package(registry: State<'_, ChatSessions>, handle: String
 
 #[tauri::command]
 pub(crate) fn chat_initiate(registry: State<'_, ChatSessions>, handle: String, package: Vec<u8>) -> Result<Vec<u8>, &'static str> {
+    valid_wire(&package)?;
     registry.get(&handle)?.initiate(package).map_err(|_| "MLS initiation failed")
 }
 
 #[tauri::command]
 pub(crate) fn chat_join(registry: State<'_, ChatSessions>, handle: String, welcome: Vec<u8>) -> Result<(), &'static str> {
+    valid_wire(&welcome)?;
     registry.get(&handle)?.join(welcome).map_err(|_| "MLS join failed")
 }
 
 #[tauri::command]
 pub(crate) fn chat_encrypt(registry: State<'_, ChatSessions>, handle: String, text: String) -> Result<Vec<u8>, &'static str> {
+    valid_text(&text)?;
     registry.get(&handle)?.encrypt(text).map_err(|_| "Message encryption unavailable")
 }
 
 #[tauri::command]
 pub(crate) fn chat_decrypt(registry: State<'_, ChatSessions>, handle: String, wire: Vec<u8>) -> Result<String, &'static str> {
+    valid_wire(&wire)?;
     registry.get(&handle)?.decrypt(wire).map_err(|_| "Message decryption unavailable")
 }
 
