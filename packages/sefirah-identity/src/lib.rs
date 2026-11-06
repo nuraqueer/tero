@@ -124,8 +124,11 @@ pub fn open_legacy_vault(
             if length > PLAINTEXT_LENGTH - 2 {
                 return Err(VaultFormatError::InvalidPayload);
             }
-            let payload = String::from_utf8(plaintext[2..2 + length].to_vec())
-                .map_err(|_| VaultFormatError::InvalidPayload)?;
+            // Validate inside the zeroizing buffer. String::from_utf8 on a
+            // temporary Vec would drop malformed plaintext without wiping it.
+            let payload = std::str::from_utf8(&plaintext[2..2 + length])
+                .map_err(|_| VaultFormatError::InvalidPayload)?
+                .to_owned();
             if opened.is_none() {
                 opened = Some(OpenedLegacySlot { slot: slot as u8, payload: Zeroizing::new(payload) });
             }
@@ -145,7 +148,9 @@ mod tests {
         STANDARD.encode(bytes)
     }
 
-    fn encrypted_vault() -> String {
+    fn encrypted_vault_with_payload(payload: &[u8], declared_length: usize) -> String {
+        assert!(payload.len() <= PLAINTEXT_LENGTH - 2);
+        assert!(declared_length <= u16::MAX as usize);
         let mut bytes = STANDARD.decode(sample_vault()).unwrap();
         let params = Params::new(12, 8, 1).unwrap();
         let mut stretched = [0_u8; 32];
@@ -158,8 +163,9 @@ mod tests {
         hkdf.expand(SLOT_INFO, &mut key).unwrap();
         let cipher = XChaCha20Poly1305::new_from_slice(&key).unwrap();
         let mut plaintext = [0_u8; PLAINTEXT_LENGTH];
-        plaintext[1] = 5;
-        plaintext[2..7].copy_from_slice(b"hello");
+        plaintext[0] = (declared_length >> 8) as u8;
+        plaintext[1] = declared_length as u8;
+        plaintext[2..2 + payload.len()].copy_from_slice(payload);
         let nonce = [9_u8; NONCE_LENGTH];
         let encrypted = cipher.encrypt(XNonce::from_slice(&nonce), Payload {
             msg: &plaintext,
@@ -169,6 +175,10 @@ mod tests {
         bytes[start..start + NONCE_LENGTH].copy_from_slice(&nonce);
         bytes[start + NONCE_LENGTH..].copy_from_slice(&encrypted);
         STANDARD.encode(bytes)
+    }
+
+    fn encrypted_vault() -> String {
+        encrypted_vault_with_payload(b"hello", 5)
     }
 
     #[test]
@@ -204,6 +214,17 @@ mod tests {
         assert_eq!(opened.payload.as_str(), "hello");
         assert!(open_legacy_vault(&encoded, "654321", &[7; 32]).unwrap().is_none());
         assert!(open_legacy_vault(&encoded, "123456", &[8; 32]).unwrap().is_none());
+
+        // The legacy vault randomises slot order. The same protected payload
+        // must open in either position without changing the header or key.
+        let mut swapped = STANDARD.decode(&encoded).unwrap();
+        let (first, second) = swapped[HEADER_LENGTH..].split_at_mut(SLOT_LENGTH);
+        first.swap_with_slice(second);
+        let opened = open_legacy_vault(&STANDARD.encode(swapped), "123456", &[7; 32])
+            .unwrap()
+            .unwrap();
+        assert_eq!(opened.slot, 0);
+        assert_eq!(opened.payload.as_str(), "hello");
     }
 
     #[test]
@@ -214,5 +235,30 @@ mod tests {
             open_legacy_vault(&STANDARD.encode(bytes), "passcode", &[7; 32]),
             Err(VaultFormatError::UnsupportedScryptCost)
         ));
+    }
+
+    #[test]
+    fn rejects_authenticated_payloads_with_invalid_text_or_length() {
+        assert!(matches!(
+            open_legacy_vault(&encrypted_vault_with_payload(&[0xff], 1), "123456", &[7; 32]),
+            Err(VaultFormatError::InvalidPayload)
+        ));
+        assert!(matches!(
+            open_legacy_vault(
+                &encrypted_vault_with_payload(b"hello", PLAINTEXT_LENGTH - 1),
+                "123456",
+                &[7; 32]
+            ),
+            Err(VaultFormatError::InvalidPayload)
+        ));
+    }
+
+    #[test]
+    fn an_authenticated_header_change_never_unlocks_the_slot() {
+        let mut bytes = STANDARD.decode(encrypted_vault()).unwrap();
+        bytes[4] ^= 1;
+        assert!(open_legacy_vault(&STANDARD.encode(bytes), "123456", &[7; 32])
+            .unwrap()
+            .is_none());
     }
 }
