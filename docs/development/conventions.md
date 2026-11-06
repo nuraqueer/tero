@@ -22,6 +22,10 @@
 
 ## Code quality
 
+- Keep new Tero client tests in `apps/tero/tests/`, outside `src/`.
+  The test runner must target that directory explicitly, and test imports point
+  to the production modules rather than requiring duplicate implementation files.
+
 - Strong TypeScript types, no unreviewed `any`; validate cross-runtime data.
 - Use TanStack Query for asynchronous cached state, TanStack Form for forms and
   Table for real complex tables. Prefer derived values over effect-driven state.

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { NativeChatSession } from './native-chat';
+import { NativeChatSession } from '../src/services/native-chat';
 
 const native = vi.hoisted(() => ({ isTauri: vi.fn(() => false), invoke: vi.fn() }));
 vi.mock('@tauri-apps/api/core', () => native);

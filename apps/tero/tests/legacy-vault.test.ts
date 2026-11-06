@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { inspectLegacyVault } from './legacy-vault';
+import { inspectLegacyVault } from '../src/services/legacy-vault';
 
 const native = vi.hoisted(() => ({
   isTauri: vi.fn(() => false),

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { sefirahTransportCall } from './sefirah-transport';
+import { sefirahTransportCall } from '../src/services/sefirah-transport';
 
 const native = vi.hoisted(() => ({
   isTauri: vi.fn(() => false),

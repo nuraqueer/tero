@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { SefirahSession } from './sefirah-session';
-import { sefirahTransportCall } from './sefirah-transport';
+import { SefirahSession } from '../src/services/sefirah-session';
+import { sefirahTransportCall } from '../src/services/sefirah-transport';
 
-vi.mock('./sefirah-transport', () => ({ sefirahTransportCall: vi.fn() }));
+vi.mock('../src/services/sefirah-transport', () => ({ sefirahTransportCall: vi.fn() }));
 const call = vi.mocked(sefirahTransportCall);
 const onion = `${'a'.repeat(56)}.onion`;
 

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getRuntimeCapabilities } from './runtime';
+import { getRuntimeCapabilities } from '../src/services/runtime';
 
 const native = vi.hoisted(() => ({
   isTauri: vi.fn(() => false),
