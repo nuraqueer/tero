@@ -3,7 +3,7 @@
 //! The legacy device-bound vault is not decrypted or migrated here. Never
 //! replace its ciphertext until a separate, tested recovery path exists.
 
-use base64::{Engine as _, engine::general_purpose::STANDARD};
+use base64::{Engine as _, engine::general_purpose::{STANDARD, URL_SAFE_NO_PAD}};
 use chacha20poly1305::{XChaCha20Poly1305, XNonce, aead::{Aead, KeyInit, Payload}};
 use hkdf::Hkdf;
 use scrypt::{Params, scrypt};
@@ -56,6 +56,52 @@ pub struct OpenedLegacySlot {
     pub slot: u8,
     /// Caller must keep this native-side and clear it when locking the session.
     pub payload: Zeroizing<String>,
+}
+
+/// The legacy decoy slot does not contain account keys. Neither variant is
+/// serializable: native callers must never return it through an IPC command.
+pub enum LegacyAccountPayload {
+    Basic,
+    Full {
+        phrase: Zeroizing<String>,
+        /// Some old installs have only the phrase. Derive the seed natively
+        /// after recovery verification, never by sending it to JavaScript.
+        seed: Option<Zeroizing<[u8; 64]>>,
+    },
+}
+
+#[derive(serde::Deserialize)]
+#[serde(tag = "mode", deny_unknown_fields)]
+enum LegacyPayloadRecord {
+    #[serde(rename = "basic")]
+    Basic { v: u8 },
+    #[serde(rename = "full")]
+    Full { v: u8, phrase: String, seed: Option<String> },
+}
+
+/// Strictly interpret a decrypted legacy slot. This must be called only in
+/// native memory immediately after successful authenticated decryption.
+pub fn parse_legacy_slot(payload: &str) -> Result<LegacyAccountPayload, VaultFormatError> {
+    let record: LegacyPayloadRecord = serde_json::from_str(payload)
+        .map_err(|_| VaultFormatError::InvalidPayload)?;
+    match record {
+        LegacyPayloadRecord::Basic { v: 1 } => Ok(LegacyAccountPayload::Basic),
+        LegacyPayloadRecord::Full { v: 1, phrase, seed } if !phrase.trim().is_empty() => {
+            let seed = seed.map(|encoded| {
+                let mut decoded = Zeroizing::new(URL_SAFE_NO_PAD.decode(encoded)
+                    .map_err(|_| VaultFormatError::InvalidPayload)?);
+                if decoded.len() != 64 {
+                    return Err(VaultFormatError::InvalidPayload);
+                }
+                let mut value = Zeroizing::new([0_u8; 64]);
+                value.copy_from_slice(&decoded);
+                decoded.fill(0);
+                Ok(value)
+            }).transpose()?;
+            Ok(LegacyAccountPayload::Full { phrase: Zeroizing::new(phrase), seed })
+        }
+        _ => Err(VaultFormatError::InvalidPayload),
+    }
 }
 
 /// Inspect public vault metadata without deriving keys or exposing either slot.
