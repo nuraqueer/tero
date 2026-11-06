@@ -1,3 +1,5 @@
+use tauri::Manager;
+
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 struct RuntimeCapabilities {
@@ -38,10 +40,41 @@ fn runtime_capabilities() -> RuntimeCapabilities {
     }
 }
 
+/// Invoke the existing Tor engine without exposing arbitrary filesystem paths.
+/// Transport readiness remains false until authenticated physical-device tests.
+#[tauri::command]
+async fn sefirah_transport_call(
+    app: tauri::AppHandle,
+    request: serde_json::Value,
+) -> Result<serde_json::Value, &'static str> {
+    let mut request = request;
+    let obj = request.as_object_mut().ok_or("Invalid transport request")?;
+    let operation = obj.get("op").and_then(serde_json::Value::as_str)
+        .ok_or("Invalid transport request")?;
+    if !matches!(operation, "start" | "stop" | "cancel" | "offer" | "forget" | "get") {
+        return Err("Unsupported transport operation");
+    }
+    if operation == "start" {
+        let root = app.path().app_local_data_dir()
+            .map_err(|_| "Private transport storage unavailable")?;
+        let root = root.join("sefirah-tor");
+        obj.insert("directory".to_owned(), serde_json::Value::String(root.to_string_lossy().into_owned()));
+    } else if obj.contains_key("directory") {
+        return Err("Unexpected transport directory");
+    }
+    let encoded = serde_json::to_string(&request).map_err(|_| "Invalid transport request")?;
+    if encoded.len() > 70 * 1024 {
+        return Err("Transport request too large");
+    }
+    let result = tauri::async_runtime::spawn_blocking(move || sefirah_tor::call(&encoded))
+        .await.map_err(|_| "Transport operation failed")?;
+    serde_json::from_str(&result).map_err(|_| "Invalid transport response")
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![runtime_capabilities, inspect_legacy_vault])
+        .invoke_handler(tauri::generate_handler![runtime_capabilities, inspect_legacy_vault, sefirah_transport_call])
         .run(tauri::generate_context!())
         .expect("failed to run Tero");
 }
