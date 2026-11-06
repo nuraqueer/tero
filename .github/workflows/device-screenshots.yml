@@ -1,0 +1,175 @@
+name: Device and web screenshots
+
+# Emulators are expensive. Do not run them for every commit.
+on:
+  workflow_dispatch:
+    inputs:
+      publish_screenshots:
+        description: 'Commit successful captures under tests-screenshots/'
+        type: boolean
+        default: true
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    name: Web Chromium smoke and screenshots
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - run: bun install --frozen-lockfile
+      - run: bun run build:web
+      - name: Install browser test runtime
+        run: bunx playwright@1.64.1 install --with-deps chromium
+      - name: Capture public routes at desktop and mobile sizes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p tests-screenshots/web
+          (cd apps/tero && bunx vite preview --host 127.0.0.1 --port 4173) > "$RUNNER_TEMP/tero-web.log" 2>&1 &
+          for attempt in $(seq 1 45); do
+            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then break; fi
+            sleep 2
+          done
+          curl --fail --silent http://127.0.0.1:4173/ > /dev/null
+          bunx playwright@1.64.1 screenshot --browser chromium --viewport-size '1440,900' --wait-for-selector 'main' --full-page http://127.0.0.1:4173/ tests-screenshots/web/home-desktop.png
+          bunx playwright@1.64.1 screenshot --browser chromium --viewport-size '390,844' --wait-for-selector 'main' --full-page http://127.0.0.1:4173/ tests-screenshots/web/home-mobile.png
+          bunx playwright@1.64.1 screenshot --browser chromium --viewport-size '1440,900' --wait-for-selector 'main' --full-page http://127.0.0.1:4173/guides tests-screenshots/web/guides-desktop.png
+          bunx playwright@1.64.1 screenshot --browser chromium --viewport-size '390,844' --wait-for-selector 'main' --full-page http://127.0.0.1:4173/guides/staying-safe-online tests-screenshots/web/guide-mobile.png
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: screenshots-web
+          path: tests-screenshots/
+          if-no-files-found: warn
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: web-preview-log
+          path: ${{ runner.temp }}/tero-web.log
+          if-no-files-found: ignore
+          retention-days: 14
+
+  android:
+    name: Android emulator Tauri smoke and screenshot
+    runs-on: ubuntu-24.04
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-linux-android
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: bun install --frozen-lockfile
+      - name: Install Android SDK tools and NDK
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'ndk;27.2.12479018' 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Build, install and capture Tero in Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_6
+          script: |
+            set -euo pipefail
+            export NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
+            export ANDROID_NDK_HOME="$NDK_HOME"
+            cd apps/tero
+            CI=true bunx tauri android init
+            bunx tauri android build --debug --apk --target x86_64
+            APK="$(find src-tauri/gen/android/app/build/outputs/apk -type f -name '*.apk' -print -quit)"
+            test -n "$APK"
+            adb install -r "$APK"
+            adb shell monkey -p tero.pherus.org -c android.intent.category.LAUNCHER 1
+            sleep 15
+            adb shell pidof tero.pherus.org
+            mkdir -p ../../tests-screenshots/android
+            adb exec-out screencap -p > ../../tests-screenshots/android/tero-emulator.png
+            test -s ../../tests-screenshots/android/tero-emulator.png
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: screenshots-android
+          path: tests-screenshots/
+          if-no-files-found: warn
+          retention-days: 30
+
+  ios:
+    name: iOS simulator Tauri smoke and screenshot
+    runs-on: macos-15
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios-sim
+      - run: bun install --frozen-lockfile
+      - name: Build and launch Tero in Xcode simulator
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEVICE="$(xcrun simctl list devices available --json | node -e 'let s="";process.stdin.on("data",x=>s+=x);process.stdin.on("end",()=>{let d=Object.values(JSON.parse(s).devices).flat().find(x=>x.name.startsWith("iPhone") && x.isAvailable);if(!d)process.exit(1);console.log(d.udid)})')"
+          xcrun simctl boot "$DEVICE"
+          xcrun simctl bootstatus "$DEVICE" -b
+          cd apps/tero
+          CI=true bunx tauri ios init
+          CODE_SIGNING_ALLOWED=NO bunx tauri ios build --debug --target aarch64-sim
+          APP="$(find src-tauri/gen/apple -type d -name 'Tero.app' -print -quit)"
+          test -n "$APP"
+          xcrun simctl install "$DEVICE" "$APP"
+          xcrun simctl launch "$DEVICE" tero.pherus.org
+          sleep 15
+          mkdir -p ../../tests-screenshots/ios
+          xcrun simctl io "$DEVICE" screenshot ../../tests-screenshots/ios/tero-simulator.png
+          test -s ../../tests-screenshots/ios/tero-simulator.png
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: screenshots-ios
+          path: tests-screenshots/
+          if-no-files-found: warn
+          retention-days: 30
+
+  publish:
+    name: Keep successful screenshots in the repository
+    if: ${{ always() && github.ref == 'refs/heads/main' && inputs.publish_screenshots && needs.web.result == 'success' }}
+    needs: [web, android, ios]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: screenshots-*
+          merge-multiple: true
+          path: tests-screenshots
+      - name: Commit verified public images
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tests-screenshots/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'test(screenshots): refresh manual CI emulator and web captures'
+          git push origin HEAD:main
