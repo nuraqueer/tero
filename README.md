@@ -1,77 +1,61 @@
 <div align="center">
 
-<img src="design/assets/app-icon-light.svg" width="104" alt="Tero tarot card symbol">
+<img src="design/assets/app-icon-light.svg" width="76" alt="Tero tarot-card icon">
 
 # Tero
 
 **A place to belong.**
 
-An open-source space for LGBTQIA+ people to find trusted connections, share
-useful knowledge and help one another, particularly where visibility carries
-real risks.
+A private, community-led space for LGBTQIA+ people to connect, find practical
+support and share what helps, especially where being visible carries risk.
 
-[Vision](docs/vision.md) · [Roadmap](docs/roadmap.md) · [Safety](docs/threat-model.md) · [Contribute](#help-build-tero)
-
-<img src="design/branding/tero-social-preview-v3.png" width="100%" alt="Tero, a place to belong. The tarot card symbol on a dark background.">
+[Vision](docs/vision.md) · [Roadmap](docs/roadmap.md) · [Safety](docs/threat-model.md) · [Support](SUPPORT.md)
 
 </div>
 
-## Why
+## Why Tero
 
-Finding a trusted doctor, a safe place to stay, practical advice or simply
-someone who understands should not require taking unnecessary risks.
+Finding a trusted person, a safe place, relevant healthcare or useful advice
+shouldn't be harder because of who you are. Tero brings trusted introductions,
+community knowledge and mutual help into one considered experience.
 
-Tero is being built around **care, consent and trusted introductions**. It is
-about people being useful to one another, not building another public feed.
+The app is organised around **Gathering, Circles, Messages, Help and You**. Its
+tarot-inspired identity remains intact across the web and native apps.
 
-## The experience
+## In development
 
-**Gathering** for discovery. **Circles** for trusted people. **Messages** for
-conversation. **Help** for practical resources. **You** for personal space.
+Tero is **not ready for use in high-risk situations**. Invitation flows,
+resources, local vaults and encrypted one-to-one chat have been demonstrated
+in the legacy test app, but the new app and peer network are still in progress.
 
-The established tarot-inspired cards and app navigation remain. We are
-improving their quality without redesigning what already works.
+Not everything is end-to-end encrypted. Some service metadata and Help
+submissions are readable by the server. See the [security audit](docs/status-audit-2026-10-20.md)
+before deciding what to share.
 
-<p align="center"><img src="docs/screens/hero.png" width="100%" alt="Early Tero interface concept"></p>
+<details>
+<summary><strong>Why Expo → Tauri?</strong></summary>
 
-<p align="center"><sub>Early concept artwork, not a current app screenshot.</sub></p>
+One Tauri v2 app gives us a shared TypeScript interface and Rust-native identity,
+storage and cryptography. We are retaining Expo for compatibility checks until
+the replacement reaches parity.
 
-## Where we are
+</details>
 
-**Tero is under active development and is not ready for use in high-risk situations.**
-The legacy test app has demonstrated invitations, directories, device vaults
-and native encrypted one-to-one messaging. The Tauri replacement and peer-first
-network are still being completed and tested.
+## Be part of it
 
-Not all information is end-to-end encrypted. Some support submissions and
-service metadata remain accessible to the server. Please do not share
-information that could endanger you or someone else. Read the
-[current audit](docs/status-audit-2026-10-20.md).
+We're looking for contributors, local resource reviewers, designers, security
+researchers and partners who care about accessible, safer queer infrastructure.
+Support can help fund independent audits, localisation, mobile releases and
+community stewardship. We have not yet measured public impact.
 
-### Expo → Tauri
+**[Support Tero](SUPPORT.md)** · **[Get in touch](mailto:pherus@pherus.org)**
 
-We are moving to **one Tauri v2 app** with a shared TypeScript interface and
-Rust for native identity, storage and cryptography. The Expo test app remains
-available for migration checks until parity is proven.
+<details>
+<summary><strong>Development</strong></summary>
 
-## Help build Tero
-
-We welcome LGBTQIA+ contributors and allies across design, engineering,
-translation, security, accessibility and community resource review.
-
-We also welcome funding and partnerships for independent security review,
-localisation, safer mobile releases and community stewardship. We have not yet
-measured impact or launched a public service.
-
-**Contact:** [pherus@pherus.org](mailto:pherus@pherus.org)
-
-### For developers
-
-The repository uses Bun, Turborepo, TanStack, PassUI, Rust and Tauri v2.
-The deployed backend remains a single Cloudflare Worker. Start with the
-[migration notes](docs/development/migration.md),
-[engineering conventions](docs/development/conventions.md) and
-[current handoff](docs/continuation.md).
+Built with Bun, Turborepo, TanStack, PassUI, Tauri v2 and Rust, alongside one
+Cloudflare Worker. See [migration](docs/development/migration.md),
+[conventions](docs/development/conventions.md) and [handoff](docs/continuation.md).
 
 ```bash
 bun install --frozen-lockfile
@@ -80,8 +64,10 @@ bun run --cwd apps/tero typecheck
 bun run --cwd apps/tero test
 ```
 
+</details>
+
 <div align="center">
 
-Built by [Pherus](https://pherus.org) · [AGPL-3.0](LICENSE)
+Built by **Tiabah La niina** at [Pherus](https://pherus.org) · [AGPL-3.0](LICENSE)
 
 </div>
