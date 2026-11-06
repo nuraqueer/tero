@@ -17,6 +17,7 @@ export async function inspectLegacyVault(encoded: string): Promise<LegacyVaultIn
   const fields = result as Record<string, unknown>;
   if (
     fields.formatVersion !== 1 ||
+    typeof fields.kdfLog2N !== 'number' ||
     !Number.isInteger(fields.kdfLog2N) ||
     typeof fields.compatibleKdf !== 'boolean'
   ) {
