@@ -25,6 +25,8 @@
 - Keep new Tero client tests in `apps/tero/tests/`, outside `src/`.
   The test runner must target that directory explicitly, and test imports point
   to the production modules rather than requiring duplicate implementation files.
+- Keep Tauri-specific Rust test implementations in `apps/tero/src-tauri/tests/`;
+  private unit tests may be linked from their module with a `#[path]` declaration.
 
 - Strong TypeScript types, no unreviewed `any`; validate cross-runtime data.
 - Use TanStack Query for asynchronous cached state, TanStack Form for forms and
