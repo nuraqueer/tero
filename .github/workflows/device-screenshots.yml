@@ -82,29 +82,46 @@ jobs:
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'ndk;27.2.12479018' 'platforms;android-35' 'build-tools;35.0.0'
-      - name: Build, install and capture Tero in Android emulator
-        uses: reactivecircus/android-emulator-runner@v2
+      - name: Build Android debug APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          export NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
+          export ANDROID_NDK_HOME="$NDK_HOME"
+          cd apps/tero
+          CI=true bunx tauri android init
+          bunx tauri android build --debug --apk --target x86_64
+      - name: Boot emulator, install and capture Tero
+        shell: bash
+        timeout-minutes: 24
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'system-images;android-35;google_apis;x86_64'
+          echo no | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd --name tero_ci --package 'system-images;android-35;google_apis;x86_64' --device 'pixel_6' --force
+          "$ANDROID_HOME/emulator/emulator" -avd tero_ci -no-window -no-audio -no-snapshot -no-boot-anim -gpu swiftshader_indirect -accel on > "$RUNNER_TEMP/tero-emulator.log" 2>&1 &
+          adb wait-for-device
+          ready=0
+          for attempt in $(seq 1 450); do
+            if [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = 1 ]; then ready=1; break; fi
+            sleep 2
+          done
+          if [ "$ready" -ne 1 ]; then tail -100 "$RUNNER_TEMP/tero-emulator.log"; exit 1; fi
+          APK="$(find apps/tero/src-tauri/gen/android/app/build/outputs/apk -type f -name '*.apk' -print -quit)"
+          test -n "$APK"
+          adb install -r "$APK"
+          adb shell am start -n tero.pherus.org/.MainActivity
+          sleep 15
+          adb shell pidof tero.pherus.org
+          mkdir -p tests-screenshots/android
+          adb exec-out screencap -p > tests-screenshots/android/tero-emulator.png
+          test -s tests-screenshots/android/tero-emulator.png
+      - uses: actions/upload-artifact@v4
+        if: failure()
         with:
-          api-level: 35
-          arch: x86_64
-          profile: pixel_6
-          script: |
-            # The emulator runner executes this block under /bin/sh, not bash.
-            set -eu
-            export NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
-            export ANDROID_NDK_HOME="$NDK_HOME"
-            cd apps/tero
-            CI=true bunx tauri android init
-            bunx tauri android build --debug --apk --target x86_64
-            APK="$(find src-tauri/gen/android/app/build/outputs/apk -type f -name '*.apk' -print -quit)"
-            test -n "$APK"
-            adb install -r "$APK"
-            adb shell monkey -p tero.pherus.org -c android.intent.category.LAUNCHER 1
-            sleep 15
-            adb shell pidof tero.pherus.org
-            mkdir -p ../../tests-screenshots/android
-            adb exec-out screencap -p > ../../tests-screenshots/android/tero-emulator.png
-            test -s ../../tests-screenshots/android/tero-emulator.png
+          name: android-emulator-diagnostics
+          path: ${{ runner.temp }}/tero-emulator.log
+          if-no-files-found: ignore
+          retention-days: 14
       - uses: actions/upload-artifact@v4
         if: success()
         with:
