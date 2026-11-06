@@ -42,3 +42,11 @@
   before a release checkpoint. Do not hide old failures by removing tests.
 - No architecture claim implies runtime safety. Verify devices, backgrounding,
   network blocking, peer identities, recovery, notification and app-store rules.
+
+## Test placement
+
+Keep application and Rust integration/regression tests in the owning
+package's top-level `tests/` directory, separate from production `src/`.
+For Rust tests requiring access to private module internals, use a small
+`#[cfg(test)] #[path = "../tests/name.rs"] mod tests;` declaration in the
+owning module rather than placing the test bodies in production source.
