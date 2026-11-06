@@ -89,7 +89,8 @@ jobs:
           arch: x86_64
           profile: pixel_6
           script: |
-            set -euo pipefail
+            # The emulator runner executes this block under /bin/sh, not bash.
+            set -eu
             export NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
             export ANDROID_NDK_HOME="$NDK_HOME"
             cd apps/tero
