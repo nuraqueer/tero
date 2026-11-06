@@ -96,6 +96,7 @@ jobs:
         timeout-minutes: 24
         run: |
           set -euo pipefail
+          export PATH="$ANDROID_HOME/platform-tools:$PATH"
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'system-images;android-35;google_apis;x86_64'
           echo no | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd --name tero_ci --package 'system-images;android-35;google_apis;x86_64' --device 'pixel_6' --force
           "$ANDROID_HOME/emulator/emulator" -avd tero_ci -no-window -no-audio -no-snapshot -no-boot-anim -gpu swiftshader_indirect -accel on > "$RUNNER_TEMP/tero-emulator.log" 2>&1 &
