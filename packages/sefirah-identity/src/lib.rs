@@ -19,6 +19,20 @@ const HEADER_LENGTH: usize = 4 + SALT_LENGTH;
 const SLOT_LENGTH: usize = NONCE_LENGTH + PLAINTEXT_LENGTH + TAG_LENGTH;
 const VAULT_LENGTH: usize = HEADER_LENGTH + 2 * SLOT_LENGTH;
 const SLOT_INFO: &[u8] = b"tero/vault-slot/v1";
+const DERIVATION_SALT: &[u8] = b"tero/key-derivation/v1";
+
+/// Reproduce the legacy purpose separation while keeping the 64-byte account
+/// seed native-side. Callers must not serialize the returned key into JS.
+pub fn derive_native_secret(seed: &[u8; 64], purpose: &str, index: u32) -> Result<Zeroizing<[u8; 32]>, VaultFormatError> {
+    if !matches!(purpose, "identity" | "messaging" | "cards" | "journeys" | "app") {
+        return Err(VaultFormatError::InvalidPayload);
+    }
+    let hkdf = Hkdf::<Sha256>::new(Some(DERIVATION_SALT), seed);
+    let mut key = Zeroizing::new([0_u8; 32]);
+    hkdf.expand(format!("{purpose}/{index}").as_bytes(), &mut key[..])
+        .map_err(|_| VaultFormatError::InvalidPayload)?;
+    Ok(key)
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum VaultFormatError {

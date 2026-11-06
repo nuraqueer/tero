@@ -42,6 +42,15 @@ Record implemented, physically confirmed and unverified status separately.
 
 ## Data and deployment preservation
 
+The Tauri native identity derivation now uses the existing `tero/key-derivation/v1`
+purpose-separated HKDF scheme. This is compatibility groundwork, **not an
+account migration**. Expo's `tero.vault` and `tero.device` live in its existing
+device secure-storage namespace. The new Tauri app identifier has a different
+platform storage identity, so it must not assume it can read the old Keychain or
+Keystore entries. A verified, consent-based transfer or recovery flow is needed
+before Tauri can open native MLS sessions. Do not copy raw device secrets to JS,
+delete the old installation, or replace a vault as part of setup.
+
 The current Worker configuration already uses name `tero`, one custom domain,
 and four Durable Object classes. Its registry, journals, notification state and
 mailboxes may contain live test data. Never clear, drop, rename or rebind them as
