@@ -2,6 +2,10 @@ name: Device and web screenshots
 
 # Emulators are expensive. Do not run them for every commit.
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/device-screenshots.yml'
   workflow_dispatch:
     inputs:
       publish_screenshots:
@@ -149,7 +153,7 @@ jobs:
 
   publish:
     name: Keep successful screenshots in the repository
-    if: ${{ always() && github.ref == 'refs/heads/main' && inputs.publish_screenshots && needs.web.result == 'success' }}
+    if: ${{ always() && github.ref == 'refs/heads/main' && (github.event_name == 'push' || inputs.publish_screenshots) && needs.web.result == 'success' }}
     needs: [web, android, ios]
     runs-on: ubuntu-24.04
     permissions:

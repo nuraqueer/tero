@@ -8,11 +8,14 @@ the manually triggered `Device and web screenshots` GitHub Actions workflow.
 - `ios/`: Tauri app running on a clean Xcode iOS simulator.
 
 Run **Actions → Device and web screenshots → Run workflow** on `main`.
+The workflow also runs when its own YAML definition changes on `main`, so the
+initial setup can test itself. Changes to application source alone do not
+trigger these expensive emulator jobs.
 Successful screenshots are uploaded as downloadable workflow artifacts. When
 `publish_screenshots` is enabled, the workflow also commits the resulting PNGs
 to this directory. Web captures may be published even when one of the mobile
 builds fails, but failed device jobs do not contribute screenshots. Ordinary
-pushes do **not** trigger this workflow.
+ordinary source-code pushes do **not** trigger this workflow.
 
 Every mobile job must actually build, install, launch and capture **Tero**.
 An emulator home-screen image is not evidence of the app working. Failed jobs
