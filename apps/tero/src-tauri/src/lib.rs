@@ -1,4 +1,5 @@
 use tauri::Manager;
+mod chat_sessions;
 
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -74,7 +75,18 @@ async fn sefirah_transport_call(
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![runtime_capabilities, inspect_legacy_vault, sefirah_transport_call])
+        .manage(chat_sessions::ChatSessions::default())
+        .invoke_handler(tauri::generate_handler![
+            runtime_capabilities,
+            inspect_legacy_vault,
+            sefirah_transport_call,
+            chat_sessions::chat_session_state,
+            chat_sessions::chat_pending,
+            chat_sessions::chat_received,
+            chat_sessions::chat_encrypt,
+            chat_sessions::chat_decrypt,
+            chat_sessions::chat_close,
+        ])
         .run(tauri::generate_context!())
         .expect("failed to run Tero");
 }
