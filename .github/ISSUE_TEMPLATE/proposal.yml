@@ -1,0 +1,28 @@
+name: Feature or decision proposal
+description: Suggest a product, design, accessibility, privacy or engineering change.
+title: "[Proposal] "
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Problem or need
+      description: Who benefits and what is currently difficult?
+    validations:
+      required: true
+  - type: textarea
+    id: approach
+    attributes:
+      label: Suggested approach
+      description: Explain how this fits the existing user experience.
+    validations:
+      required: true
+  - type: textarea
+    id: tradeoffs
+    attributes:
+      label: Safety, accessibility and alternatives
+      description: Include misuse risks and the costs of changing existing behaviour.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Acceptance evidence
+      description: What would we need to observe before calling this done?

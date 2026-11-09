@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" role="img" aria-labelledby="title description">
+  <title id="title">Tero</title>
+  <desc id="description">Tero, a place to belong. A refined tarot-card symbol with a small line of muted Pride colours.</desc>
+  <rect width="1280" height="640" fill="#171716"/>
+  <rect x="79" y="79" width="1122" height="482" rx="2" fill="none" stroke="#4B4540" stroke-width="1"/>
+  <text x="155" y="334" fill="#F5F0E8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="134" font-weight="600" letter-spacing="-9">tero</text>
+  <text x="159" y="393" fill="#B5ADA2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="27" letter-spacing="0.2">A place to belong.</text>
+  <g transform="translate(738 10) scale(.61)">
+    <rect x="302" y="166" width="420" height="692" rx="67" fill="#252422" stroke="#C9A27E" stroke-width="19"/>
+    <rect x="329" y="193" width="366" height="638" rx="44" fill="none" stroke="#C9A27E" stroke-width="5" opacity=".66"/>
+    <path d="M512 365 C589 422 635 467 635 512 C635 557 589 602 512 659 C435 602 389 557 389 512 C389 467 435 422 512 365Z" fill="#E6C9A8"/>
+    <path d="M512 422 C555 457 580 488 580 512 C580 536 555 567 512 602 C469 567 444 536 444 512 C444 488 469 457 512 422Z" fill="#252422"/>
+    <path d="M512 475 C531 490 542 502 542 512 C542 522 531 534 512 549 C493 534 482 522 482 512 C482 502 493 490 512 475Z" fill="#E6C9A8"/>
+    <g opacity=".90">
+      <rect x="410" y="780" width="34" height="5" rx="2.5" fill="#D39B9A"/>
+      <rect x="444" y="780" width="34" height="5" fill="#DFB18D"/>
+      <rect x="478" y="780" width="34" height="5" fill="#D8C29A"/>
+      <rect x="512" y="780" width="34" height="5" fill="#9FB9A4"/>
+      <rect x="546" y="780" width="34" height="5" fill="#92AFC9"/>
+      <rect x="580" y="780" width="34" height="5" rx="2.5" fill="#B3A1C8"/>
+    </g>
+  </g>
+</svg>

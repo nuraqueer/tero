@@ -1,0 +1,48 @@
+name: Tauri foundation
+
+on:
+  pull_request:
+    paths:
+      - 'apps/tero/**'
+      - 'packages/sefirah-mls/**'
+      - 'packages/sefirah-tor/**'
+      - 'packages/sefirah-routing/**'
+      - 'packages/sefirah-identity/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'bun.lock'
+      - 'package.json'
+      - '.github/workflows/tauri-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux-check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Tauri Linux prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+      - run: bun install --frozen-lockfile
+      - run: bun run build:web
+      - name: Check Tauri Rust workspace
+        run: cargo check --workspace
+      - name: Test encrypted messaging engine
+        run: cargo test -p sefirah-mls --lib
+      - name: Test private peer transport
+        run: cargo test -p sefirah-tor --lib
+      - name: Test peer-first delivery policy
+        run: cargo test -p sefirah-routing
+      - name: Test legacy vault format compatibility
+        run: cargo test -p sefirah-identity

@@ -2,7 +2,9 @@
 
 <g transform="translate(512 512) scale(0.82) translate(-512 -512)">
 <rect x="302" y="166" width="420" height="692" rx="67" fill="none" stroke="#FFFFFF" stroke-width="19"/>
-<rect x="329" y="193" width="366" height="638" rx="44" fill="none" stroke="#FFFFFF" stroke-width="3" opacity=".5"/>
-<circle cx="512" cy="512" r="109" fill="none" stroke="#FFFFFF" stroke-width="5" opacity=".65"/>
-<path d="M512 402 540 484 622 512 540 540 512 622 484 540 402 512 484 484Z" fill="#FFFFFF"/>
+<rect x="329" y="193" width="366" height="638" rx="44" fill="none" stroke="#FFFFFF" stroke-width="5" opacity=".66"/>
+<path d="M512 365 C589 422 635 467 635 512 C635 557 589 602 512 659 C435 602 389 557 389 512 C389 467 435 422 512 365Z" fill="#FFFFFF"/>
+<path d="M512 422 C555 457 580 488 580 512 C580 536 555 567 512 602 C469 567 444 536 444 512 C444 488 469 457 512 422Z" fill="none"/>
+<path d="M512 475 C531 490 542 502 542 512 C542 522 531 534 512 549 C493 534 482 522 482 512 C482 502 493 490 512 475Z" fill="#FFFFFF"/>
+
 </g></svg>

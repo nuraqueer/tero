@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Sensitive security or community-safety report
+    url: mailto:pherus@pherus.org
+    about: Do not publish identifying information, keys or private member details in GitHub issues.

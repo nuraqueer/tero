@@ -1,0 +1,33 @@
+name: Bug report
+description: Report a reproducible problem without including sensitive member information.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Please do not include identity keys, account recovery words, real member details, private locations or identifying screenshots. Report sensitive security concerns privately to pherus@pherus.org."
+  - type: textarea
+    id: behaviour
+    attributes:
+      label: What happened?
+      description: Include expected and actual behaviour.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How can we reproduce it safely?
+      description: Use test data only.
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Platform
+      options: [Web, Desktop, Android, iOS, Worker, Rust library, Documentation]
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Safe evidence and version
+      description: Commit, build number, test output or redacted logs.

@@ -1,5 +1,13 @@
 node_modules/
 dist/
+.output/
+.tanstack/
+src/routeTree.gen.ts
+src-tauri/target/
+src-tauri/gen/
+apps/tero/src/routeTree.gen.ts
+apps/tero/src-tauri/target/
+apps/tero/src-tauri/gen/
 .expo/
 .wrangler/
 *.tsbuildinfo
